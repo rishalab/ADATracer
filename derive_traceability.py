@@ -26,6 +26,42 @@ def derive_traceability(
     for node in ada_nodes:
         key = normalize_path_basename(node.file_path)
         ada_by_basename[key].append(node)
+    # print("[INFO] Deriving CHANGES (Commit → AdaNode)")
+    # for commit in tqdm(commits, desc="Commit → AdaNode"):
+    #     for changed_file in commit.changed_files:
+    #         key = normalize_path_basename(changed_file)
+    #         for ada in ada_by_basename.get(key, []):
+    #             relationships.append((
+    #                 commit.id,
+    #                 ada.id,
+    #                 "CHANGES",
+    #                 {},
+    #             ))
+    # print("[INFO] Deriving IMPACTS (Issue → AdaNode)")
+    # for issue in tqdm(issues, desc="Issue → AdaNode"):
+    #     text = f"{issue.title} {issue.body}".lower()
+    #     for basename, nodes in ada_by_basename.items():
+    #         if basename in text:
+    #             for ada in nodes:
+    #                 relationships.append((
+    #                     issue.id,
+    #                     ada.id,
+    #                     "IMPACTS",
+    #                     {},
+    #                 ))
+    # print("[INFO] Deriving ADDRESSES (Commit → Issue)")
+    # issue_by_number = {str(i.issue_id): i for i in issues}
+    # for commit in tqdm(commits, desc="Commit → Issue"):
+    #     for iid in re.findall(r"#(\d+)", commit.message):
+    #         issue = issue_by_number.get(iid)
+    #         if issue:
+    #             relationships.append((
+    #                 commit.id,
+    #                 issue.id,
+    #                 "ADDRESSES",
+    #                 {},
+    #             ))
+
     print("[INFO] Deriving CHANGES (Commit → AdaNode)")
     for commit in tqdm(commits, desc="Commit → AdaNode"):
         for changed_file in commit.changed_files:
@@ -37,20 +73,11 @@ def derive_traceability(
                     "CHANGES",
                     {},
                 ))
-    print("[INFO] Deriving IMPACTS (Issue → AdaNode)")
-    for issue in tqdm(issues, desc="Issue → AdaNode"):
-        text = f"{issue.title} {issue.body}".lower()
-        for basename, nodes in ada_by_basename.items():
-            if basename in text:
-                for ada in nodes:
-                    relationships.append((
-                        issue.id,
-                        ada.id,
-                        "IMPACTS",
-                        {},
-                    ))
+    
     print("[INFO] Deriving ADDRESSES (Commit → Issue)")
     issue_by_number = {str(i.issue_id): i for i in issues}
+    commit_to_issues = {}  # commit_id -> [issue]
+    
     for commit in tqdm(commits, desc="Commit → Issue"):
         for iid in re.findall(r"#(\d+)", commit.message):
             issue = issue_by_number.get(iid)
@@ -61,6 +88,31 @@ def derive_traceability(
                     "ADDRESSES",
                     {},
                 ))
+                commit_to_issues.setdefault(commit.id, []).append(issue)
+    
+    print("[INFO] Deriving IMPACTS (Issue → AdaNode) via Commit evidence")
+    commit_by_id = {c.id: c for c in commits}
+    
+    for commit_id, linked_issues in tqdm(commit_to_issues.items(), desc="Issue → AdaNode"):
+        commit = commit_by_id.get(commit_id)
+        if not commit:
+            continue
+    
+        impacted_adas = set()
+        for changed_file in commit.changed_files:
+            key = normalize_path_basename(changed_file)
+            for ada in ada_by_basename.get(key, []):
+                impacted_adas.add(ada)
+    
+        for issue in linked_issues:
+            for ada in impacted_adas:
+                relationships.append((
+                    issue.id,
+                    ada.id,
+                    "IMPACTS",
+                    {},
+                ))
+
 
     return relationships
 
