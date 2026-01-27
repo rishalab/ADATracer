@@ -1,0 +1,322 @@
+[
+  {
+    "issue_id": 45,
+    "title": "AWA start command option --max-upload-size and --max-form-size don't accept a value",
+    "body": "The two options to configure the max upload size and form size don't accept any value to the option: it is not possible to give a size value.  The option declaration is missing the `:` and `=` in the option names.",
+    "created_at": "2023-08-15T19:58:03Z",
+    "updated_at": "2023-08-15T20:15:09Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 42,
+    "title": "Configure the authenticate methods during the web setup",
+    "body": "The `setup` command provides a web setup for the AWA application and it must be improved:\r\n\r\n* we must be able to easily choose whether user registration is enabled/disabled,\r\n* we should choose the authenticate methods (Email, Google, Facebook, Twitter, Github, Gitlab, Yahoo!),\r\n* we should allow to enter the selected OAuth configuration.",
+    "created_at": "2023-06-10T15:22:27Z",
+    "updated_at": "2023-06-10T15:22:27Z",
+    "state": "open"
+  },
+  {
+    "issue_id": 41,
+    "title": "Configuration option for the 500 error page to enable/disable the stack trace dump",
+    "body": "By default the 500 error page will dump the optional stack trace if there is one.\r\n\r\nFor some installation, you want to see the stack trace since it helps track the issue but for some other installation it could expose some sensitive information such as addresses.\r\n",
+    "created_at": "2023-06-10T09:04:10Z",
+    "updated_at": "2023-06-10T09:04:10Z",
+    "state": "open"
+  },
+  {
+    "issue_id": 40,
+    "title": "Typo in a GPR file",
+    "body": "Small typo in the following GPR file:\r\n\r\nhttps://github.com/stcarrez/ada-awa/blob/3e8786ed10b051588838dd52665205f99413ff76/awa/plugins/awa-wikis/distrib/awa_wikis.gpr#L7\r\n\r\nShould be `with`",
+    "created_at": "2023-05-15T17:06:11Z",
+    "updated_at": "2023-06-03T20:34:30Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 39,
+    "title": "Error with fresh install: wrong use of interface type in tagged conversion ",
+    "body": "Hi Stephane,\r\n\r\nI trying to install AWA using Alire gut I got a compilation error.\r\n\r\nStep to reproduce:\r\n\r\n```bash\r\nalr init --bin demo_awa\r\ncd demo_awa\r\nalr with awa\r\nalr build\r\n```\r\n\r\nThe trace of `alr build` is:\r\n\r\n```\r\nalr build\r\nwarn: Generating possibly incomplete environment because of missing dependencies\r\n\u24d8 gnat>=9: no build needed.\r\n\u24d8 Building demo_awa/demo_awa.gpr...\r\nCompile\r\n   [Ada]          el-expressions-nodes.adb\r\n   [Ada]          util-properties-basic.adb\r\n   [Ada]          util-properties-discrete.adb\r\n   [Ada]          util-properties.adb\r\n   [Ada]          util-properties-bundles.adb\r\n   [Ada]          util-log-locations.adb\r\n   [Ada]          util-log-appenders-rolling_files.adb\r\n   [Ada]          util-log-appenders-files.adb\r\nel-expressions-nodes.adb:517:61: error: wrong use of interface type in tagged conversion\r\nel-expressions-nodes.adb:517:61: error: add 'Class to the target interface type\r\n\r\n   compilation of el-expressions-nodes.adb failed\r\n\r\ngprbuild: *** compilation phase failed\r\nerror: Command [\"gprbuild\", \"-s\", \"-j0\", \"-p\", \"-P\", \"/workspaces/PhD_XP/alr_test/demo_awa/demo_awa.gpr\"] exited with code 4\r\nerror: Compilation failed.\r\n```\r\n\r\nAm I the only one with this problem?\r\n\r\nMy setup:\r\nI running the full GNAT environment into a Docker container (with VS Code docker dev tools).\r\nI using a GNAT Pro 24.0",
+    "created_at": "2023-05-14T18:24:07Z",
+    "updated_at": "2023-05-15T17:29:38Z",
+    "state": "open"
+  },
+  {
+    "issue_id": 38,
+    "title": "Image module does not handle SVG correctly",
+    "body": "If we upload an SVG image, the Image module fails to identify the dimension. We get can exception while parsing the output of `convert`.  The thumbnail job fails and terminates with an error.\r\n\r\n```\r\n[2023-03-05 08:05:54] INFO  - AWA.Images.Module - : Dimension  --export-png= -  45.. 58\r\n[2023-03-05 08:05:54] ERROR - AWA.Jobs.Services - : Exception when executing job AWA.IMAGES.MODULES.THUMBNAIL_JOB_DEFINITION.S_FACTORY\r\nException when executing job AWA.IMAGES.MODULES.THUMBNAIL_JOB_DEFINITION.S_FACTORY\r\n[2023-03-05 08:05:55] ERROR - AWA.Jobs.Services - : Exception:: Exception CONSTRAINT_ERROR: bad input for 'Value: \"--e\" at [/src/adafr/ada-france/bin/adafr-server]\r\n0x1600e02 system__val_util__bad_value at ???\r\n0x15fcfcc system__val_int__impl__scan_integer at ???\r\n0x15fd055 system__val_int__impl__value_integer at ???\r\n0x71b555 Awa.Images.Modules.Create_Thumbnail at awa-images-modules.adb:267\r\n0x71cbbd Awa.Images.Modules.Build_Thumbnail at awa-images-modules.adb:306\r\n0x71a331 Awa.Images.Modules.Do_Thumbnail_Job at awa-images-modules.adb:202\r\n0x718a0e Awa.Images.Modules.Thumbnail_Worker at awa-images-modules.adb:53\r\n\r\n```",
+    "created_at": "2023-03-05T08:37:31Z",
+    "updated_at": "2023-03-05T09:10:39Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 37,
+    "title": "Cannot use entity-permission for the url-policy",
+    "body": "When we have an entity permission like:\r\n\r\n```\r\n  <entity-permission>\r\n    <name>member-view</name>\r\n    <entity-type>awa_workspace</entity-type>\r\n    <description>Grant the member view </description>\r\n    <sql>\r\n       SELECT acl.id FROM awa_acl AS acl\r\n            WHERE acl.entity_type = :entity_type\r\n            AND acl.user_id = :user_id\r\n            AND acl.entity_id = 1\r\n            AND acl.permission = $permission[member-view]\r\n    </sql>\r\n  </entity-permission>\r\n```\r\n\r\nif we want to use the permission in an url-policy like:\r\n\r\n```\r\n  <url-policy>\r\n    <permission>member-view</permission>\r\n    <url-pattern>/members/admin/.*</url-pattern>\r\n    <url-pattern>/members/.*</url-pattern>\r\n  </url-policy>\r\n```\r\n\r\nthen the entity-permission is always rejected because when we evaluate it there is no entity-id to evaluate and the permission controller immediately reject the permission even if the SQL query does not make reference to the entity-id.\r\n\r\nIf the SQL does not references the `:entity_id` parameter, then the controller should proceed and run the SQL query to check the permission (instead of rejecting without checking).",
+    "created_at": "2022-12-04T08:06:03Z",
+    "updated_at": "2022-12-04T08:13:00Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 36,
+    "title": "The AWA redirect cookie is not removed",
+    "body": "Sometimes AWA set the cookie `RURL` to remember a redirection page when a user accesses a page that requires authentication. The cookie is not removed after the redirection.\r\n",
+    "created_at": "2022-11-26T15:54:45Z",
+    "updated_at": "2025-05-01T09:43:43Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 35,
+    "title": "Blog post creation improvement",
+    "body": "The blog post creation is not clear and could be improved by allowing to choose the article format (Markdown, Html, Dotclear) before creating the page and having the online editor.\r\n\r\nThe selection of the article format before the creation allows to have and use a better editor that targets the article format.\r\n",
+    "created_at": "2022-11-13T14:27:14Z",
+    "updated_at": "2023-07-09T07:28:33Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 34,
+    "title": "Configuration to authenticate with Gitlab is incomplete",
+    "body": "The `awa/config/users.xml` configuration file is missing some correct setup for the OAuth configuration to authenticate with Gitlab.\r\n\r\nThe following configurations are missing:\r\n\r\n* gitlab.request_url\r\n* gitlab.scope\r\n* gitlab.callback_url\r\n* gitlab.issuer\r\n",
+    "created_at": "2022-11-12T16:49:54Z",
+    "updated_at": "2022-11-12T16:52:16Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 33,
+    "title": "Application name not recognized by some AWA commands",
+    "body": "Several AWA commands can use the application name to execute the command on a specific application.\r\nGiving the application name results in an error message.\r\nThe application name must be given with a initial '/' to be matched correctly which is strange.\r\n",
+    "created_at": "2022-11-12T16:15:26Z",
+    "updated_at": "2022-11-12T16:23:28Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 32,
+    "title": "Support several authentication methods for a user",
+    "body": "The AWA 2.4 implementation supports only a single authentication method for a user registered with an email address.\r\nIt is useful to allow a Google OAuth access at the same time of a GitHub, GitLab or even password based access as long as we are sure this is the same user.\r\n\r\n* the authenticate information must be moved outside of the `awa_user` table,\r\n* the same user can authenticate as soon as the email address matches (assuming we trust GitHub or GitLab)\r\n",
+    "created_at": "2022-11-12T13:17:14Z",
+    "updated_at": "2023-10-08T08:20:01Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 31,
+    "title": "Use <header>, <footer>, <main> for HTML layouts",
+    "body": "The current HTML pages need some modernization and should use the `header`, `footer` and `main` HTML blocks.",
+    "created_at": "2022-11-06T13:52:44Z",
+    "updated_at": "2023-07-09T07:28:46Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 30,
+    "title": "Configuration to authenticate with GitHub is incomplete",
+    "body": "The configuration to authenticate by using GitHub OAuth is incomplete.\r\n\r\nThe `awa/config/users.xml` configuration file is missing the following parameters:\r\n\r\n* github.request_url\r\n* github.scope\r\n* github.callback_url\r\n* github.issuer\r\n",
+    "created_at": "2022-11-06T13:48:26Z",
+    "updated_at": "2022-11-06T13:48:53Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 29,
+    "title": "Compilation errors building using Alire",
+    "body": "What I did:\r\n\r\n```bash\r\ngit clone --recurse-submodules https://github.com/stcarrez/ada-awa.git\r\ncd ada-awa\r\nalr build\r\n```\r\n\r\nOn commit: dbbc6c69d43d056f9955759706b61a77a22868f5\r\n\r\nCompilation errors:\r\n\r\n```\r\nawa-commands-migrate.adb:44:38: \"Upgrade_List\" not declared in \"Databases\"\r\nawa-commands-migrate.adb:51:31: \"Scan_Migration\" not declared in \"Databases\"\r\nawa-commands-migrate.adb:68:43: \"MIGRATE_PATHS_CONFIG\" not declared in \"Configs\"\r\nawa-commands-migrate.adb:69:67: \"MIGRATE_PATHS_CONFIG\" not declared in \"Configs\"\r\nawa-commands-migrate.adb:78:68: \"Migrate_Paths_config\" not declared in \"Configs\"\r\nawa-commands-migrate.adb:80:10: invalid prefix in selected component \"List\"\r\nawa-commands-migrate.adb:85:28: \"Sort_Migration\" not declared in \"Databases\"\r\nawa-commands-migrate.adb:88:34: \"Run_Migration\" not declared in \"Databases\"\r\nawa-commands-migrate.adb:97:34: \"Prepare_Migration\" not declared in \"Databases\"\r\n\r\n   compilation of awa-commands-migrate.adb failed\r\n\r\ngprbuild: *** compilation phase failed\r\nerror: Command [\"gprbuild\", \"-s\", \"-j0\", \"-p\", \"-P\", \"/home/mgr/src/github/stcarrez/ada-awa/.alire/awa_blogs.gpr\"] exited with code 4\r\nerror: Compilation failed.\r\n```",
+    "created_at": "2022-10-03T22:05:58Z",
+    "updated_at": "2022-10-04T18:51:02Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 28,
+    "title": "ADO don't find db drivers on fedora",
+    "body": "Hello,\r\nI've installed AWA with Alire, but it seems Ado can't find dependencies for :\r\n\r\n- mysql/mariadb\r\n- mysqlite\r\n- postgres\r\n- openssl\r\n\r\nI'm sure i've installed all the package needed and follow your instruction on your blog to make a test:\r\n\r\n```\r\nalr init demo\r\ncd demo\r\nalr with awa\r\nalr with dynamo\r\nalr with servletada_aws\r\nalr build\r\n\r\nalr exec -- dynamo create-project -l apache --web demo Ada.Lovelace@planet.dev\r\nalr build\r\n```\r\n\r\nbut when i start the server i still have :\r\n`Some internal error occurred: Exception ADO.CONFIGS.CONNECTION_ERROR: Database driver 'postgres' not found`\r\n\r\n\r\nSomething i missed ??",
+    "created_at": "2022-10-01T17:07:51Z",
+    "updated_at": "2022-10-02T19:39:15Z",
+    "state": "open"
+  },
+  {
+    "issue_id": 27,
+    "title": "New option for the list command to print the last audit fields",
+    "body": "The `list` command can print the users, sessions, jobs.  A new option `--audit` can be added to print the audit fields and have a quick look at the last database changes when the fields are audited.\r\n",
+    "created_at": "2022-09-10T13:07:26Z",
+    "updated_at": "2023-10-08T08:20:59Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 26,
+    "title": "Support to enable/disable user account",
+    "body": "The AWA user model is missing the ability to enable/disable a user account.\r\n",
+    "created_at": "2022-08-27T20:24:49Z",
+    "updated_at": "2023-10-08T08:20:45Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 25,
+    "title": "Update database schema for ADO 2.4",
+    "body": "ADO 2.4 changes the name of the entity_type database into ado_entity_type.\r\n\r\nThe SQL migration must be integrated in AWA.\r\n",
+    "created_at": "2022-08-21T08:52:00Z",
+    "updated_at": "2023-07-09T07:28:19Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 24,
+    "title": "Database schema is broken for unit tests",
+    "body": "The AWA framework has a testsuite which uses the database and exercises every AWA module.\r\nThe database schema is not generated correctly and the `awa_audit_field` table is not created at the proper place.\r\nThis impacts only unit tests.\r\n",
+    "created_at": "2022-08-21T08:35:38Z",
+    "updated_at": "2023-07-09T07:29:13Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 23,
+    "title": "Add command line for database schema migration",
+    "body": "With ADO 2.4, we will have the support for database schema migration and handle the upgrade of schema.\r\n\r\nWe can now have a command in the AWA library to help in the schema migration.\r\n\r\nThe command should be able to list the SQL files that must be executed without actually executing them.\r\nIt should also be able to run the migration scripts by its own.",
+    "created_at": "2022-08-20T19:15:23Z",
+    "updated_at": "2023-07-09T07:28:58Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 22,
+    "title": "Add command line support to register a new user",
+    "body": "The AWA framework provides a set of commands for the server management (start, stop, setup, list).\r\n\r\nA command to register a new user with an email address is useful to register users and disable signup.\r\nIn that case, only users that are registered by the sysadmin can access the web application.\r\n",
+    "created_at": "2022-08-20T18:48:10Z",
+    "updated_at": "2023-10-08T08:20:32Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 21,
+    "title": "imported project file \"aws\" not found",
+    "body": "For some reason the configure script isn't finding the aws installation even though its in the \"external\" directory. Ideas or should I just install it from the AUR?",
+    "created_at": "2022-03-22T23:43:20Z",
+    "updated_at": "2022-03-23T14:32:42Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 20,
+    "title": "Do not use git:// protocol",
+    "body": "Some submodules (e.g. the ada-ado submodule) use `git://` instead of `ssh://` or `https://`. The unauthenticated git protocol on port 9418 is no longer supported by GitHub.",
+    "created_at": "2022-03-19T01:21:55Z",
+    "updated_at": "2022-03-19T10:22:32Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 18,
+    "title": "AWA blog plugin fails to serve an image when it is stored in the storage directory",
+    "body": "When an image is big it can be stored in the `storage` directory instead of the database (this is configurable).\r\n\r\nThen, when the image is referenced from a blog article, the blog image servlet does not load the image content.\r\nThe image is therefore not served and we get a 404 error.\r\n\r\nThere is no issue if the image was stored in the database.\r\n",
+    "created_at": "2022-01-22T17:15:45Z",
+    "updated_at": "2022-01-22T20:52:02Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 17,
+    "title": "Error generated when a blog article makes a reference to a non existing image",
+    "body": "If a blog article contains a reference to an image that is not found, the SQL query that is executed to retrieve the\r\ninformation can return a `NULL` column and when this happens an error is raised.\r\n\r\nWhen such error occurs, the rest of the blog article is not visible and we stop at the missing image.\r\nWe should better continue and skip the image (this is the behavior of other blog systems).\r\n",
+    "created_at": "2021-12-19T09:12:17Z",
+    "updated_at": "2021-12-19T09:15:56Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 16,
+    "title": "Allow the configuration of server max upload size and max form submission size",
+    "body": "When starting the Web server, we must be able to configure:\r\n\r\n* the max size of uploaded content,\r\n* the max size of input line for a form submission\r\n\r\nThe default values are sometimes too small to upload big documents or write long Wiki or blog posts.\r\n",
+    "created_at": "2021-12-19T08:45:22Z",
+    "updated_at": "2021-12-19T13:38:46Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 15,
+    "title": "Compilation with debug mode sometimes fails due to incorrect GNAT config project",
+    "body": "With recent version of `gprbuild`, the compilation of awa with debugging does not work: it compiles but the `-g` option is not taken into account.\r\n\r\nThe GNAT config.gpr project is incorrect as the `-g` is passed to the `Builder` instead of the `Compiler`.\r\n",
+    "created_at": "2021-12-04T09:54:29Z",
+    "updated_at": "2021-12-04T15:21:55Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 14,
+    "title": "Avoid using gnatprep for the configuration of mail factory",
+    "body": "The AWA mail plugin is uses a factory whose implementation is generated by `gnatprep`.\r\n\r\nThis is nice but it requires running `gnatprep` before building the project.\r\n\r\nBy providing a factory ready to be used in a specific directory, we can eliminate this step.\r\n",
+    "created_at": "2021-11-27T14:57:28Z",
+    "updated_at": "2021-11-27T15:40:28Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 13,
+    "title": "AWA help command prints the wrong title 'akt tool to store and protecte...'",
+    "body": "The AWA server binary provides a set of commands and when we run it with `--help` it prints the title:\r\n\r\n```\r\nakt - tool to store and protect your sensitive data\r\n```\r\n\r\nThis is not correct (the message comes from the Ada Keystore: I've reused a set of sources to implement the AWA commands).",
+    "created_at": "2021-09-26T07:23:07Z",
+    "updated_at": "2021-12-04T15:21:55Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 11,
+    "title": "Unable to configure on Windows",
+    "body": "When running\r\n\r\n./configure --prefix=/usr/local\r\n\r\nOn Windows 10 within msys2 I get the following:\r\n\r\n***\r\nconfigure: error: Building Ada EL requires the Ada Utility Library.\r\n  You should build and install the Ada Utility Library component.\r\n  It must be available and found by gprbuild.\r\n  This project was not found in the ADA_PROJECT_PATH environment variable.\r\n  This project was not found in ../utilada_base nor in ../ada-util-*.\r\n  The component is available at git@github.com:stcarrez/ada-util.git.\r\n  Please, download and configure Ada Utility Library.\r\n  The current configuration was using:\r\n    gprbuild\r\n    ADA_PROJECT_PATH=\r\n\r\nconfigure: error: ./configure failed for ada-el\r\n***\r\n\r\nI would assume any interdependencies on the modules would have been handled so I am a little uncertain if this is the ada-util module or something else.  Thank you very much!",
+    "created_at": "2021-02-24T22:51:23Z",
+    "updated_at": "2021-03-20T17:07:04Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 9,
+    "title": "No macOS support?",
+    "body": "It would be nice to have macOS support as well. Is it on the cards? If there is a list of things that need to be in order for macOS builds to go through fine, I would be glad (as would others I'm sure) to try and help out.",
+    "created_at": "2020-05-02T14:34:55Z",
+    "updated_at": "2020-05-03T06:19:34Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 8,
+    "title": "ada.awa profile in the argo editor",
+    "body": "I have added the awa profile into the argo editor and then restarted argo. When I went to create the models directory as per your video there was no datamodel stereo type. I've checked what I did is exactly the same as in your video and cannot figure out what went wrong.",
+    "created_at": "2019-08-22T07:55:13Z",
+    "updated_at": "2019-08-26T17:09:29Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 7,
+    "title": "facebook and google authentication  (suggestion)",
+    "body": "There appear to be some barriers appearing like mandatory https and a privacy policy URL (at least for facebook but we can expect Google to follow suit), for OAUTH authentication. Perhaps it is useful to include this as part of the project. ",
+    "created_at": "2019-08-20T08:49:35Z",
+    "updated_at": "2020-04-30T22:09:41Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 6,
+    "title": "Unable to build",
+    "body": "I have used two ways to clone this repository but problem persists, in both cases ada-lzma is empty. I have used submodule init and submodule update method but result is the same. Here are commands output:-\r\n\r\n$ git clone --recurse-submodules https://github.com/stcarrez/ada-awa.git\r\nCloning into 'ada-awa'...\r\nremote: Enumerating objects: 1531, done.\r\nremote: Counting objects: 100% (1531/1531), done.\r\nremote: Compressing objects: 100% (743/743), done.\r\nremote: Total 34595 (delta 935), reused 1240 (delta 753), pack-reused 33064\r\nReceiving objects: 100% (34595/34595), 108.62 MiB | 1.03 MiB/s, done.\r\nResolving deltas: 100% (25990/25990), done.\r\nSubmodule 'ada-ado' (git://github.com/stcarrez/ada-ado.git) registered for path 'ada-ado'\r\nSubmodule 'ada-asf' (git://github.com/stcarrez/ada-asf.git) registered for path 'ada-asf'\r\nSubmodule 'ada-el' (git://github.com/stcarrez/ada-el.git) registered for path 'ada-el'\r\nSubmodule 'ada-lzma' (git://github.com/stcarrez/ada-lzma.git) registered for path 'ada-lzma'\r\nSubmodule 'ada-security' (git://github.com/stcarrez/ada-security.git) registered for path 'ada-security'\r\nSubmodule 'ada-servlet' (git://github.com/stcarrez/ada-servlet.git) registered for path 'ada-servlet'\r\nSubmodule 'ada-util' (git://github.com/stcarrez/ada-util.git) registered for path 'ada-util'\r\nSubmodule 'ada-wiki' (git://github.com/stcarrez/ada-wiki.git) registered for path 'ada-wiki'\r\nSubmodule 'dynamo' (git://github.com/stcarrez/dynamo.git) registered for path 'dynamo'\r\nSubmodule 'swagger-ada' (git://github.com/stcarrez/swagger-ada.git) registered for path 'swagger-ada'\r\nCloning into '/home/amit/0myspace/ada/gitrepo/ada-awa/ada-ado'...\r\nremote: Enumerating objects: 515, done.        \r\nremote: Counting objects: 100% (515/515), done.        \r\nremote: Compressing objects: 100% (246/246), done.        \r\nremote: Total 6401 (delta 322), reused 419 (delta 269), pack-reused 5886        \r\nReceiving objects: 100% (6401/6401), 3.28 MiB | 598.00 KiB/s, done.\r\nResolving deltas: 100% (4581/4581), done.\r\nCloning into '/home/amit/0myspace/ada/gitrepo/ada-awa/ada-asf'...\r\nremote: Enumerating objects: 11297, done.        \r\nremote: Total 11297 (delta 0), reused 0 (delta 0), pack-reused 11297        \r\nReceiving objects: 100% (11297/11297), 9.33 MiB | 98.00 KiB/s, done.\r\nResolving deltas: 100% (7920/7920), done.\r\nCloning into '/home/amit/0myspace/ada/gitrepo/ada-awa/ada-el'...\r\nremote: Enumerating objects: 14, done.        \r\nremote: Counting objects: 100% (14/14), done.        \r\nremote: Compressing objects: 100% (12/12), done.        \r\nremote: Total 1752 (delta 4), reused 7 (delta 2), pack-reused 1738        \r\nReceiving objects: 100% (1752/1752), 802.54 KiB | 220.00 KiB/s, done.\r\nResolving deltas: 100% (1246/1246), done.\r\nCloning into '/home/amit/0myspace/ada/gitrepo/ada-awa/ada-lzma'...\r\nremote: Enumerating objects: 6, done.        \r\nremote: Counting objects: 100% (6/6), done.        \r\nremote: Compressing objects: 100% (5/5), done.        \r\nremote: Total 230 (delta 1), reused 3 (delta 1), pack-reused 224        \r\nReceiving objects: 100% (230/230), 152.31 KiB | 313.00 KiB/s, done.\r\nResolving deltas: 100% (121/121), done.\r\nCloning into '/home/amit/0myspace/ada/gitrepo/ada-awa/ada-security'...\r\nremote: Enumerating objects: 50, done.        \r\nremote: Counting objects: 100% (50/50), done.        \r\nremote: Compressing objects: 100% (30/30), done.        \r\nremote: Total 2716 (delta 24), reused 40 (delta 20), pack-reused 2666        \r\nReceiving objects: 100% (2716/2716), 761.88 KiB | 525.00 KiB/s, done.\r\nResolving deltas: 100% (1854/1854), done.\r\nCloning into '/home/amit/0myspace/ada/gitrepo/ada-awa/ada-servlet'...\r\nremote: Enumerating objects: 95, done.        \r\nremote: Counting objects: 100% (95/95), done.        \r\nremote: Compressing objects: 100% (50/50), done.        \r\nremote: Total 12036 (delta 49), reused 83 (delta 45), pack-reused 11941        \r\nReceiving objects: 100% (12036/12036), 9.12 MiB | 736.00 KiB/s, done.\r\nResolving deltas: 100% (8426/8426), done.\r\nCloning into '/home/amit/0myspace/ada/gitrepo/ada-awa/ada-util'...\r\nremote: Enumerating objects: 9898, done.        \r\nremote: Total 9898 (delta 0), reused 0 (delta 0), pack-reused 9898        \r\nReceiving objects: 100% (9898/9898), 2.70 MiB | 99.00 KiB/s, done.\r\nResolving deltas: 100% (7228/7228), done.\r\nCloning into '/home/amit/0myspace/ada/gitrepo/ada-awa/ada-wiki'...\r\nremote: Enumerating objects: 102, done.        \r\nremote: Counting objects: 100% (102/102), done.        \r\nremote: Compressing objects: 100% (66/66), done.        \r\nremote: Total 4231 (delta 40), reused 75 (delta 35), pack-reused 4129        \r\nReceiving objects: 100% (4231/4231), 836.94 KiB | 610.00 KiB/s, done.\r\nResolving deltas: 100% (2838/2838), done.\r\nCloning into '/home/amit/0myspace/ada/gitrepo/ada-awa/dynamo'...\r\nremote: Enumerating objects: 27, done.        \r\nremote: Counting objects: 100% (27/27), done.        \r\nremote: Compressing objects: 100% (20/20), done.        \r\nremote: Total 9974 (delta 14), reused 14 (delta 7), pack-reused 9947        \r\nReceiving objects: 100% (9974/9974), 3.90 MiB | 924.00 KiB/s, done.\r\nResolving deltas: 100% (7189/7189), done.\r\nCloning into '/home/amit/0myspace/ada/gitrepo/ada-awa/swagger-ada'...\r\nremote: Enumerating objects: 58, done.        \r\nremote: Counting objects: 100% (58/58), done.        \r\nremote: Compressing objects: 100% (37/37), done.        \r\nremote: Total 1249 (delta 29), reused 46 (delta 21), pack-reused 1191        \r\nReceiving objects: 100% (1249/1249), 21.17 MiB | 1001.00 KiB/s, done.\r\nResolving deltas: 100% (825/825), done.\r\nSubmodule path 'ada-ado': checked out '2c4b89d1ba8b7eabff63b090e4130f9cf759ae6c'\r\nerror: Server does not allow request for unadvertised object 138efbdc94982ed1f84c5e74ee03d71774d156d4\r\nFetched in submodule path 'ada-asf', but it did not contain 138efbdc94982ed1f84c5e74ee03d71774d156d4. Direct fetching of that commit failed.\r\n\r\n$ cd ada-awa\r\n\r\n$ ./configure --prefix=/usr\r\nchecking build system type... x86_64-pc-linux-gnu\r\nchecking host system type... x86_64-pc-linux-gnu\r\nchecking target system type... x86_64-pc-linux-gnu\r\nchecking shared library support... no\r\nchecking distribution build... yes\r\nchecking coverage support... no\r\nchecking for gprbuild... gprbuild\r\nchecking for gprclean... gprclean\r\nchecking whether make sets $(MAKE)... yes\r\nchecking for a BSD-compatible install... /usr/bin/install -c\r\nchecking for unzip... yes\r\nchecking for mysql... mysql\r\nchecking for sqlite3... sqlite3\r\nchecking for psql... psql\r\nchecking for msysinfo... no\r\nchecking number of processors... 4\r\nchecking XML/Ada... trying xmlada\r\nchecking whether xmlada project exists in gnatmake's search path... yes\r\nchecking Ada Web Server... trying aws\r\nchecking whether aws project exists in gnatmake's search path... yes\r\nconfigure: creating ./config.status\r\nconfig.status: creating Makefile\r\n\r\n$ make\r\ntouch stamp-xmlada\r\ntouch stamp-aws\r\nConfiguring ==== ada-lzma ====\r\n\r\n(cd /home/amit/0myspace/ada/gitrepo/ada-awa/ada-lzma && ./configure --prefix=/usr )\r\n/bin/sh: ./configure: No such file or directory\r\nMakefile:143: recipe for target 'stamp-configure' failed\r\nmake: *** [stamp-configure] Error 127\r\n\r\nThink I have provided you enough information. If anything else required, please ask.\r\n\r\n",
+    "created_at": "2019-07-12T21:13:29Z",
+    "updated_at": "2021-03-27T06:57:07Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 5,
+    "title": "Docker build fails in current checkout",
+    "body": "I attempted a Docker build using ada-awa/docker/Dockerfile. \r\n\r\nThe commands I issued were\r\n\r\n```\r\n$ cd ada-awa/docker\r\n$ sudo docker build -t ada-awa .\r\n```\r\n\r\nHere is the output showing the build error\r\n\r\n```\r\n.\r\n.\r\n.\r\nawa-events-models.ads:37:06: file \"ado-audits.ads\" not found\r\nawa-events-models.ads:37:06: \"AWA.EVENTS.MODELS (body)\" depends on \"AWA.EVENTS.MODELS (spec)\"\r\nawa-events-models.ads:37:06: \"AWA.EVENTS.MODELS (spec)\" depends on \"AWA.USERS.MODELS (spec)\"\r\nawa-events-models.ads:37:06: \"AWA.USERS.MODELS (spec)\" depends on \"ADO.AUDITS (spec)\"\r\nawa-audits-models.ads:34:06: file \"ado-audits.ads\" not found\r\nawa-audits-models.ads:34:06: \"AWA.AUDITS.MODELS (body)\" depends on \"AWA.AUDITS.MODELS (spec)\"\r\nawa-audits-models.ads:34:06: \"AWA.AUDITS.MODELS (spec)\" depends on \"AWA.USERS.MODELS (spec)\"\r\nawa-audits-models.ads:34:06: \"AWA.USERS.MODELS (spec)\" depends on \"ADO.AUDITS (spec)\"\r\nawa-oauth-models.ads:34:06: file \"ado-audits.ads\" not found\r\nawa-oauth-models.ads:34:06: \"AWA.OAUTH.MODELS (body)\" depends on \"AWA.OAUTH.MODELS (spec)\"\r\nawa-oauth-models.ads:34:06: \"AWA.OAUTH.MODELS (spec)\" depends on \"AWA.USERS.MODELS (spec)\"\r\nawa-oauth-models.ads:34:06: \"AWA.USERS.MODELS (spec)\" depends on \"ADO.AUDITS (spec)\"\r\n\r\n   compilation of awa-oauth-models.adb failed\r\n   compilation of awa-audits-models.adb failed\r\n   compilation of awa-events-models.adb failed\r\n\r\ngprbuild: *** compilation phase failed\r\nrules.mk:108: recipe for target 'local-build' failed\r\nmake[1]: *** [local-build] Error 4\r\nMakefile:119: recipe for target 'build' failed\r\nmake: *** [build] Error 2\r\nThe command '/bin/sh -c mkdir -p /usr/src    && cd /usr/src    && git clone https://github.com/stcarrez/ada-awa.git ada-awa    && cd ada-awa    && git submodule init    && git submodule update    && ./confi\r\nsable-shared --prefix=/usr    && make -s    && make -s install' returned a non-zero code: 2\r\n```\r\n\r\nIt seems that the submodule ada-ado (and others) are not to the latest version.  ado-audits.ads is a relatively new file which is not in the version that is checked out (by the git submodule update command) in the ada-ado submodule.\r\n\r\nIf the intent of the Dockerfile is to build with the latest source in all submodules then a possible fix is to add --recursive --remote to the git submodule update command in Dockerfile.\r\n\r\nThat is, in Dockerfile replace\r\n  ` && git submodule update`\r\nwith\r\n   `&& git submodule update --recursive --remote`\r\n\r\nIf the intent of the Dockerfile is to build with the current commited submodules then a process needs to be put in place to insure that submodules are committed in the main project whenever the main project is dependent on a submodule change.",
+    "created_at": "2019-01-05T09:23:36Z",
+    "updated_at": "2019-01-05T19:24:34Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 4,
+    "title": "getting started",
+    "body": "Hello, i'm getting started on Linux platform (Centos 7) and after I build my web app \"hello\" when server run I've the 404 on http://localhost:8080/hello/index.html \r\nThe server log say:\r\n\r\nINFO : Reading module configuration file setup.xml\r\nINFO : Reading file setup.xml\r\n**ERROR: setup.xml: File 'setup.xml' does not exist.**\r\n\r\n\r\n`\r\n[root@vmcentos7` hello]# bin/hello-server\r\nINFO : Register bindings: http://java.sun.com/jsf/core\r\nINFO : Register bindings: http://java.sun.com/jsf/html\r\nINFO : Register bindings: http://java.sun.com/jstl/core\r\nINFO : Register bindings: http://java.sun.com/jsf/facelets\r\nINFO : Register bindings: http://code.google.com/p/ada-asf/util\r\nINFO : Register bindings: http://code.google.com/p/ada-asf/ajax\r\nINFO : Register bindings: http://code.google.com/p/ada-asf/widget\r\nINFO : Register bean class ASF.Beans.Map_Bean\r\nDEBUG: Add namespace fn:http://java.sun.com/jsp/jstl/functions\r\nDEBUG: Adding config log4j.appender.console = Console\r\nDEBUG: Adding config openid.provider.orange = http://openid.orange.fr\r\nDEBUG: Adding config log4j.logger.ASF.Views.Nodes.Reader = INFO\r\nDEBUG: Adding config google-plus.secret = PUT-HERE_GOOGLE-SECRET\r\nDEBUG: Adding config google-plus.client_id = PUT-HERE-GOOGLE-CLIENT-ID.apps.googleusercontent.com\r\nDEBUG: Adding config log4j.logger.ASF = DEBUG\r\nDEBUG: Adding config dynamo_author = eqcola\r\nDEBUG: Adding config log4j.logger.AWA.Modules = WARN\r\nDEBUG: Adding config log4j.logger.AWA = DEBUG\r\nDEBUG: Adding config log4j.appender.result = File\r\nDEBUG: Adding config bundle.dir = bundles\r\nDEBUG: Adding config dynamo_is_lib = FALSE\r\nDEBUG: Adding config app_name = Null\r\nDEBUG: Adding config log4j.appender.result.File = hello.log\r\nDEBUG: Adding config openid.callback_url = http://localhost:8080/hello/auth/verify\r\nDEBUG: Adding config dynamo_is_ado = FALSE\r\nDEBUG: Adding config log4j.rootCategory = DEBUG,console,result\r\nDEBUG: Adding config bundle.var.samplesMsg = samples\r\nDEBUG: Adding config openid.provider.myopenid = http://www.myopenid.com/server\r\nDEBUG: Adding config log4j.logger.Util.Log = WARN\r\nDEBUG: Adding config counters.counter_limit = 10\r\nDEBUG: Adding config contextPath = /hello\r\nDEBUG: Adding config log4j.logger.Util.Serialize.IO = INFO\r\nDEBUG: Adding config database = mysql://localhost:3306/hello?user=hello\r\nDEBUG: Adding config dynamo_is_tool = FALSE\r\nDEBUG: Adding config view.dir = web\r\nDEBUG: Adding config facebook.secret = PUT-HERE-YOUR-FACEBOOK-API-SECRET\r\nDEBUG: Adding config log4j.logger.Util = DEBUG\r\nDEBUG: Adding config openid.realm = http://localhost:8080/hello/auth\r\nDEBUG: Adding config app_search_dirs = .\r\nDEBUG: Adding config log4j.logger.ADO.Databases = INFO\r\nDEBUG: Adding config dynamo_license = apache\r\nDEBUG: Adding config dynamo_is_gtk = FALSE\r\nDEBUG: Adding config awa_dispatcher_count = 0\r\nDEBUG: Adding config dynamo_author_email = eqcola@vodafone.it\r\nDEBUG: Adding config log4j.appender.console.layout = level-message\r\nDEBUG: Adding config openid.provider.yahoo = http://open.login.yahooapis.com/openid20/www.yahoo.com/xrds\r\nDEBUG: Adding config facebook.scope = email\r\nDEBUG: Adding config web.dir = web\r\nDEBUG: Adding config view.escape_unknown_tags = true\r\nDEBUG: Adding config counters.counter_age_limit = 1\r\nDEBUG: Adding config app.modules.dir = config\r\nDEBUG: Adding config log4j.logger.Util.Serialize.Mappers = WARN\r\nDEBUG: Adding config view.debug = true\r\nDEBUG: Adding config dynamo_is_web = TRUE\r\nDEBUG: Adding config view.ext = .html\r\nDEBUG: Adding config openid.provider.google = https://www.google.com/accounts/o8/id\r\nDEBUG: Adding config view.ignore_spaces = false\r\nDEBUG: Adding config log4j.logger.log = WARN\r\nDEBUG: Adding config facebook.client_id = PUT-HERE-YOUR-FACEBOOK-CLIENT-ID\r\nDEBUG: Adding config app.config = awa.xml\r\nDEBUG: Adding config log4j.logger.Util.Properties = DEBUG\r\nDEBUG: Adding config log4j.appender.console.level = DEBUG\r\nDEBUG: Adding config user.auth-filter.redirect = /hello/auth/login.html\r\nDEBUG: Adding config app_url_base = http://localhost:8080\r\nDEBUG: Adding config log4j.logger.AWA.Applications.Configs = WARN\r\nINFO : Set facelet search directory to: 'web'\r\nINFO : Initialize bundle factory to load from bundles\r\nINFO : Register bean 'samplesMsg' in scope\r\nINFO : Using page /setup/install.html for http error  404\r\nINFO : Add servlet 'redirect'\r\nINFO : Add servlet 'faces'\r\nINFO : Add servlet 'files'\r\nINFO : File servlet using directory 'web'\r\nINFO : Add servlet mapping *.html -> redirect\r\nINFO : Adding route *.html\r\nINFO : Add servlet mapping /setup/*.html -> faces\r\nINFO : Adding route /setup/*.html\r\nINFO : Add servlet mapping *.css -> files\r\nINFO : Adding route *.css\r\nINFO : Add servlet mapping *.js -> files\r\nINFO : Adding route *.js\r\nINFO : Add servlet mapping *.png -> files\r\nINFO : Adding route *.png\r\nINFO : Register bindings: http://code.google.com/p/ada-awa/jsf\r\nDEBUG: Add namespace fn:http://java.sun.com/jsp/jstl/functions\r\nINFO : Reading module configuration file setup.xml\r\nINFO : Reading file setup.xml\r\nERROR: setup.xml: File 'setup.xml' does not exist.\r\nINFO : Get driver mysql\r\nINFO : Register driver mysql\r\nINFO : Register driver sqlite\r\nINFO : Set connection URI: mysql://localhost:3306/hello?user=hello \r\n`\r\n\r\nThanks in advance.\r\nRegards\r\n",
+    "created_at": "2017-11-03T16:28:15Z",
+    "updated_at": "2019-07-21T19:46:29Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 3,
+    "title": "docker image",
+    "body": "Hi, the correct docker command is: \r\ndocker  pull ciceron/ada-awa instead of \r\ndocker  pull ciceron/awa \r\nin documentation.\r\nThanks",
+    "created_at": "2017-10-30T19:08:43Z",
+    "updated_at": "2017-10-30T19:43:33Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 2,
+    "title": "Invalid install instructions on wiki installation page",
+    "body": "The wiki installation page https://github.com/stcarrez/ada-awa/wiki/Installation has the following instructions\r\n\r\ngit clone git@github.com:stcarrez/ada-awa.git ada-awa\r\ncd ada-awa\r\n./configure --with-git --prefix=$HOME/install-awa\r\n\r\nThis does not work. The --with-git option is not an available option for the configure script.\r\n\r\nInstead I executed the following commands to install ada-awa\r\n\r\ngit clone --recursive git@github.com:stcarrez/ada-awa.git ada-awa\r\ncd ada-awa\r\n./configure --prefix=$HOME/install-awa\r\n\r\nThis does work. I was able to configure, build and install ada-awa.\r\n",
+    "created_at": "2017-03-31T16:51:25Z",
+    "updated_at": "2017-03-31T19:20:32Z",
+    "state": "closed"
+  },
+  {
+    "issue_id": 1,
+    "title": "./configure needs ada-wiki",
+    "body": "./configure wants ada-wiki-1.0.0.tar.gz, which is not found in distrib dir. Should it be there, or should README be modified to let the user know ada-wiki must be compiled separately?\n",
+    "created_at": "2015-12-09T19:26:18Z",
+    "updated_at": "2017-03-31T19:19:34Z",
+    "state": "closed"
+  }
+]

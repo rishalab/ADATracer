@@ -1,0 +1,32 @@
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
+DATASETS_DIR = BASE_DIR / "datasets" / "ada-awa"
+ADA_CODE_DIR = DATASETS_DIR
+REQUIREMENTS_DIR = DATASETS_DIR / "ada_requirements"
+ADA_EXTENSIONS = {".ads", ".adb", ".ada"}
+EMBEDDING_MODEL_NAME = "all-MiniLM-L6-v2"
+MAX_TOKENS = 8000
+NEO4J_URI = "bolt://adatracer-neo4j:7687"
+NEO4J_USER = "neo4j"
+NEO4J_PASSWORD = "12345678"
+NODE_REQUIREMENT = "Requirement"
+NODE_FILE = "File"
+NODE_ADA = "AdaNode"
+NODE_ISSUE = "Issue"
+NODE_COMMIT = "Commit"
+IMPLEMENTS = "IMPLEMENTS"
+DEPENDS_ON = "DEPENDS_ON"
+REFERENCES = "REFERENCES"
+SIMILAR_TO = "SIMILAR_TO"
+COMMITS_TO = "COMMITS_TO"
+ISSUES_RELATED = "ISSUES_RELATED"
+GITHUB_API_TOKEN = ""
+GITHUB_REPO_OWNER = "stcarrez"
+GITHUB_REPO_NAME = "ada-awa"
+USE_CHECKPOINTS = True
+OVERWRITE_NEO4J = False
+OUTPUT_DIR = BASE_DIR / "outputs" 
+SUMMARIES_DIR = OUTPUT_DIR / "summaries"
+GRAPH_DIR = OUTPUT_DIR / "graphs"
+CHECKPOINT_DIR = OUTPUT_DIR / "checkpoints"

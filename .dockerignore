@@ -1,0 +1,5 @@
+# .dockerignore
+ada_env/
+__pycache__/
+*.log
+.git/
