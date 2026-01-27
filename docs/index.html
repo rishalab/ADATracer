@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADATracer - Requirement-to-Code Traceability for Ada</title>
+    <meta name="description" content="A deterministic, explainable traceability system connecting requirements to Ada code elements through static analysis and semantic matching.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00ff9f;
+            --secondary: #0066ff;
+            --accent: #ff00ff;
+            --bg-dark: #0a0e1a;
+            --bg-darker: #050810;
+            --bg-card: #111826;
+            --text-primary: #e5e7eb;
+            --text-secondary: #9ca3af;
+            --border: rgba(0, 255, 159, 0.2);
+            --glow: rgba(0, 255, 159, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-darker);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated background grid */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(0, 255, 159, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 159, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Gradient orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--primary), transparent);
+            top: -200px;
+            right: -200px;
+            animation: float 15s ease-in-out infinite;
+        }
+
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--secondary), transparent);
+            bottom: -150px;
+            left: -150px;
+            animation: float 20s ease-in-out infinite reverse;
+        }
+
+        .orb-3 {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, var(--accent), transparent);
+            top: 50%;
+            left: 50%;
+            animation: float 25s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(50px, -50px) scale(1.1); }
+            66% { transform: translate(-50px, 50px) scale(0.9); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        header {
+            padding: 3rem 0 2rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 4rem;
+            backdrop-filter: blur(10px);
+            animation: slideDown 0.8s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--bg-darker);
+            box-shadow: 0 0 30px var(--glow);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 30px var(--glow); }
+            50% { box-shadow: 0 0 50px var(--glow), 0 0 80px rgba(0, 255, 159, 0.2); }
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .tagline {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            font-weight: 300;
+            margin-top: 0.5rem;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 2px solid;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--bg-darker);
+            border-color: var(--primary);
+            box-shadow: 0 4px 20px rgba(0, 255, 159, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(0, 255, 159, 0.5);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border-color: var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            background: rgba(0, 255, 159, 0.1);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 0 6rem;
+            animation: fadeIn 1s ease-out 0.2s both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero h2 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+        }
+
+        .hero-highlight {
+            color: var(--primary);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            font-weight: 300;
+        }
+
+        /* Flow Diagram */
+        .flow-diagram {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 3rem;
+            margin: 4rem 0;
+            backdrop-filter: blur(10px);
+            animation: fadeIn 1s ease-out 0.4s both;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .flow-diagram::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        }
+
+        .flow-steps {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+        }
+
+        .flow-step {
+            padding: 1.5rem 3rem;
+            background: rgba(0, 255, 159, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            position: relative;
+            animation: slideIn 0.6s ease-out both;
+            animation-delay: calc(var(--step) * 0.1s);
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .flow-arrow {
+            color: var(--primary);
+            font-size: 2rem;
+            font-weight: 300;
+        }
+
+        /* Features Grid */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            animation: fadeIn 0.8s ease-out both;
+            animation-delay: calc(var(--card) * 0.1s);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 255, 159, 0.2);
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            font-weight: 300;
+            line-height: 1.7;
+        }
+
+        /* Architecture Section */
+        .architecture {
+            margin: 6rem 0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 3rem;
+            text-align: center;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        }
+
+        .architecture-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .arch-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--primary);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .arch-item:hover {
+            border-left-color: var(--secondary);
+            transform: translateX(5px);
+            background: rgba(0, 255, 159, 0.05);
+        }
+
+        .arch-item h4 {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .arch-item p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 300;
+        }
+
+        /* Code Block */
+        .code-section {
+            margin: 4rem 0;
+        }
+
+        pre {
+            background: var(--bg-darker);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .code-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .code-lang {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            background: rgba(0, 255, 159, 0.1);
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+        }
+
+        code {
+            color: var(--text-primary);
+        }
+
+        .comment {
+            color: #6b7280;
+        }
+
+        .keyword {
+            color: var(--accent);
+        }
+
+        .string {
+            color: var(--primary);
+        }
+
+        /* Stats Section */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+            text-align: center;
+        }
+
+        .stat {
+            padding: 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .stat:hover {
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-top: 0.5rem;
+            font-weight: 300;
+        }
+
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+            margin: 2rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th {
+            background: rgba(0, 255, 159, 0.1);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 0.95rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(0, 255, 159, 0.05);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: rgba(0, 255, 159, 0.03);
+        }
+
+        td code {
+            background: rgba(0, 255, 159, 0.1);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--primary);
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 3rem 0;
+            margin-top: 6rem;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .hero h2 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .header-content {
+                justify-content: center;
+            }
+
+            .flow-step {
+                padding: 1rem 2rem;
+                font-size: 0.95rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo">AT</div>
+                    <div>
+                        <h1>ADATracer</h1>
+                        <p class="tagline">Requirement-to-Code Traceability for Ada</p>
+                    </div>
+                </div>
+                <div class="header-buttons">
+                    <a href="#quick-start" class="btn btn-primary">Get Started</a>
+                    <a href="https://github.com/rishalab/ADATracer" class="btn btn-secondary" target="_blank">View on GitHub</a>
+                </div>
+            </div>
+        </header>
+
+        <section class="hero">
+            <h2>Deterministic, <span class="hero-highlight">Explainable</span> Traceability</h2>
+            <p>Connect requirements to Ada program elements, files, and GitHub commits through hybrid static analysis, embeddings, and lexical matching. Built for large codebases that demand precision.</p>
+        </section>
+
+        <div class="flow-diagram">
+            <div class="flow-steps">
+                <div class="flow-step" style="--step: 0">Requirement</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step" style="--step: 1">[Semantic + Keyword Matching]</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step" style="--step: 2">AdaNode (procedure / function / type)</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step" style="--step: 3">File</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step" style="--step: 4">Commit / Issue</div>
+            </div>
+        </div>
+
+        <div class="features">
+            <div class="feature-card" style="--card: 0">
+                <div class="feature-icon">⚡</div>
+                <h3>Batch Analysis</h3>
+                <p>Process entire requirement sets at once with full pipeline automation. Parse Ada code, extract nodes, compute embeddings, and persist the complete traceability graph in one command.</p>
+            </div>
+            <div class="feature-card" style="--card: 1">
+                <div class="feature-icon">🔍</div>
+                <h3>Interactive REPL</h3>
+                <p>Explore traceability relationships interactively with human-in-the-loop analysis. Query requirements, inspect nodes, and navigate the graph with real-time feedback.</p>
+            </div>
+            <div class="feature-card" style="--card: 2">
+                <div class="feature-icon">🎯</div>
+                <h3>Hybrid Scoring</h3>
+                <p>Combines semantic similarity (70%) from sentence embeddings with keyword overlap (30%) from full-file text analysis for robust, grounded matching.</p>
+            </div>
+            <div class="feature-card" style="--card: 3">
+                <div class="feature-icon">📊</div>
+                <h3>Graph Persistence</h3>
+                <p>Store and query traceability relationships in Neo4j. Navigate complex dependency chains and visualize the complete requirements-to-implementation map.</p>
+            </div>
+            <div class="feature-card" style="--card: 4">
+                <div class="feature-icon">🔗</div>
+                <h3>GitHub Integration</h3>
+                <p>Link code changes to requirements through commit history and issue tracking. Understand evolution context and impact analysis across your development timeline.</p>
+            </div>
+            <div class="feature-card" style="--card: 5">
+                <div class="feature-icon">✅</div>
+                <h3>Ground Truth Evaluation</h3>
+                <p>Validate traceability quality with precision, recall, F1, and Recall@K metrics. Compare predictions against verified mappings to measure system performance.</p>
+            </div>
+        </div>
+
+        <section class="architecture">
+            <h2 class="section-title">Core Architecture</h2>
+            
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">Data Sources</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">Relationship Types</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">70/30</div>
+                    <div class="stat-label">Semantic/Keyword Mix</div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 4rem; margin-bottom: 2rem; font-size: 1.8rem; font-weight: 700;">Component Overview</h3>
+            
+            <div class="architecture-grid">
+                <div class="arch-item">
+                    <h4>code2graph.py</h4>
+                    <p>Parses Ada source using libadalang, extracts procedures/functions/types, produces AdaNode objects with disk caching</p>
+                </div>
+                <div class="arch-item">
+                    <h4>req2nodes.py</h4>
+                    <p>Loads and parses requirements from text files into RequirementNode objects for graph integration</p>
+                </div>
+                <div class="arch-item">
+                    <h4>embeddings.py</h4>
+                    <p>Generates embeddings using sentence-transformers, computes cosine similarity, creates RELATED_TO relationships</p>
+                </div>
+                <div class="arch-item">
+                    <h4>github_integration.py</h4>
+                    <p>Fetches issues and commits from GitHub with local caching, extracts commit messages and changed files</p>
+                </div>
+                <div class="arch-item">
+                    <h4>derive_traceability.py</h4>
+                    <p>Derives deterministic relationships: CHANGES (Commit → AdaNode), IMPACTS (Issue → AdaNode), ADDRESSES (Commit → Issue)</p>
+                </div>
+                <div class="arch-item">
+                    <h4>graph_database.py</h4>
+                    <p>Neo4j persistence layer for nodes and relationships with constraint creation and query optimization</p>
+                </div>
+                <div class="arch-item">
+                    <h4>orchestrate.py</h4>
+                    <p>End-to-end batch pipeline that builds the complete traceability graph from source to persistence</p>
+                </div>
+                <div class="arch-item">
+                    <h4>repl.py</h4>
+                    <p>Interactive CLI with hybrid scoring and commands: req, reqfile, show, commits, issues</p>
+                </div>
+                <div class="arch-item">
+                    <h4>evaluate.py</h4>
+                    <p>Evaluates predictions vs ground truth with precision, recall, F1, and Recall@K metrics</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="code-section" id="quick-start">
+            <h2 class="section-title">Quick Start</h2>
+            
+            <div style="margin-top: 3rem;">
+                <div class="code-header">
+                    <span class="code-title">Installation</span>
+                    <span class="code-lang">bash</span>
+                </div>
+                <pre><code><span class="comment"># Build and start the containers</span>
+docker compose build
+docker compose up -d neo4j</code></pre>
+            </div>
+
+            <div style="margin-top: 2rem;">
+                <div class="code-header">
+                    <span class="code-title">Batch Processing</span>
+                    <span class="code-lang">bash</span>
+                </div>
+                <pre><code><span class="comment"># Run the complete traceability pipeline</span>
+docker compose run --rm adatracer python orchestrate.py</code></pre>
+            </div>
+
+            <div style="margin-top: 2rem;">
+                <div class="code-header">
+                    <span class="code-title">Interactive Exploration</span>
+                    <span class="code-lang">bash</span>
+                </div>
+                <pre><code><span class="comment"># Launch the REPL for interactive queries</span>
+docker compose run --rm adatracer python repl.py
+
+<span class="comment"># Example REPL commands:</span>
+adatracer&gt; <span class="keyword">req</span> <span class="string">"User authentication shall support multi-factor"</span>
+adatracer&gt; <span class="keyword">show</span> <span class="string">node_id_123</span>
+adatracer&gt; <span class="keyword">commits</span> <span class="string">node_id_123</span></code></pre>
+            </div>
+
+            <div style="margin-top: 2rem;">
+                <div class="code-header">
+                    <span class="code-title">Evaluation</span>
+                    <span class="code-lang">bash</span>
+                </div>
+                <pre><code><span class="comment"># Validate against ground truth</span>
+python evaluate.py \
+  --ground-truth ground_truth.json \
+  --predictions predictions.json \
+  --top-k 10 \
+  --output results.json</code></pre>
+            </div>
+        </section>
+
+        <section style="margin: 6rem 0;">
+            <h2 class="section-title">Graph Relationships</h2>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Relationship</th>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>RELATED_TO</code></td>
+                            <td>Requirement</td>
+                            <td>AdaNode</td>
+                            <td>Semantic/keyword similarity match between requirement and code element</td>
+                        </tr>
+                        <tr>
+                            <td><code>CHANGES</code></td>
+                            <td>Commit</td>
+                            <td>AdaNode</td>
+                            <td>Commit modified the code element</td>
+                        </tr>
+                        <tr>
+                            <td><code>IMPACTS</code></td>
+                            <td>Issue</td>
+                            <td>AdaNode</td>
+                            <td>Issue affects the code element</td>
+                        </tr>
+                        <tr>
+                            <td><code>ADDRESSES</code></td>
+                            <td>Commit</td>
+                            <td>Issue</td>
+                            <td>Commit resolves or references the issue</td>
+                        </tr>
+                        <tr>
+                            <td><code>SATISFIES</code></td>
+                            <td>AdaNode</td>
+                            <td>Requirement</td>
+                            <td>Code implements the requirement</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section style="margin: 6rem 0;">
+            <h2 class="section-title">Design Principles</h2>
+            
+            <div class="features" style="margin-top: 3rem;">
+                <div class="feature-card" style="--card: 0">
+                    <h3>🎲 Deterministic</h3>
+                    <p>Same inputs produce identical outputs. No random ML behavior or unpredictable results. Every traceability decision is reproducible and verifiable.</p>
+                </div>
+                <div class="feature-card" style="--card: 1">
+                    <h3>🔬 Explainable</h3>
+                    <p>Each traceability link traces back to specific evidence: similarity scores, keyword matches, or file changes. No black-box predictions.</p>
+                </div>
+                <div class="feature-card" style="--card: 2">
+                    <h3>🔧 Extensible</h3>
+                    <p>Modular architecture allows easy addition of new data sources, scoring methods, or analysis techniques without disrupting the core pipeline.</p>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="footer-links">
+                <a href="https://github.com/rishalab/ADATracer">GitHub</a>
+                <a href="https://github.com/rishalab/ADATracer/issues">Issues</a>
+                <a href="https://github.com/rishalab/ADATracer">Documentation</a>
+                <a href="#quick-start">Quick Start</a>
+            </div>
+            <p style="font-weight: 300;">&copy; 2026 ADATracer. Open Source Project.</p>
+            <p style="margin-top: 1rem; font-size: 0.9rem; font-weight: 300;">Built with Ada, Python, libadalang, Neo4j, and sentence-transformers</p>
+        </footer>
+    </div>
+
+    <script>
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add scroll reveal animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all feature cards and architecture items
+        document.querySelectorAll('.feature-card, .arch-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
