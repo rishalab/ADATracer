@@ -1,0 +1,1 @@
+Register a new user with the provided email, first name, last name, and password, and send a confirmation email to the user's email address.

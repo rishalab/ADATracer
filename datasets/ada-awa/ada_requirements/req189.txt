@@ -1,0 +1,1 @@
+This event is posted when an invitation is created for a user.

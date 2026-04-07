@@ -1,0 +1,12 @@
+<!-- a list of tags
+  -  Copyright (C) 2013 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<ul class="tagedit-list" xmlns:h="http://java.sun.com/jsf/html">
+    <h:list var="tag" value="#{tagList}">
+        <li class='xtagedit-listelement xtagedit-listelement-old'>
+            <a class='tag-link' href="#{link}?tag=#{tag.tag}">#{tag.tag}</a>
+        </li>
+    </h:list>
+</ul>

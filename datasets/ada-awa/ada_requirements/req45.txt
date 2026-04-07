@@ -1,0 +1,1 @@
+The country model is a system data model for the application.

@@ -1,0 +1,1 @@
+The web server shall be stopped by sending a 'stop' command on the management socket.

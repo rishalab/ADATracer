@@ -1,0 +1,51 @@
+<!-- Display a question
+  -  Copyright (C) 2013 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<div class='question'
+        xmlns:awa="http://code.google.com/p/ada-awa/jsf"
+        xmlns:auth="http://code.google.com/p/ada-awa/auth"
+        xmlns:util="http://code.google.com/p/ada-asf/util"
+        xmlns:c="http://java.sun.com/jstl/core"
+        xmlns:h="http://java.sun.com/jsf/html">
+
+    <h2>#{questionInfo.question.title}</h2>
+    <div>
+        <div id='vote_for-#{questionInfo.question.id}' class='question-vote user-vote#{questionInfo.question.user_rating}'>
+            <div class='vote-up'><em></em></div>
+            <div class='vote-count'>#{questionInfo.question.rating}</div>
+            <div class='vote-down'><em></em></div>
+        </div>
+        <div class='question-content'>
+            <awa:wiki styleClass='post-text' value="#{questionInfo.question.description}" format="markdown"/>
+            <awa:tagList value='#{questionInfo.tags}' id='qtags' styleClass="tagedit-list"
+                         var="tagName"
+                         tagClass="tagedit-listelement tagedit-listelement-old"
+                         tagLink="#{contextPath}/questions/lists.html?tag=#{tagName}"/>
+            <div class='question-info'>
+                <div class='question-action'>
+                    <h:panelGroup rendered="#{auth:hasPermission('question-edit',questionInfo.question.id)}">
+                        <ul>
+                            <li>
+                                <a href="#{contextPath}/questions/edit.html?id=#{questionInfo.question.id}">
+                                    #{questionMsg.question_edit_question_label}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#"
+                                   onclick="return ASF.OpenDialog(this, 'deleteDialog', '#{contextPath}/questions/forms/delete-question.html?id=#{questionInfo.question.id}');">
+                                    #{questionMsg.question_delete_question_label}
+                                </a>
+                            </li>
+                        </ul>
+                    </h:panelGroup>
+                </div>
+                <div class='question-author'>
+                    #{questionInfo.question.author_name}
+                    <h:outputText id="date" value="#{questionInfo.question.create_date}" converter="dateConverter"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

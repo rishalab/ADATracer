@@ -1,0 +1,61 @@
+<query-mapping package='AWA.Workspaces.Models'>
+    <description>
+      The list of workspace members for the workspace administrator.
+    </description>
+
+    <class name="AWA.Workspaces.Models.Member_Info" bean="yes">
+        <comment>The Member_Info describes a member of the workspace.</comment>
+        <property type='Identifier' name="id">
+            <comment>the member identifier.</comment>
+        </property>
+        <property type='Identifier' name="user_id">
+            <comment>the user identifier.</comment>
+        </property>
+        <property type='String' name="name">
+            <comment>the user name.</comment>
+        </property>
+        <property type='String' name="email">
+            <comment>the user email address.</comment>
+        </property>
+        <property type='String' name="role">
+            <comment>the user's role.</comment>
+        </property>
+        <property type='Nullable_Date' name="join_date" not-null="no">
+            <comment>the date when the user joined the workspace.</comment>
+        </property>
+        <property type='Nullable_Date' name="invite_date" not-null="no">
+            <comment>the date when the invitation was sent to the user.</comment>
+        </property>
+    </class>
+
+    <query name='workspace-member-list'>
+       <comment>Get the list of workspace members</comment>
+       <sql>
+    SELECT
+      wm.id,
+      u.id,
+      u.name,
+      email.email,
+      wm.role,
+      wm.join_date,
+      invite.create_date
+    FROM awa_workspace_member AS user_member
+    INNER JOIN awa_workspace_member AS wm ON wm.workspace_id = user_member.workspace_id
+    INNER JOIN awa_user AS u ON wm.member_id = u.id
+    INNER JOIN awa_email AS email ON u.email_id = email.id
+    LEFT JOIN awa_invitation AS invite ON invite.workspace_id = wm.workspace_id AND invite.invitee_id = u.id
+    WHERE user_member.member_id = :user_id
+       </sql>
+       <sql-count>
+    SELECT
+      COUNT(*)
+    FROM awa_workspace_member AS user_member
+    INNER JOIN awa_workspace_member AS wm ON wm.workspace_id = user_member.workspace_id
+    INNER JOIN awa_user AS u ON wm.member_id = u.id
+    INNER JOIN awa_email AS email ON u.email_id = email.id
+    WHERE user_member.member_id = :user_id
+       </sql-count>
+    </query>
+
+</query-mapping>
+

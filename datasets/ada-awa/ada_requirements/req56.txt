@@ -1,0 +1,1 @@
+The Image_Servlet represents the component that will handle an HTTP request received by the server.

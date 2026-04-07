@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!-- This is used to map the model types to Java types for the generated code.
+  It extends the default META-INF\andromda\mappings\JavaMappings.xml file in the
+  org/andromda/plugins/andromda-maven-plugin/<Version>/andromda-maven-plugin-<Version>.jar file.
+  If any type mappings are missing or need to be changed
+  from the default mapping file, they can be added here. Examples
+  below are already mapped. A reference was added to config\andromda.xml
+  under default namespace properties languageMappingsUri.
+  See http://docs.andromda.org/mappings.html -->
+<mappings name="Ada05">
+    <mapping type="date">
+        <from>Time</from>
+        <from>time</from>
+        <from>Date</from>
+        <from>date</from>
+        <from>DateTime</from>
+        <from>dateTime</from>
+        <from>Timestamp</from>
+        <from>timestamp</from>
+        <from>PrimitiveTypes::Time</from>
+        <from>PrimitiveTypes::Date</from>
+        <from>PrimitiveTypes::DateTime</from>
+        <from>PrimitiveTypes::Timestamp</from>
+        <from>datatype::Time</from>
+        <from>datatype::Date</from>
+        <from>datatype::DateTime</from>
+        <from>datatype::Timestamp</from>
+        <to>Ada.Calendar.Time</to>
+    </mapping>
+    <mapping type="date" allow-null='true'>
+        <from>Time</from>
+        <from>time</from>
+        <from>date</from>
+        <from>Date</from>
+        <from>DateTime</from>
+        <from>dateTime</from>
+        <from>Timestamp</from>
+        <from>timestamp</from>
+        <from>Nullable_Time</from>
+        <from>Nullable_Date</from>
+        <from>Nullable_DateTime</from>
+        <from>Nullable_Timestamp</from>
+        <to>ADO.Nullable_Time</to>
+    </mapping>
+    <mapping type="integer">
+        <from>int</from>
+        <from>Integer</from>
+        <from>integer</from>
+        <from>PrimitiveTypes::Integer</from>
+        <from>datatype::Integer</from>
+        <to>Integer</to>
+    </mapping>
+    <mapping type="integer">
+        <from>Positive</from>
+        <from>PrimitiveTypes::Positive</from>
+        <from>datatype::Positive</from>
+        <to>Positive</to>
+    </mapping>
+    <mapping type="integer" allow-null='true'>
+        <from>int</from>
+        <from>integer</from>
+        <from>Integer</from>
+        <from>PrimitiveTypes::Integer</from>
+        <from>datatype::Integer</from>
+        <from>Nullable_Integer</from>
+        <to>ADO.Nullable_Integer</to>
+    </mapping>
+    <mapping type="integer">
+        <from>long</from>
+        <from>Long</from>
+        <from>PrimitiveTypes::Long</from>
+        <from>datatype::Long</from>
+        <to>ADO.Int64</to>
+    </mapping>
+    <mapping type='integer'>
+        <from>Natural</from>
+        <to>Natural</to>
+    </mapping>
+    <mapping type="identifier">
+        <from>ADO.Identifier</from>
+        <from>Identifier</from>
+        <from>identifier</from>
+        <from>PrimitiveTypes::Identifier</from>
+        <from>datatype::Identifier</from>
+        <to>ADO.Identifier</to>
+    </mapping>
+    <mapping type="identifier" allow-null='true'>
+        <from>ADO.Identifier</from>
+        <from>Identifier</from>
+        <from>identifier</from>
+        <from>PrimitiveTypes::Identifier</from>
+        <from>datatype::Identifier</from>
+        <to>ADO.Identifier</to>
+    </mapping>
+    <mapping type='entity_type'>
+        <from>ADO.Entity_Type</from>
+        <from>ADO.Model.Entity_Type</from>
+        <from>Entity_Type</from>
+        <from>entity_type</from>
+        <from>PrimitiveTypes::Entity_Type</from>
+        <from>datatype::Entity_Type</from>
+        <to>ADO.Entity_Type</to>
+    </mapping>
+    <mapping type='entity_type' allow-null='true'>
+        <from>ADO.Entity_Type</from>
+        <from>ADO.Model.Entity_Type</from>
+        <from>Entity_Type</from>
+        <from>entity_type</from>
+        <from>PrimitiveTypes::Entity_Type</from>
+        <from>datatype::Entity_Type</from>
+        <to>ADO.Nullable_Entity_Type</to>
+    </mapping>
+    <mapping type='boolean'>
+        <from>bool</from>
+        <from>boolean</from>
+        <from>Boolean</from>
+        <to>Boolean</to>
+    </mapping>
+    <mapping type="boolean" allow-null='true'>
+        <from>bool</from>
+        <from>boolean</from>
+        <from>Boolean</from>
+        <from>Nullable_Boolean</from>
+        <to>ADO.Nullable_Boolean</to>
+    </mapping>
+    <mapping type='blob' allow-null='true'>
+        <from>blob</from>
+        <from>Blob</from>
+        <from>java.sql.Blob</from>
+        <to>ADO.Blob_Ref</to>
+    </mapping>
+    <mapping type="string">
+        <from>String</from>
+        <from>string</from>
+        <to>Ada.Strings.Unbounded.Unbounded_String</to>
+    </mapping>
+    <mapping type="string" allow-null='true'>
+        <from>String</from>
+        <from>string</from>
+        <to>ADO.Nullable_String</to>
+    </mapping>
+    <mapping type="float">
+        <from>PrimitiveTypes::Double</from>
+        <from>double</from>
+        <to>Long_Float</to>
+    </mapping>
+    <mapping type="float">
+        <from>PrimitiveTypes::Float</from>
+        <from>datatype::float</from>
+        <from>float</from>
+        <to>Float</to>
+    </mapping>
+</mappings>

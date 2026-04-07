@@ -1,0 +1,39 @@
+-----------------------------------------------------------------------
+--  akt-configs -- Configuration
+--  Copyright (C) 2019, 2023 Stephane Carrez
+--  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+--  SPDX-License-Identifier: Apache-2.0
+-----------------------------------------------------------------------
+
+package AKT.Configs is
+
+   VERSION   : constant String := $VERSION;
+   RELEASE   : constant String := "Ada Keystore Tool " & $VERSION;
+   RESOURCES : constant String := "/share/akt/resources/";
+
+   FILL_CONFIG        : constant String := "fill-mode";
+   GPG_CRYPT_CONFIG   : constant String := "gpg-encrypt";
+   GPG_DECRYPT_CONFIG : constant String := "gpg-decrypt";
+   GPG_LIST_CONFIG    : constant String := "gpg-list-keys";
+   NAMED_KEY_DIR      : constant String := "keys";
+
+   --  Initialize the configuration.
+   procedure Initialize (Path : in String);
+
+   --  Get the configuration parameter.
+   function Get (Name : in String) return String;
+
+   --  Set the configuration parameter.
+   procedure Set (Name  : in String;
+                  Value : in String);
+
+   --  Returns true if the configuration parameter is defined.
+   function Exists (Name : in String) return Boolean;
+
+   --  Get the directory which contains the named keys.
+   function Get_Directory_Key_Path return String;
+
+   --  Save the configuration.
+   procedure Save;
+
+end AKT.Configs;

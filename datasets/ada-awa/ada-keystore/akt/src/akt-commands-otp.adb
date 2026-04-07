@@ -1,0 +1,457 @@
+-----------------------------------------------------------------------
+--  akt-commands-otp -- One-time-password generation with otpauth
+--  Copyright (C) 2023, 2025 Stephane Carrez
+--  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+--  SPDX-License-Identifier: Apache-2.0
+-----------------------------------------------------------------------
+with Ada.Calendar.Conversions;
+with Ada.IO_Exceptions;
+with Ada.Text_IO;
+with Util.Strings;
+with Interfaces;
+with GNAT.Command_Line;
+with Util.Encoders.HMAC.SHA1;
+with Util.Encoders.HMAC.SHA256;
+with Util.Encoders.HMAC.HOTP;
+package body AKT.Commands.OTP is
+
+   procedure Generate (Account : in String;
+                       URI     : in String;
+                       Context : in out Context_Type);
+   function Get_Account (URI : in String) return String;
+   function Get_Param (URI  : in String;
+                       Name : in String) return String;
+   function Get_Issuer (URI : in String) return String;
+   function Trim_Spaces (Line : in String) return String;
+   function Enter_Digits return String;
+   function Enter_Secret return String;
+   function Enter_Account return String;
+   function To_String (Code   : in Natural;
+                       Length : in Positive) return String;
+
+   function HOTP_SHA1 is
+     new Util.Encoders.HMAC.HOTP (Util.Encoders.HMAC.SHA1.HASH_SIZE,
+                                  Util.Encoders.HMAC.SHA1.Sign);
+
+   function HOTP_SHA256 is
+     new Util.Encoders.HMAC.HOTP (Util.Encoders.HMAC.SHA256.HASH_SIZE,
+                                  Util.Encoders.HMAC.SHA256.Sign);
+
+   function To_Positive (Value : in String;
+                         Def   : in Positive) return Positive is
+     (if Value'Length = 0 then Def else Positive'Value (Value));
+
+   function To_String (Code   : in Natural;
+                       Length : in Positive) return String is
+      Img    : constant String := Natural'Image (Code);
+      Result : String (1 .. Length) := (others => '0');
+   begin
+      Result (Result'Last - Img'Length + 2 .. Result'Last) := Img (Img'First + 1 .. Img'Last);
+      return Result;
+   end To_String;
+
+   --  otpauth://totp/issuer:account?secret=XXX&issuer=issuer
+   function Get_Account (URI : in String) return String is
+      Sep : constant Natural := Util.Strings.Index (URI, '?');
+   begin
+      if Sep = 0 or else URI'Length <= 15 then
+         return "";
+      end if;
+      return URI (URI'First + 15 .. Sep - 1);
+   end Get_Account;
+
+   function Get_Param (URI  : in String;
+                       Name : in String) return String is
+      Sep   : Natural := Util.Strings.Index (URI, '?');
+      First : Natural;
+   begin
+      if Sep = 0 or else URI'Length <= 15 then
+         return "";
+      end if;
+      First := Sep + 1;
+      while First < URI'Last loop
+         Sep := Util.Strings.Index (URI, '=', First);
+         exit when Sep = 0;
+         if URI (First .. Sep - 1) = Name then
+            First := Sep + 1;
+            Sep := Util.Strings.Index (URI, '&', First);
+            if Sep = 0 then
+               Sep := URI'Last;
+            else
+               Sep := Sep - 1;
+            end if;
+            return URI (First .. Sep);
+         end if;
+         Sep := Util.Strings.Index (URI, '&', Sep + 1);
+         exit when Sep = 0;
+         First := Sep + 1;
+      end loop;
+      return "";
+   end Get_Param;
+
+   function Get_Issuer (URI : in String) return String is
+      Sep    : constant Natural := Util.Strings.Index (URI, '?');
+      Issuer : constant String := Get_Param (URI, "issuer");
+   begin
+      if Sep = 0 or else URI'Length <= 15 then
+         return "";
+      end if;
+      declare
+         Sep2 : constant Natural := Util.Strings.Index (URI, ':', URI'First + 15);
+      begin
+         if Sep2 = 0 or else Sep2 > Sep then
+            return "";
+         end if;
+         if Issuer'Length = 0 then
+            return URI (URI'First + 15 .. Sep2 - 1);
+         elsif Issuer = URI (URI'First + 15 .. Sep2 - 1) then
+            return Issuer;
+         else
+            return "";
+         end if;
+      end;
+   end Get_Issuer;
+
+   procedure Generate (Account : in String;
+                       URI     : in String;
+                       Context : in out Context_Type) is
+
+      function Is_Number (S   : in String;
+                          Min : in Positive;
+                          Max : in Positive) return Boolean is
+        ((for all C of S => C in '0' .. '9')
+          and then Integer'Value (S) in Min .. Max);
+
+      Issuer  : constant String := Get_Issuer (URI);
+      Secret  : constant String := Get_Param (URI, "secret");
+      Algo    : constant String := Get_Param (URI, "algorithm");
+      Digit   : constant String := Get_Param (URI, "digits");
+      Period  : constant String := Get_Param (URI, "period");
+   begin
+      if Secret'Length = 0 then
+         AKT.Commands.Log.Error (-("invalid otpauth URI: missing '{0}'"), "secret");
+         raise Error;
+      end if;
+      if Issuer'Length = 0 then
+         AKT.Commands.Log.Error (-("invalid otpauth URI: missing '{0}'"), "issuer");
+         raise Error;
+      end if;
+      if Algo'Length /= 0 and then Algo /= "SHA1" and then Algo /= "SHA256" then
+         AKT.Commands.Log.Error (-("algorithm '{0}' is not supported"), Algo);
+         raise Error;
+      end if;
+      if Period'Length /= 0 and then not Is_Number (Period, 15, 60) then
+         AKT.Commands.Log.Error (-("invalid period '{0}'"), Period);
+         raise Error;
+      end if;
+      if Digit'Length /= 0 and then not Is_Number (Digit, 1, 10) then
+         AKT.Commands.Log.Error (-("invalid digits '{0}'"), Digit);
+         raise Error;
+      end if;
+
+      declare
+         use Interfaces;
+         P       : constant Positive := To_Positive (Period, 30);
+         D       : constant Positive := To_Positive (Digit, 6);
+         Now     : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+         Time    : constant Unsigned_64 :=
+           Unsigned_64 (Ada.Calendar.Conversions.To_Unix_Nano_Time (Now));
+         Steps   : constant Unsigned_64 := Time / (Unsigned_64 (P) * 1_000_000_000);
+         Decoder : constant Util.Encoders.Decoder := Util.Encoders.Create (Util.Encoders.BASE_32);
+         Key     : constant Util.Encoders.Secret_Key := Decoder.Decode_Key (Secret);
+         Code    : Natural;
+      begin
+         if Algo = "SHA1" or else Algo = "" then
+            Code := HOTP_SHA1 (Key, Steps, D);
+         elsif Algo = "SHA256" then
+            Code := HOTP_SHA256 (Key, Steps, D);
+         else
+            AKT.Commands.Log.Error (-("algorithm '{0}' is not supported"), Algo);
+            raise Error;
+         end if;
+         if Account'Length > 0 then
+            Context.Console.Notice (N_INFO, Account & ": code: " & To_String (Code, D));
+         else
+            Context.Console.Notice (N_INFO, "Code: " & To_String (Code, D));
+         end if;
+      end;
+
+   exception
+      when Util.Encoders.Encoding_Error =>
+         AKT.Commands.Log.Error (-("invalid secret key for '{0}'"), Account);
+         raise Error;
+   end Generate;
+
+   --  Register or update an otpauth URI.
+   --  ------------------------------
+   procedure Register (Command : in out Command_Type;
+                       URI     : in String;
+                       Context : in out Context_Type) is
+      pragma Unreferenced (Command);
+
+      Account : constant String := Get_Account (URI);
+      Key     : constant String := "otpauth." & Account;
+   begin
+      Generate ("", URI, Context);
+
+      if Context.Wallet.Contains (Key)
+        and then not Confirm (-("override existing otpauth entry ?"))
+      then
+         return;
+      end if;
+
+      Context.Wallet.Set (Name => Key, Content => URI);
+   end Register;
+
+   --  ------------------------------
+   --  Collect the list of OTP definitions in the keystore.
+   --  ------------------------------
+   procedure Collect_List (Context : in out Context_Type;
+                           Into    : in out Util.Strings.Vectors.Vector) is
+      List   : Keystore.Entry_Map;
+      Iter   : Keystore.Entry_Cursor;
+      Prefix : constant String := "otpauth.";
+   begin
+      Into.Clear;
+      Context.Wallet.List (Content => List);
+      Iter := List.First;
+      while Keystore.Entry_Maps.Has_Element (Iter) loop
+         declare
+            Name   : constant String := Keystore.Entry_Maps.Key (Iter);
+         begin
+            if Util.Strings.Starts_With (Name, Prefix) then
+               Into.Append (Name);
+            end if;
+         end;
+         Keystore.Entry_Maps.Next (Iter);
+      end loop;
+   end Collect_List;
+
+   --  ------------------------------
+   --  Generate to OTP code for the selected account.
+   --  ------------------------------
+   procedure Generate (Command : in out Command_Type;
+                       Account : in String;
+                       Context : in out Context_Type) is
+      pragma Unreferenced (Command);
+
+      Prefix : constant String := "otpauth.";
+
+      function Match (Name : in String) return Boolean is
+        (Util.Strings.Starts_With (Name, Prefix & Account & ":")
+         or else Util.Strings.Ends_With (Name, ":" & Account));
+
+      Names : Util.Strings.Vectors.Vector;
+      Found : Boolean := False;
+   begin
+      Collect_List (Context, Names);
+      for Name of Names loop
+         if Match (Name) then
+            declare
+               URI     : constant String := Context.Wallet.Get (Name);
+            begin
+               Generate (Get_Account (URI), URI, Context);
+               Found := True;
+            end;
+         end if;
+      end loop;
+      if not Found then
+         AKT.Commands.Log.Error (-("no otpauth matching account '{0}'"), Account);
+         raise Error;
+      end if;
+   end Generate;
+
+   --  ------------------------------
+   --  List the OTP authorizations that are registered.
+   --  ------------------------------
+   procedure List (Command   : in out Command_Type;
+                   Context   : in out Context_Type) is
+      pragma Unreferenced (Command);
+
+      Names : Util.Strings.Vectors.Vector;
+   begin
+      Collect_List (Context, Names);
+      for Name of Names loop
+         declare
+            URI : constant String := Context.Wallet.Get (Name);
+            Account : constant String := Get_Account (URI);
+         begin
+            Context.Console.Notice (N_INFO, Account);
+         end;
+      end loop;
+   end List;
+
+   function Trim_Spaces (Line : in String) return String is
+      Result : String (Line'Range);
+      Pos    : Natural := Line'First;
+   begin
+      for C of Line loop
+         if C /= ' ' then
+            Result (Pos) := C;
+            Pos := Pos + 1;
+         end if;
+      end loop;
+      return Result (Result'First .. Pos - 1);
+   end Trim_Spaces;
+
+   function Enter_Secret return String is
+      Decoder : constant Util.Encoders.Decoder := Util.Encoders.Create (Util.Encoders.BASE_32);
+   begin
+      loop
+         Util.Commands.Put_Raw (-("akt: secret key (base32): "));
+         declare
+            Secret : constant String := Trim_Spaces (Ada.Text_IO.Get_Line);
+         begin
+            if Secret'Length = 0 then
+               return "";
+            end if;
+
+            --  Decode the key to make sure it is valid.
+            declare
+               Key : constant Util.Encoders.Secret_Key := Decoder.Decode_Key (Secret);
+
+               pragma Unreferenced (Key);
+            begin
+               return Secret;
+            end;
+
+         exception
+            when others =>
+               AKT.Commands.Log.Error (-("invalid secret key"));
+         end;
+      end loop;
+
+   exception
+      when Ada.IO_Exceptions.End_Error =>
+         return "";
+   end Enter_Secret;
+
+   function Enter_Account return String is
+   begin
+      loop
+         Util.Commands.Put_Raw (-("akt: enter account name (<issuer>:<name>): "));
+         declare
+            Account : constant String := Ada.Text_IO.Get_Line;
+         begin
+            if Account'Length = 0 then
+               return Account;
+            end if;
+            if Util.Strings.Index (Account, ':') > 0 then
+               return Account;
+            end if;
+            AKT.Commands.Log.Error (-("invalid account name"));
+         end;
+      end loop;
+
+   exception
+      when Ada.IO_Exceptions.End_Error =>
+         return "";
+   end Enter_Account;
+
+   function Enter_Digits return String is
+   begin
+      --  AKT.Commands.Flush_Input;
+      loop
+         Util.Commands.Put_Raw (-("akt: number of digits (5..8, default 6): "));
+         declare
+            Value : constant String := Trim_Spaces (Ada.Text_IO.Get_Line);
+         begin
+            if Value'Length = 0 then
+               return "6";
+            end if;
+            if Value'Length = 1
+              and then Value (Value'First) in '5' | '6' | '7' | '8'
+            then
+               return Value;
+            end if;
+         end;
+      end loop;
+
+   exception
+      when Ada.IO_Exceptions.End_Error =>
+         return "6";
+
+   end Enter_Digits;
+
+   procedure Interactive (Command : in out Command_Type;
+                          Context : in out Context_Type) is
+      Account : constant String := Enter_Account;
+   begin
+      if Account'Length = 0 then
+         return;
+      end if;
+      declare
+         Secret  : constant String := Enter_Secret;
+      begin
+         if Secret'Length = 0 then
+            return;
+         end if;
+         declare
+            D : constant String := Enter_Digits;
+         begin
+            Command.Register ("otpauth://totp/" & Account
+                              & "?secret=" & Secret & "&digits=" & D,
+                              Context);
+         end;
+      end;
+   end Interactive;
+
+   --  ------------------------------
+   --  Store the otpauth secret or generate the OTP code.
+   --  ------------------------------
+   overriding
+   procedure Execute (Command   : in out Command_Type;
+                      Name      : in String;
+                      Args      : in Argument_List'Class;
+                      Context   : in out Context_Type) is
+      pragma Unreferenced (Name);
+   begin
+      Context.Open_Keystore (Args, Use_Worker => False);
+      if Context.First_Arg > Args.Get_Count then
+         if Command.Interactive then
+            Interactive (Command, Context);
+         else
+            Command.List (Context);
+         end if;
+
+      else
+         declare
+            URI : constant String := Args.Get_Argument (2);
+         begin
+            if Util.Strings.Starts_With (URI, "otpauth://totp/") then
+               Command.Register (URI, Context);
+            elsif Util.Strings.Starts_With (URI, "otpauth://") then
+               AKT.Commands.Log.Error (-("only 'totp' otpauth URI is supported"));
+               raise Error;
+            else
+               Command.Generate (URI, Context);
+            end if;
+
+         exception
+            when Keystore.Not_Found =>
+               AKT.Commands.Log.Error (-("value '{0}' not found"), URI);
+               raise Error;
+
+         end;
+      end if;
+   end Execute;
+
+   --  ------------------------------
+   --  Setup the command before parsing the arguments and executing it.
+   --  ------------------------------
+   overriding
+   procedure Setup (Command : in out Command_Type;
+                    Config  : in out GNAT.Command_Line.Command_Line_Configuration;
+                    Context : in out Context_Type) is
+      package GC renames GNAT.Command_Line;
+   begin
+      Drivers.Command_Type (Command).Setup (Config, Context);
+      GC.Define_Switch (Config, Command.Remove'Access,
+                        "-r", "--remove", -("Remove the otpauth URI"));
+      GC.Define_Switch (Config, Command.Force'Access,
+                        "-f", "--force", -("Force update of existing otpauth URI"));
+      GC.Define_Switch (Config, Command.Interactive'Access,
+                        "-i", "--interactive", -("Interactive insertion of otpauth"));
+   end Setup;
+
+end AKT.Commands.OTP;

@@ -1,0 +1,1 @@
+The <tt>Upload_Bean</tt> allows to upload a file in the storage space.

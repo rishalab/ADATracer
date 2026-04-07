@@ -1,0 +1,1 @@
+Test creation of blog by simulating web requests.

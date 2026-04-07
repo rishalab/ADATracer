@@ -1,0 +1,1 @@
+Verify that the permission represented by <b>Permission</b> is granted to access the database entity represented by <b>Entity</b>.

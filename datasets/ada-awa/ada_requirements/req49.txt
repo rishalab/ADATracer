@@ -1,0 +1,1 @@
+Test creation of image by simulating web requests.

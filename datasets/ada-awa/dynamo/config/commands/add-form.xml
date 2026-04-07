@@ -1,0 +1,35 @@
+<commands>
+   <command>
+      <name>add-form</name>
+      <title>Add a form to the module</title>
+      <usage>add-form MODULE/FORM-NAME [LAYOUT]</usage>
+      <help><![CDATA[
+  This command adds the form page FORM-NAME in the module MODULE under
+  the 'web' directory.  The form is intended to be included from another
+  XHTML file by using a <ui:include> directive (it does not contain the
+  <f:view> component).  The associated response is a JSON that allows to
+  perform update operations.  The optional LAYOUT parameter defines the
+  layout to be used for the for page. The default will use the 'layout'
+  presentation.  The following files are created:
+
+    web/<module>/<form-name>.xhtml
+    web/<module>/forms/<form-name>-form.xhtml
+    web/<module>/forms/<form-name>-response.xhtml
+
+  And the following files are updated to setup the form navigation rules:
+    config/<module>.xml
+]]>   </help>
+       <param name='ARG1' optional='false'/>
+       <param name='layout' optional='true'/>
+       <param name='moduleName'>#{fn:substringBefore(ARG1,'/')}</param>
+       <param name='formName'>#{fn:substringAfter(ARG1,'/')}</param>
+       <template>add-form/page.xhtml</template>
+       <template>add-form/form.xhtml</template>
+       <template>add-form/form-response.xhtml</template>
+       <patch>
+           <template>add-form/patch-form-navigation.xhtml</template>
+           <after>&lt;module version=</after>
+           <before>&lt;/module&gt;</before>
+       </patch>
+   </command>
+</commands>

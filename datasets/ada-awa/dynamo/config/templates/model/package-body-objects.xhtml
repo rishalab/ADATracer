@@ -1,0 +1,660 @@
+<ui:composition xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+        xmlns:g="http://code.google.com/p/ada-ado/generator"
+        xmlns:f="http://java.sun.com/jsf/core">
+
+<h:list value="#{package.tables}" var="table">
+   function #{table.type}_Key (Id : in ADO.Identifier) return ADO.Objects.Object_Key is
+      Result : ADO.Objects.Object_Key (Of_Type  => ADO.Objects.#{table.id.type.isIdentifier ? 'KEY_INTEGER' : 'KEY_STRING'},
+                                       Of_Class => #{fn:toUpperCase(table.type)}_DEF'Access);
+   begin
+      ADO.Objects.Set_Value (Result, Id);
+      return Result;
+   end #{table.type}_Key;
+#{''}
+   function #{table.type}_Key (Id : in String) return ADO.Objects.Object_Key is
+      Result : ADO.Objects.Object_Key (Of_Type  => ADO.Objects.#{table.id.type.isIdentifier ? 'KEY_INTEGER' : 'KEY_STRING'},
+                                       Of_Class => #{fn:toUpperCase(table.type)}_DEF'Access);
+   begin
+      ADO.Objects.Set_Value (Result, Id);
+      return Result;
+   end #{table.type}_Key;
+#{''}
+
+   function "=" (Left, Right : #{table.type}_Ref'Class) return Boolean is
+   begin
+      return ADO.Objects.Object_Ref'Class (Left) = ADO.Objects.Object_Ref'Class (Right);
+   end "=";
+#{''}
+
+   procedure Set_Field (Object : in out #{fn:capitalize(table.type)}_Ref'Class;
+                        Impl   : out #{fn:capitalize(table.type)}_Access) is
+      Result : ADO.Objects.Object_Record_Access;
+   begin
+      Object.Prepare_Modify (Result);
+      Impl := #{fn:capitalize(table.type)}_Impl (Result.all)'Access;
+   end Set_Field;
+#{''}
+
+   --  Internal method to allocate the Object_Record instance
+   overriding
+   procedure Allocate (Object : in out #{fn:capitalize(table.type)}_Ref) is
+      Impl : #{fn:capitalize(table.type)}_Access;
+   begin
+      Impl := new #{fn:capitalize(table.type)}_Impl;
+<h:list value="#{table.members}" var="column">
+  <h:panelGroup rendered="#{column.name ne table.id.name and column.type.isIdentifier}">
+      Impl.#{fn:capitalize(column.name)} := ADO.NO_IDENTIFIER;
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.isBoolean and not column.isPrimaryKey and not column.isNull}">
+      Impl.#{fn:capitalize(column.name)} := False;
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.isInteger and not column.isPrimaryKey and not column.isNull}">
+      Impl.#{fn:capitalize(column.name)} := 0;
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.isFloat and not column.isPrimaryKey and not column.isNull}">
+      Impl.#{fn:capitalize(column.name)} := 0.0;
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.isEnum and not column.isPrimaryKey}">
+      Impl.#{fn:capitalize(column.name)} := #{g:adaType(column,1)}'First;
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.isNull and not column.isPrimaryKey and not column.type.isIdentifier and not column.type.isBlob and not column.type.isObject}">
+      Impl.#{fn:capitalize(column.name)}.Is_Null := True;
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.isDate and not column.isNull}">
+      Impl.#{fn:capitalize(column.name)} := ADO.DEFAULT_TIME;
+  </h:panelGroup>
+</h:list>
+      ADO.Objects.Set_Object (Object, Impl.all'Access);
+   end Allocate;
+#{''}
+   -- ----------------------------------------
+   --  Data object: #{fn:capitalize(table.type)}
+   -- ----------------------------------------
+<h:list value="#{table.members}" var="column">
+  <h:panelGroup rendered="#{column.isInserted or column.isUpdated}">
+    <h:panelGroup rendered="#{column.type.isString}">
+#{''}
+   procedure Set_#{fn:capitalize(column.name)} (Object : in out #{fn:capitalize(table.type)}_Ref;
+                   #{g:indent(column.name)} Value : in String) is
+      Impl : #{fn:capitalize(table.type)}_Access;
+   begin
+      Set_Field (Object, Impl);
+    <h:panelGroup rendered="#{column.name ne table.id.name}">
+      ADO.#{column.isAuditable ? 'Audits' : 'Objects'}.Set_Field_String (Impl.all, #{column.index + 1}, Impl.#{fn:capitalize(column.name)}, Value);
+    </h:panelGroup>
+    <h:panelGroup rendered="#{column.name eq table.id.name}">
+      ADO.#{column.isAuditable ? 'Audits' : 'Objects'}.Set_Field_Key_Value (Impl.all, #{column.index + 1}, Value);
+    </h:panelGroup>
+   end Set_#{fn:capitalize(column.name)};
+    </h:panelGroup>
+#{''}
+
+   procedure Set_#{fn:capitalize(column.name)} (Object : in out #{fn:capitalize(table.type)}_Ref;
+                  #{g:indent(column.name)} Value  : in #{g:adaType(column,1)}) is
+     <h:panelGroup rendered="#{(column.type.isEnum or column.type.isNewDiscrete) and not column.isAuditable}">
+      procedure Set_Field_Discrete is
+        new ADO.Objects.Set_Field_Operation
+          (#{g:adaType(column,1)});
+     </h:panelGroup>
+     <h:panelGroup rendered="#{column.type.isEnum and column.isAuditable}">
+      procedure Set_Field_Discrete is
+        new ADO.Audits.Set_Field_Operation
+          (#{g:adaType(column,1)},
+           #{g:adaType(column,1)}_Objects.To_Object);
+     </h:panelGroup>
+     <h:panelGroup rendered="#{column.type.isNewDiscrete and column.isAuditable}">
+      function To_Object (Value : in #{g:adaType(column,1)}) return Util.Beans.Objects.Object
+        is (Util.Beans.Objects.To_Object (Long_Long_Integer (Value)));
+      procedure Set_Field_Discrete is
+        new ADO.Audits.Set_Field_Operation
+          (#{g:adaType(column,1)},
+           To_Object);
+     </h:panelGroup>
+      Impl : #{fn:capitalize(table.type)}_Access;
+   begin
+      Set_Field (Object, Impl);
+
+    <h:panelGroup rendered="#{column.name ne table.id.name and column.type.isBoolean}">
+      ADO.#{column.isAuditable ? 'Audits' : 'Objects'}.Set_Field_Boolean (Impl.all, #{column.index + 1}, Impl.#{fn:capitalize(column.name)}, Value);
+    </h:panelGroup>
+
+    <h:panelGroup rendered="#{column.name ne table.id.name and column.type.isInteger and not column.type.isNewDiscrete and column.type.name ne 'ADO.Entity_Type' and column.type.name ne 'ADO.Nullable_Entity_Type'}">
+      ADO.#{column.isAuditable ? 'Audits' : 'Objects'}.Set_Field_Integer (Impl.all, #{column.index + 1}, Impl.#{fn:capitalize(column.name)}, Value);
+    </h:panelGroup>
+
+    <h:panelGroup rendered="#{column.type.isEnum or column.type.isNewDiscrete}">
+      Set_Field_Discrete (Impl.all, #{column.index + 1}, Impl.#{fn:capitalize(column.name)}, Value);
+    </h:panelGroup>
+
+    <h:panelGroup rendered="#{column.type.isBlob}">
+      ADO.#{column.isAuditable ? 'Audits' : 'Objects'}.Set_Field_Blob (Impl.all, #{column.index + 1}, Impl.#{fn:capitalize(column.name)}, Value);
+    </h:panelGroup>
+
+    <h:panelGroup rendered="#{column.name ne table.id.name and not column.isPrimitiveType and not column.type.isBoolean and not column.type.isEnum and not column.type.isBlob or column.type.isObject}">
+      ADO.#{column.isAuditable ? 'Audits' : 'Objects'}.Set_Field_Object (Impl.all, #{column.index + 1}, Impl.#{fn:capitalize(column.name)}, Value);
+    </h:panelGroup>
+
+    <h:panelGroup rendered="#{column.type.isDate}">
+      ADO.#{column.isAuditable ? 'Audits' : 'Objects'}.Set_Field_Time (Impl.all, #{column.index + 1}, Impl.#{fn:capitalize(column.name)}, Value);
+    </h:panelGroup>
+
+    <h:panelGroup rendered="#{column.type.isIdentifier and column.name ne table.id.name}">
+      ADO.#{column.isAuditable ? 'Audits' : 'Objects'}.Set_Field_Identifier (Impl.all, #{column.index + 1}, Impl.#{fn:capitalize(column.name)}, Value);
+    </h:panelGroup>
+
+    <h:panelGroup rendered="#{column.type.isString and column.name ne table.id.name and not column.type.isNullable}">
+      ADO.#{column.isAuditable ? 'Audits' : 'Objects'}.Set_Field_Unbounded_String (Impl.all, #{column.index + 1}, Impl.#{fn:capitalize(column.name)}, Value);
+    </h:panelGroup>
+
+    <h:panelGroup rendered="#{column.type.isString and column.name ne table.id.name and column.type.isNullable}">
+      ADO.#{column.isAuditable ? 'Audits' : 'Objects'}.Set_Field_String (Impl.all, #{column.index + 1}, Impl.#{fn:capitalize(column.name)}, Value);
+    </h:panelGroup>
+
+    <h:panelGroup rendered="#{column.type.name eq 'ADO.Entity_Type' or column.type.name eq 'ADO.Nullable_Entity_Type'}">
+      ADO.#{column.isAuditable ? 'Audits' : 'Objects'}.Set_Field_Entity_Type (Impl.all, #{column.index + 1}, Impl.#{fn:capitalize(column.name)}, Value);
+    </h:panelGroup>
+
+    <h:panelGroup rendered="#{column.name ne table.id.name and column.isPrimitiveType and not column.type.isEnum and not column.type.isNewdiscrete and not column.type.isDate and not column.type.isString and not column.type.isInteger and not column.type.isBoolean and not column.type.isIdentifier and column.type.name ne 'ADO.Entity_Type' and not column.type.isObject}">
+      ADO.#{column.isAuditable ? 'Audits' : 'Objects'}.Set_Field_#{fn:capitalize(g:adaType(column,2))} (Impl.all, #{column.index + 1}, Impl.#{fn:capitalize(column.name)}, Value);
+    </h:panelGroup>
+
+    <h:panelGroup rendered="#{column.name eq table.id.name}">
+<h:panelGroup rendered="#{table.id.type.isString or table.id.type.isIdentifier}">
+      ADO.#{column.isAuditable ? 'Audits' : 'Objects'}.Set_Field_Key_Value (Impl.all, #{column.index + 1}, Value);
+</h:panelGroup>
+<h:panelGroup rendered="#{not table.id.type.isString and not table.id.type.isIdentifier}">
+      ADO.#{column.isAuditable ? 'Audits' : 'Objects'}.Set_Field_Key_Value (Impl.all, #{column.index + 1}, ADO.Identifier (Value));
+</h:panelGroup>
+    </h:panelGroup>
+   end Set_#{fn:capitalize(column.name)};
+  </h:panelGroup>
+
+  <h:panelGroup rendered="#{column.isReadable}">
+#{''}
+    <h:panelGroup rendered="#{column.type.isString}">
+   function Get_#{fn:capitalize(column.name)} (Object : in #{fn:capitalize(table.type)}_Ref)
+                 return String is
+      <h:panelGroup rendered="#{column.type.isNullable}">
+      Value : constant ADO.Nullable_String := Object.Get_#{fn:capitalize(column.name)};
+      </h:panelGroup>
+   begin
+      <h:panelGroup rendered="#{not column.type.isNullable}">
+      return Ada.Strings.Unbounded.To_String (Object.Get_#{fn:capitalize(column.name)});
+      </h:panelGroup>
+      <h:panelGroup rendered="#{column.type.isNullable}">
+      if Value.Is_Null then
+         return "";
+      else
+         return Ada.Strings.Unbounded.To_String (Value.Value);
+      end if;
+      </h:panelGroup>
+   end Get_#{fn:capitalize(column.name)};
+    </h:panelGroup>
+
+   function Get_#{fn:capitalize(column.name)} (Object : in #{fn:capitalize(table.type)}_Ref)
+                  return #{g:adaType(column,1)} is
+    <h:panelGroup rendered="#{column.name ne table.id.name}">
+      Impl : constant #{fn:capitalize(table.type)}_Access
+         := #{fn:capitalize(table.type)}_Impl (Object.Get_Load_Object.all)'Access;
+   begin
+      return Impl.#{fn:capitalize(column.name)};
+    </h:panelGroup>
+    <h:panelGroup rendered="#{column.name eq table.id.name}">
+      Impl : constant #{fn:capitalize(table.type)}_Access
+         := #{fn:capitalize(table.type)}_Impl (Object.Get_Object.all)'Access;
+   begin
+<h:panelGroup rendered="#{table.id.type.isString or table.id.type.isIdentifier}">
+      return Impl.Get_Key_Value;
+</h:panelGroup>
+<h:panelGroup rendered="#{not table.id.type.isString and not table.id.type.isIdentifier}">
+      return #{g:adaType(column,1)} (ADO.Identifier '(Impl.Get_Key_Value));
+</h:panelGroup>
+    </h:panelGroup>
+   end Get_#{fn:capitalize(column.name)};
+#{''}
+  </h:panelGroup>
+</h:list>
+
+   --  Copy of the object.
+   procedure Copy (Object : in #{fn:capitalize(table.type)}_Ref;
+                   Into   : in out #{fn:capitalize(table.type)}_Ref) is
+      Result : #{fn:capitalize(table.type)}_Ref;
+   begin
+      if not Object.Is_Null then
+         declare
+            Impl : constant #{fn:capitalize(table.type)}_Access
+              := #{fn:capitalize(table.type)}_Impl (Object.Get_Load_Object.all)'Access;
+            Copy : constant #{fn:capitalize(table.type)}_Access
+              := new #{fn:capitalize(table.type)}_Impl;
+         begin
+            ADO.Objects.Set_Object (Result, Copy.all'Access);
+            Copy.Copy (Impl.all);
+<h:list value="#{table.members}" var="column">
+<h:panelGroup rendered="#{column.name ne table.id.name}">
+            Copy.#{fn:capitalize(column.name)} := Impl.#{fn:capitalize(column.name)};
+</h:panelGroup>
+<h:panelGroup rendered="#{column.name eq table.id.name and (table.id.generator eq 'none')}">
+            Copy.all.Set_Key (Impl.all.Get_Key);
+</h:panelGroup>
+</h:list>
+         end;
+      end if;
+      Into := Result;
+   end Copy;
+#{''}
+
+   overriding
+   procedure Find (Object  : in out #{fn:capitalize(table.type)}_Ref;
+                   Session : in out ADO.Sessions.Session'Class;
+                   Query   : in ADO.SQL.Query'Class;
+                   Found   : out Boolean) is
+      Impl  : constant #{fn:capitalize(table.type)}_Access := new #{fn:capitalize(table.type)}_Impl;
+   begin
+      Impl.Find (Session, Query, Found);
+      if Found then
+         ADO.Objects.Set_Object (Object, Impl.all'Access);
+      else
+         ADO.Objects.Set_Object (Object, null);
+         Destroy (Impl);
+      end if;
+   end Find;
+#{''}
+
+   procedure Load (Object  : in out #{fn:capitalize(table.type)}_Ref;
+                   Session : in out ADO.Sessions.Session'Class;
+                   Id      : in #{g:adaType(table.id,0)}) is
+      Impl  : constant #{fn:capitalize(table.type)}_Access := new #{fn:capitalize(table.type)}_Impl;
+      Found : Boolean;
+      Query : ADO.SQL.Query;
+   begin
+      Query.Bind_Param (Position => 1, Value => Id);
+      Query.Set_Filter ("#{table.id.name} = ?");
+      Impl.Find (Session, Query, Found);
+      if not Found then
+         Destroy (Impl);
+         raise ADO.Objects.NOT_FOUND;
+      end if;
+      ADO.Objects.Set_Object (Object, Impl.all'Access);
+   end Load;
+#{''}
+
+   procedure Load (Object  : in out #{fn:capitalize(table.type)}_Ref;
+                   Session : in out ADO.Sessions.Session'Class;
+                   Id      : in #{g:adaType(table.id,0)};
+                   Found   : out Boolean) is
+      Impl  : constant #{fn:capitalize(table.type)}_Access := new #{fn:capitalize(table.type)}_Impl;
+      Query : ADO.SQL.Query;
+   begin
+      Query.Bind_Param (Position => 1, Value => Id);
+      Query.Set_Filter ("#{table.id.name} = ?");
+      Impl.Find (Session, Query, Found);
+      if not Found then
+         Destroy (Impl);
+      else
+         ADO.Objects.Set_Object (Object, Impl.all'Access);
+      end if;
+   end Load;
+<h:panelGroup rendered="#{not empty table.version}">
+#{''}
+
+   procedure Reload (Object  : in out #{fn:capitalize(table.type)}_Ref;
+                     Session : in out ADO.Sessions.Session'Class;
+                     Updated : out Boolean) is
+      Result : ADO.Objects.Object_Record_Access;
+      Impl   : #{fn:capitalize(table.type)}_Access;
+      Query  : ADO.SQL.Query;
+      Id     : #{g:adaType(table.id,0)};
+   begin
+      if Object.Is_Null then
+         raise ADO.Objects.NULL_ERROR;
+      end if;
+      Object.Prepare_Modify (Result);
+      Impl := #{fn:capitalize(table.type)}_Impl (Result.all)'Access;
+      Id := ADO.Objects.Get_Key_Value (Impl.all);
+      Query.Bind_Param (Position => 1, Value => Id);
+      Query.Bind_Param (Position => 2, Value => Impl.#{fn:capitalize(table.version.name)});
+      Query.Set_Filter ("#{table.id.name} = ? AND #{table.version.name} != ?");
+      declare
+         Stmt : ADO.Statements.Query_Statement
+             := Session.Create_Statement (Query, #{fn:toUpperCase(table.type)}_DEF'Access);
+      begin
+         Stmt.Execute;
+         if Stmt.Has_Elements then
+            Updated := True;
+            Impl.Load (Stmt, Session);
+         else
+            Updated := False;
+         end if;
+      end;
+   end Reload;
+</h:panelGroup>
+#{''}
+
+   overriding
+   procedure Save (Object  : in out #{fn:capitalize(table.type)}_Ref;
+                   Session : in out ADO.Sessions.Master_Session'Class) is
+      Impl : ADO.Objects.Object_Record_Access := Object.Get_Object;
+   begin
+      if Impl = null then
+         Impl := new #{fn:capitalize(table.type)}_Impl;
+         ADO.Objects.Set_Object (Object, Impl);
+      end if;
+      if not ADO.Objects.Is_Created (Impl.all) then
+         Impl.Create (Session);
+      else
+         Impl.Save (Session);
+      end if;
+   end Save;
+#{''}
+
+   overriding
+   procedure Delete (Object  : in out #{fn:capitalize(table.type)}_Ref;
+                     Session : in out ADO.Sessions.Master_Session'Class) is
+      Impl : constant ADO.Objects.Object_Record_Access := Object.Get_Object;
+   begin
+      if Impl /= null then
+         Impl.Delete (Session);
+      end if;
+   end Delete;
+#{''}
+
+   --  --------------------
+   --  Free the object
+   --  --------------------
+   overriding
+   procedure Destroy (Object : access #{fn:capitalize(table.type)}_Impl) is
+   
+      type #{fn:capitalize(table.type)}_Impl_Ptr is access all #{fn:capitalize(table.type)}_Impl;
+
+      procedure Unchecked_Free is new Ada.Unchecked_Deallocation
+              (#{fn:capitalize(table.type)}_Impl, #{fn:capitalize(table.type)}_Impl_Ptr);
+
+      pragma Warnings (Off, "*redundant conversion*");
+      Ptr : #{fn:capitalize(table.type)}_Impl_Ptr := #{fn:capitalize(table.type)}_Impl (Object.all)'Access;
+      pragma Warnings (On, "*redundant conversion*");
+   begin
+      Unchecked_Free (Ptr);
+   end Destroy;
+#{''}
+
+   overriding
+   procedure Find (Object  : in out #{fn:capitalize(table.type)}_Impl;
+                   Session : in out ADO.Sessions.Session'Class;
+                   Query   : in ADO.SQL.Query'Class;
+                   Found   : out Boolean) is
+      Stmt : ADO.Statements.Query_Statement
+          := Session.Create_Statement (Query, #{fn:toUpperCase(table.type)}_DEF'Access);
+   begin
+      Stmt.Execute;
+      if Stmt.Has_Elements then
+         Object.Load (Stmt, Session);
+         Stmt.Next;
+         Found := not Stmt.Has_Elements;
+      else
+         Found := False;
+      end if;
+   end Find;
+#{''}
+
+   overriding
+   procedure Load (Object  : in out #{fn:capitalize(table.type)}_Impl;
+                   Session : in out ADO.Sessions.Session'Class) is
+      Found : Boolean;
+      Query : ADO.SQL.Query;
+<h:panelGroup rendered="#{table.id.type.isString or table.id.type.isIdentifier}">
+      Id    : constant #{g:adaType(table.id,0)} := Object.Get_Key_Value;
+</h:panelGroup>
+<h:panelGroup rendered="#{not table.id.type.isString and not table.id.type.isIdentifier}">
+      Id    : constant #{g:adaType(table.id,0)} := #{g:adaType(table.id,0)} (ADO.Identifier '(Object.Get_Key_Value));
+</h:panelGroup>
+   begin
+      Query.Bind_Param (Position => 1, Value => Id);
+      Query.Set_Filter ("#{table.id.name} = ?");
+      Object.Find (Session, Query, Found);
+      if not Found then
+         raise ADO.Objects.NOT_FOUND;
+      end if;
+   end Load;
+#{''}
+
+   overriding
+   procedure Save (Object  : in out #{fn:capitalize(table.type)}_Impl;
+                   Session : in out ADO.Sessions.Master_Session'Class) is
+      Stmt : ADO.Statements.Update_Statement
+         := Session.Create_Statement (#{fn:toUpperCase(table.type)}_DEF'Access);
+   begin
+<h:list value="#{table.members}" var="column">
+    <h:panelGroup rendered="#{column.isUpdated}">
+      if Object.Is_Modified (#{column.index + 1}) then
+      <h:panelGroup rendered="#{column.type.isEnum}">
+         Stmt.Save_Field (Name  => COL_#{column.index}_#{table.rowIndex}_NAME, --  #{column.sqlName}
+                          Value => Integer (#{g:adaType(column,1)}'Enum_Rep (Object.#{fn:capitalize(column.name)})));
+      </h:panelGroup>
+      <h:panelGroup rendered="#{column.type.isNewDiscrete}">
+         Stmt.Save_Field (Name  => COL_#{column.index}_#{table.rowIndex}_NAME, --  #{column.sqlName}
+                          Value => Integer (Object.#{fn:capitalize(column.name)}));
+      </h:panelGroup>
+      <h:panelGroup rendered="#{column.name ne table.id.name and not column.type.isEnum and not column.type.isNewDiscrete}">
+         Stmt.Save_Field (Name  => COL_#{column.index}_#{table.rowIndex}_NAME, --  #{column.sqlName}
+                          Value => Object.#{fn:capitalize(column.name)});
+      </h:panelGroup>
+      <h:panelGroup rendered="#{column.name eq table.id.name}">
+         Stmt.Save_Field (Name  => COL_#{column.index}_#{table.rowIndex}_NAME, --  #{column.sqlName}
+                          Value => Object.Get_Key);
+      </h:panelGroup>
+         Object.Clear_Modified (#{column.index + 1});
+      end if;
+    </h:panelGroup>
+</h:list>
+      if Stmt.Has_Save_Fields then
+<h:panelGroup rendered="#{not empty table.version}">
+         Object.#{fn:capitalize(table.version.name)} := Object.#{fn:capitalize(table.version.name)} + 1;
+         Stmt.Save_Field (Name  => "#{table.version.name}",
+                          Value => Object.#{fn:capitalize(table.version.name)});
+         Stmt.Set_Filter (Filter => "#{table.id.name} = ? and #{table.version.name} = ?");
+         Stmt.Add_Param (Value => Object.Get_Key);
+         Stmt.Add_Param (Value => Object.#{fn:capitalize(table.version.name)} - 1);
+</h:panelGroup>
+<h:panelGroup rendered="#{empty table.version}">
+         Stmt.Set_Filter (Filter => "#{table.id.name} = ?<h:list value="#{table.members}" var="column"><h:panelGroup rendered="#{column.isPrimaryKey and column.name ne table.id.name}"> AND #{column.sqlName} = ?</h:panelGroup></h:list>");
+         Stmt.Add_Param (Value => Object.Get_Key);
+<h:list value="#{table.members}" var="column">
+<h:panelGroup rendered="#{column.isPrimaryKey and column.name ne table.id.name}">
+         Stmt.Add_Param (Value => Object.#{fn:capitalize(column.name)});
+</h:panelGroup>
+</h:list>
+</h:panelGroup>
+         declare
+            Result : Integer;
+         begin
+            Stmt.Execute (Result);
+            if Result /= 1 then
+               if Result /= 0 then
+                  raise ADO.Objects.UPDATE_ERROR;
+<h:panelGroup rendered="#{not empty table.version}">
+               else
+                  raise ADO.Objects.LAZY_LOCK;
+</h:panelGroup>
+               end if;
+            end if;
+<h:panelGroup rendered="#{table.isAuditable}">
+            ADO.Audits.Save (Object, Session);
+</h:panelGroup>
+         end;
+      end if;
+   end Save;
+#{''}
+
+   overriding
+   procedure Create (Object  : in out #{fn:capitalize(table.type)}_Impl;
+                     Session : in out ADO.Sessions.Master_Session'Class) is
+      Query : ADO.Statements.Insert_Statement
+                  := Session.Create_Statement (#{fn:toUpperCase(table.type)}_DEF'Access);
+      Result : Integer;
+   begin
+<h:panelGroup rendered="#{not empty table.version}">
+      Object.#{fn:capitalize(table.version.name)} := 1;
+</h:panelGroup>
+
+<h:list value="#{table.members}" var="column">
+  <h:panelGroup rendered="#{table.keyCount eq 1 and table.id.generator ne 'native' and table.id.name eq column.name and table.id.generator ne 'none'}">
+    <h:panelGroup rendered="#{not column.isAuditable}">
+      Session.Allocate (Id => Object);
+    </h:panelGroup>
+    <h:panelGroup rendered="#{column.isAuditable}">
+      ADO.Audits.Allocate (Session, Object, #{column.index + 1});
+    </h:panelGroup>
+  </h:panelGroup>
+  <h:panelGroup rendered="#{table.id.generator ne 'native' or table.id.name ne column.name}">
+    <h:panelGroup rendered="#{column.type.isEnum and column.isInserted}">
+      Query.Save_Field (Name  => COL_#{column.index}_#{table.rowIndex}_NAME, --  #{column.sqlName}
+                        Value => Integer (#{g:adaType(column,1)}'Enum_Rep (Object.#{fn:capitalize(column.name)})));
+    </h:panelGroup>
+    <h:panelGroup rendered="#{column.name ne table.id.name and (column.isInserted or column.isVersion) and column.type.isNewDiscrete}">
+      Query.Save_Field (Name  => COL_#{column.index}_#{table.rowIndex}_NAME, --  #{column.sqlName}
+                        Value => Integer (Object.#{fn:capitalize(column.name)}));
+    </h:panelGroup>
+    <h:panelGroup rendered="#{column.name ne table.id.name and (column.isInserted or column.isVersion) and not column.type.isEnum and not column.type.isNewDiscrete}">
+      Query.Save_Field (Name  => COL_#{column.index}_#{table.rowIndex}_NAME, --  #{column.sqlName}
+                        Value => Object.#{fn:capitalize(column.name)});
+    </h:panelGroup>
+    <h:panelGroup rendered="#{column.name eq table.id.name}">
+      Query.Save_Field (Name  => COL_#{column.index}_#{table.rowIndex}_NAME, --  #{column.sqlName}
+                        Value => Object.Get_Key);
+    </h:panelGroup>
+  </h:panelGroup>
+</h:list>
+<h:panelGroup rendered="#{table.id.generator ne 'native'}">
+      Query.Execute (Result);
+      if Result /= 1 then
+         raise ADO.Objects.INSERT_ERROR;
+      end if;
+</h:panelGroup>
+<h:panelGroup rendered="#{table.id.generator eq 'native'}">
+      Query.Execute (Object.#{fn:capitalize(table.id.name)});
+</h:panelGroup>
+      ADO.Objects.Set_Created (Object);
+<h:panelGroup rendered="#{table.isAuditable}">
+      ADO.Audits.Save (Object, Session);
+</h:panelGroup>
+   end Create;
+#{''}
+
+   overriding
+   procedure Delete (Object  : in out #{fn:capitalize(table.type)}_Impl;
+                     Session : in out ADO.Sessions.Master_Session'Class) is
+      Stmt : ADO.Statements.Delete_Statement
+         := Session.Create_Statement (#{fn:toUpperCase(table.type)}_DEF'Access);
+   begin
+      Stmt.Set_Filter (Filter => "#{table.id.name} = ?");
+      Stmt.Add_Param (Value => Object.Get_Key);
+      Stmt.Execute;
+   end Delete;
+
+   <ui:include src="../beans/package-bean-operations.xhtml">
+     <ui:param name="bean" value="#{table}"/>
+   </ui:include>
+
+<h:panelGroup rendered="#{table.hasList}">
+   procedure List (Object  : in out #{fn:capitalize(table.type)}_Vector;
+                   Session : in out ADO.Sessions.Session'Class;
+                   Query   : in ADO.SQL.Query'Class) is
+      Stmt : ADO.Statements.Query_Statement
+        := Session.Create_Statement (Query, #{fn:toUpperCase(table.type)}_DEF'Access);
+   begin
+      Stmt.Execute;
+      #{fn:capitalize(table.type)}_Vectors.Clear (Object);
+      while Stmt.Has_Elements loop
+         declare
+            Item : #{fn:capitalize(table.type)}_Ref;
+            Impl : constant #{fn:capitalize(table.type)}_Access := new #{fn:capitalize(table.type)}_Impl;
+         begin
+            Impl.Load (Stmt, Session);
+            ADO.Objects.Set_Object (Item, Impl.all'Access);
+            Object.Append (Item);
+         end;
+         Stmt.Next;
+      end loop;
+   end List;
+</h:panelGroup>
+#{''}
+
+   --  ------------------------------
+   --  Load the object from current iterator position
+   --  ------------------------------
+   procedure Load (Object  : in out #{fn:capitalize(table.type)}_Impl;
+                   Stmt    : in out ADO.Statements.Query_Statement'Class;
+                   Session : in out ADO.Sessions.Session'Class) is
+<h:panelGroup rendered="#{not table.hasAssociations}">
+      pragma Unreferenced (Session);
+</h:panelGroup>
+   begin
+<h:list value="#{table.members}" var="column">
+
+  <h:panelGroup rendered="#{column.name eq table.id.name and column.type.isIdentifier}">
+      Object.Set_Key_Value (Stmt.Get_Identifier (#{column.index}));
+  </h:panelGroup>
+
+  <h:panelGroup rendered="#{column.name eq table.id.name and not column.type.isIdentifier}">
+      Object.Set_Key_Value (Stmt.Get_Unbounded_String (#{column.index}));
+  </h:panelGroup>
+
+<h:panelGroup rendered="#{column.name ne table.id.name and column.name ne table.version.name}">
+  <h:panelGroup rendered="#{not column.isPrimitiveType and not column.type.isBoolean and not column.type.isEnum and not column.type.isBlob or column.type.isObject}">
+      if not Stmt.Is_Null (#{column.index}) then
+         Object.#{fn:capitalize(column.name)}.Set_Key_Value (Stmt.Get_Identifier (#{column.index}), Session);
+      end if;
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.isIdentifier}">
+      Object.#{fn:capitalize(column.name)} := Stmt.Get_Identifier (#{column.index});
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.isString and not column.type.isNullable}">
+      Object.#{fn:capitalize(column.name)} := Stmt.Get_Unbounded_String (#{column.index});
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.isString and column.type.isNullable}">
+      Object.#{fn:capitalize(column.name)} := Stmt.Get_Nullable_String (#{column.index});
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.isBoolean and not column.isNull}">
+      Object.#{fn:capitalize(column.name)} := Stmt.Get_Boolean (#{column.index});
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.isBoolean and column.isNull}">
+      Object.#{fn:capitalize(column.name)} := Stmt.Get_Nullable_Boolean (#{column.index});
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.isDate and column.isNull}">
+      Object.#{fn:capitalize(column.name)} := Stmt.Get_Nullable_Time (#{column.index});
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.isDate and not column.isNull}">
+      Object.#{fn:capitalize(column.name)} := Stmt.Get_Time (#{column.index});
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.isEnum}">
+      Object.#{fn:capitalize(column.name)} := #{g:adaType(column,1)}'Enum_Val (Stmt.Get_Integer (#{column.index}));
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.isNewDiscrete}">
+      Object.#{fn:capitalize(column.name)} := #{g:adaType(column,1)} (Stmt.Get_Integer (#{column.index}));
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.isBlob}">
+      Object.#{fn:capitalize(column.name)} := Stmt.Get_Blob (#{column.index});
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.name eq 'ADO.Entity_Type'}">
+      Object.#{fn:capitalize(column.name)} := ADO.Entity_Type (Stmt.Get_Integer (#{column.index}));
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.name eq 'ADO.Nullable_Entity_Type'}">
+      Object.#{fn:capitalize(column.name)} := Stmt.Get_Nullable_Entity_Type (#{column.index});
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.name eq 'ADO.Nullable_Integer'}">
+      Object.#{fn:capitalize(column.name)} := Stmt.Get_Nullable_Integer (#{column.index});
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.isPrimitiveType and not column.type.isEnum and not column.type.isNewDiscrete and not column.type.isBlob and not column.type.isIdentifier and not column.type.isString and not column.type.isDate and not column.type.isBoolean and column.type.name ne 'ADO.Entity_Type' and column.type.name ne 'ADO.Nullable_Entity_Type' and column.type.name ne 'ADO.Nullable_Integer' and not column.type.isObject}">
+      Object.#{fn:capitalize(column.name)} := Stmt.Get_#{fn:capitalize(g:adaType(column,2))} (#{column.index});
+  </h:panelGroup>
+</h:panelGroup>
+</h:list>
+<h:panelGroup rendered="#{not empty table.version}">
+      Object.#{fn:capitalize(table.version.name)} := Stmt.Get_#{fn:capitalize(g:adaType(table.version,0))} (#{table.version.index});
+</h:panelGroup>
+      ADO.Objects.Set_Created (Object);
+   end Load;
+</h:list>
+</ui:composition>

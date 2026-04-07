@@ -1,0 +1,1 @@
+A user is able to vote up, down, or change their vote on a module.

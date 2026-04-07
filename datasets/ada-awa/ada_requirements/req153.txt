@@ -1,0 +1,1 @@
+The tag component must be rendered as readonly.

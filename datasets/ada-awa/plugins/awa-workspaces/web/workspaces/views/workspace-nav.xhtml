@@ -1,0 +1,28 @@
+<!-- Workspace navigation menu
+  -  Copyright (C) 2017 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<ul class='awa-nav'
+    xmlns:auth="http://code.google.com/p/ada-awa/auth"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:w="http://code.google.com/p/ada-asf/widget"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+    <li class="awa-nav-left">
+        <a href="#{contextPath}/workspaces/invite.html" class="awa-nav-icon"
+           title="#{workspaceMsg.workspace_add_members_title}">
+            <img src="#{contextPath}/images/workspaces/icon-add-members-64.png"
+                 alt="#{workspaceMsg.workspace_add_members_label}"/>
+            <span>#{workspaceMsg.workspace_add_members_label}</span>
+        </a>
+    </li>
+    <li class="awa-nav-left">
+        <a href="#{contextPath}/workspaces/members.html" class="awa-nav-icon"
+           title="#{workspaceMsg.workspace_list_members_title}">
+            <img src="#{contextPath}/images/workspaces/icon-members-64.png"
+                 alt="#{workspaceMsg.workspace_list_members_label}"/>
+            <span>#{workspaceMsg.workspace_list_members_label}</span>
+        </a>
+    </li>
+</ul>

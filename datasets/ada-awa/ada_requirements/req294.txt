@@ -1,0 +1,1 @@
+The life cycle listeners registered in "List" are informed when the item has been created, updated, or deleted.

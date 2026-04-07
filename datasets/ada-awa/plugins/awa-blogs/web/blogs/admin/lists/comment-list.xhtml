@@ -1,0 +1,39 @@
+<!-- List of blog comments for the blog administrator
+  -  Copyright (C) 2014, 2019, 2021, 2023 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<ui:composition
+        xmlns:awa="http://code.google.com/p/ada-awa/jsf"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:w="http://code.google.com/p/ada-asf/widget"
+        xmlns:c="http://java.sun.com/jstl/core"
+	    xmlns:u="http://code.google.com/p/ada-asf/util"
+        xmlns:h="http://java.sun.com/jsf/html">
+    <c:choose>
+        <c:when test="#{adminBlog.comments.count == 0}">
+           <div class='awa-list-empty'>#{blogMsg.blog_admin_list_comment_empty_message}</div>
+        </c:when>
+        <c:otherwise>
+           <h:list var="cmt" value="#{adminBlog.comments}">
+                <div class='post-info ui-list-item comment-#{cmt.status}' id="p_#{cmt.id}">
+                    <div class='comment-status'>
+                    </div>
+                    <div class='comment-title'>
+                        <a href="edit/#{adminBlog.id}/#{cmt.post_id}">#{cmt.title}</a>
+                    </div>
+                    <div class='comment-date'>
+                        <h:outputText value="#{cmt.date}"/>
+                    </div>
+                    <div class='comment-gravatar'>
+                        <w:gravatar email="#{cmt.email}" size="32" secure="true"/>
+                    </div>
+                    <div class='comment-author'>
+                        #{cmt.author}
+                    </div>
+                </div>
+            </h:list>
+        </c:otherwise>
+    </c:choose>
+</ui:composition>

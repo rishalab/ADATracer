@@ -1,0 +1,46 @@
+dist: bionic
+
+language: generic
+
+services:
+  - mysql
+  - postgresql
+
+env:
+  - ADA_PROJECT_PATH="${TRAVIS_BUILD_DIR}/install/share/gpr"
+
+install:
+
+  # Install GNAT FSF
+  - sudo apt-get -y install gnat gprbuild liblzma-dev libcurl4-openssl-dev libxmlada-sax7-dev
+  - sudo apt-get -y install libaws3.3.2.2-dev libxmlada-sax7-dev libxmlada-dom7-dev libgpr1-dev
+
+  # Install databases for Ado
+  - sudo apt-get -y install sqlite3 libsqlite3-dev
+  - sudo apt-get -y install postgresql-client libpq-dev
+  - sudo apt-get -y install libmariadb-dev
+  - sudo apt-get -y install xsltproc autotools-dev  libfuse-dev pkg-config
+
+  # Install lcov for coverage
+  - sudo apt-get -y install lcov
+
+before_script:
+  - psql -c 'CREATE DATABASE ado_test;' -U postgres
+  - psql -c 'CREATE DATABASE awa_test;' -U postgres
+  - psql -c "CREATE ROLE ado WITH LOGIN PASSWORD 'ado'" -U postgres
+  - psql -c "CREATE ROLE awa_user WITH LOGIN PASSWORD 'awa_pass'" -U postgres
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS ado_test;'
+  - mysql -e "CREATE USER 'ado'@'localhost' IDENTIFIED BY '';"
+  - mysql -e "GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, CREATE TEMPORARY TABLES, EXECUTE, SHOW VIEW ON ado_test.* TO ado@localhost;"
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS awa_test;'
+  - mysql -e "CREATE USER 'awa_user'@'localhost' IDENTIFIED BY '';"
+  - mysql -e "GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, CREATE TEMPORARY TABLES, EXECUTE, SHOW VIEW ON awa_test.* TO awa_user@localhost;"
+  - mysql -e "FLUSH PRIVILEGES;"
+
+script:
+  - ./configure --enable-coverage --prefix=${TRAVIS_BUILD_DIR}/install
+  - make -s build install
+  - make -s -i test
+
+after_success:
+  - make update-coverage

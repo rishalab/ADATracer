@@ -1,0 +1,1 @@
+Get the <tt>openid.realm</tt> and <tt>openid.callback_url</tt> parameters to configure the realm.

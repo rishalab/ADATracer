@@ -1,0 +1,1 @@
+No requirement can be extracted from this Ada source code.

@@ -1,0 +1,28 @@
+<project>
+    <name>awa-blogs</name>
+    <property name="model_version">1</property>
+    <property name="author_email">Stephane.Carrez@gmail.com</property>
+    <property name="license">none</property>
+    <property name="is_plugin">TRUE</property>
+    <property name="author">Stephane Carrez</property>
+    <depend name="awa_markedit"></depend>
+    <depend name="awa_flotcharts"></depend>
+    <depend name="awa_trumbowyg"></depend>
+    <depend name="awa_easymde"></depend>
+    <depend name="util"></depend>
+    <depend name="ado"></depend>
+    <depend name="security"></depend>
+    <depend name="asf"></depend>
+    <depend name="awa"></depend>
+    <depend name="awa-workspaces"></depend>
+    <depend name="awa-tags"></depend>
+    <depend name="awa-comments"></depend>
+    <depend name="awa-storages"></depend>
+    <depend name="awa-jobs"></depend>
+    <depend name="awa-images"></depend>
+    <depend name="awa-counters"></depend>
+    <depend name="awa-seo"></depend>
+    <depend name="servlet"></depend>
+    <depend name="keystore"></depend>
+    <depend name="seo"></depend>
+</project>

@@ -1,0 +1,8 @@
+enums.gpr
+enums_config.gpr
+src/client/enums-clients.adb
+src/client/enums-clients.ads
+src/enums-client.adb
+src/enums.ads
+src/model/enums-models.adb
+src/model/enums-models.ads

@@ -1,0 +1,14 @@
+<!-- Response sent after the general settings step
+  -  Copyright (C) 2016, 2023 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<f:view contentType="application/json"
+        xmlns:c="http://java.sun.com/jstl/core"
+        xmlns:f="http://java.sun.com/jsf/core">
+[
+    { "action": "get", "url": "#{contextPath}/setup/forms/auth.html" },
+    { "action": "removeClass", "id": "#setup-steps", "data": "setup-settings" },
+    { "action": "addClass", "id": "#setup-steps", "data": "setup-auth" }
+]
+</f:view>

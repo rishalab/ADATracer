@@ -1,0 +1,1 @@
+Get the attribute registered under the given name in the HTTP session.

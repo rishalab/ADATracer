@@ -1,0 +1,85 @@
+<!-- Form to create or edit answer
+  -  Copyright (C) 2013, 2018 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<ui:composition
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:util="http://code.google.com/p/ada-asf/util"
+        xmlns:c="http://java.sun.com/jstl/core"
+        xmlns:h="http://java.sun.com/jsf/html">
+
+  <div class='awa-post ui-widget ui-widget-content ui-corner-all awa-form'>
+
+    <h:form id='post' styleClass='awa-columns'>
+        <h:inputHidden id='question-id' value='#{answer.question_id}' required='false'/>
+        <h:inputHidden id='answer-id' value='#{answer.id}' required='false'/>
+        <div class='awa-grid-8'>
+            <dl class="awa-required">
+                <dt></dt>
+                <dd>
+                    <h2>#{answer.title}</h2>
+                    <div class='question-summary'>
+                       #{answer.description}
+                    </div>
+                </dd>
+            </dl>
+
+            <h:messages styleClass='awa-error'/>
+            <dl class="awa-required#{util:hasMessage('title') ? ' awa-error' : ''}">
+                <dt>
+                    <label for='title'>#{questionMsg.question_anwser_title_label}</label>
+                    <h:message for='text' styleClass='awa-error'/>
+                </dt>
+                <dd>
+                    <h:inputTextarea id='text' rows='15' required='false'
+                                     placeholder="#{questionMsg.question_answer_placeholder}"
+                                     value='#{answer.answer}'/>
+                </dd>
+            </dl>
+            <ul class='awa-buttons'>
+                <li>
+                    <h:commandButton id='save'
+                                     value='#{not empty answer.id ? questionMsg.question_edit_answer_button : questionMsg.question_post_answer_button}'
+                                     styleClass="ui-button ui-state-default ui-corner-all"
+                                     action="#{answer.save}"/>
+                </li>
+            </ul>
+        </div>
+        <div class='awa-grid-4'>
+            <dl class="awa-optional">
+                <dd>
+                    <ui:include src="/markedit/syntax.xhtml">
+                        <ui:param name="syntax" value="FORMAT_MARKDOWN"/>
+                    </ui:include>
+                </dd>
+            </dl>
+        </div>
+
+    </h:form>
+  </div>
+    <util:script>
+    // Create a MarkEdit editor on page load
+      const easyMDE = new EasyMDE({
+         element: document.getElementById('text'),
+         autoDownloadFontAwesome: false,
+         spellChecker: false,
+         indentWithTabs: false,
+         autofocus: true,
+         tabSize: 4,
+         lineNumbers: true,
+         renderingConfig: {
+           singleLineBreaks: false
+         },
+         toolbar: [
+           'bold', 'italic', 'strikethrough', '|',
+           'code', 'quote', '|',
+           'unordered-list', 'ordered-list', '|',
+           'table', 'horizontal-rule', '|', 'clean-block'
+         ]
+      });
+    </util:script>
+
+</ui:composition>
+

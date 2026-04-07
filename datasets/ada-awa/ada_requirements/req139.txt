@@ -1,0 +1,1 @@
+The storage data is created only if the storage type is set to DATABASE.

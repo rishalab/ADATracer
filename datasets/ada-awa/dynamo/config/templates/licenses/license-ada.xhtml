@@ -1,0 +1,43 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:util="http://code.google.com/p/ada-asf/util"
+                xmlns:c="http://java.sun.com/jstl/core">
+--  Copyright (C) #{util:formatDate(date,"%Y")} #{empty project.copyright ? project.author : project.copyright}
+<c:choose>
+    <c:when test="#{project.license eq 'bsd3'}">
+--  All rights reserved.
+</c:when>
+    <c:otherwise>
+--  Written by #{project.author} (#{project.author_email})
+</c:otherwise>
+</c:choose>
+--
+    <c:choose>
+        <c:when test="#{project.license eq 'gpl' or project.license eq 'gpl2'}">
+            <ui:include src="gpl/gpl-2_0.xhtml"/>
+        </c:when>
+
+        <c:when test="#{project.license eq 'gpl3'}">
+            <ui:include src="gpl/gpl-3_0.xhtml"/>
+        </c:when>
+
+        <c:when test="#{project.license eq 'apache'}">
+            <ui:include src="apache2/apache-2_0.xhtml"/>
+        </c:when>
+
+        <c:when test="#{project.license eq 'mit'}">
+            <ui:include src="mit/mit.xhtml"/>
+        </c:when>
+
+        <c:when test="#{project.license eq 'bsd3'}">
+            <ui:include src="bsd3/bsd3.xhtml"/>
+        </c:when>
+
+        <c:when test="#{project.license eq 'proprietary'}">
+            <ui:include src="proprietary.xhtml"/>
+        </c:when>
+
+        <c:otherwise>
+            <ui:include src="apache2/apache-2_0.xhtml"/>
+        </c:otherwise>
+    </c:choose>
+</ui:composition>

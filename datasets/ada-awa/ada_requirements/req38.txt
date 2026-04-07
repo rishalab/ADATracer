@@ -1,0 +1,1 @@
+The `Counter_Module` manages the counters associated with database entities.

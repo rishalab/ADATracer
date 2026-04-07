@@ -1,0 +1,73 @@
+<query-mapping package='AWA.Storages.Models'>
+    <description>
+      The list of documents for a given folder.
+    </description>
+
+    <class name="AWA.Storages.Models.Storage_Info" bean="yes">
+        <comment>The list of documents for a given folder.</comment>
+        <property type='Identifier' name="id">
+            <comment>the storage identifier.</comment>
+        </property>
+        <property type='String' name="name">
+            <comment>the file name.</comment>
+        </property>
+        <property type='Date' name="create_date">
+            <comment>the file creation date.</comment>
+        </property>
+        <property type='String' name="uri">
+            <comment>the file storage URI.</comment>
+        </property>
+        <property type='AWA.Storages.Models.Storage_Type' name="storage">
+            <comment>the file storage URI.</comment>
+        </property>
+        <property type='String' name="mime_type">
+            <comment>the file mime type.</comment>
+        </property>
+        <property type='Integer' name="file_size">
+            <comment>the file size.</comment>
+        </property>
+        <property type='Boolean' name="is_public">
+            <comment>whether the document is public or not.</comment>
+        </property>
+        <property type='String' name="user_name">
+            <comment>the user name who uploaded the document.</comment>
+        </property>
+        <property type='Integer' name="thumb_width">
+            <comment>the image thumbnail width (or 0).</comment>
+        </property>
+        <property type='Integer' name="thumb_height">
+            <comment>the image thumbnail height (or 0).</comment>
+        </property>
+        <property type='Identifier' name="thumbnail_id">
+            <comment>the image thumbnail identifier.</comment>
+        </property>
+    </class>
+
+    <query name='storage-list'>
+       <comment>Get a list of storage files for a given folder.</comment>
+       <sql>
+    SELECT
+      st.id,
+      st.name,
+      st.create_date,
+      st.uri,
+      st.storage,
+      st.mime_type,
+      st.file_size,
+      st.is_public,
+      u.name,
+      COALESCE(img.thumb_width, 0),
+      COALESCE(img.thumb_height, 0),
+      img.thumbnail_id
+    FROM awa_storage AS st
+    INNER JOIN awa_acl AS acl ON acl.entity_id = st.workspace_id
+      AND acl.entity_type = $entity_type[awa_workspace]
+      AND acl.user_id = :user_id AND acl.permission = $permission[storage-create]
+    INNER JOIN awa_user AS u ON st.owner_id = u.id
+    LEFT JOIN awa_image AS img ON img.storage_id = st.id
+    WHERE st.folder_id = :folder_id AND st.original_id IS NULL
+    ORDER BY st.create_date DESC
+       </sql>
+    </query>
+
+</query-mapping>

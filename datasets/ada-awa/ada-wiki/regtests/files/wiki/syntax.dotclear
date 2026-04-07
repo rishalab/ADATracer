@@ -1,0 +1,74 @@
+First paragraph.
+
+Second paragraph.
+
+!!!!! Section h1
+
+!!!! Section h2
+
+!!! Section h3
+
+!! Section h4
+
+! Section h5
+
+----
+
+* item 1
+** item 1.1
+** item 1.2
+* item 2
+* item 3
+*# item 3.1
+*# item 3.2
+
+# num 1
+# num 2
+
+Section bloc:
+
+ L1: line 1
+ L2: line 2
+ L3: line 3
+
+Formatting
+
+''emphasis''
+
+__strong__
+
+Line%%%break
+
+++insert++
+
+--delete--
+
+> citation line 1
+> citation line 2
+> citation line 3
+
+[A link]
+[Title|A link]
+[Title|link|en]
+[Title|link|en|The link title]
+
+((link|Alt text))
+((link|Alt text|center))
+((link|Alt text|center|Long alt description))
+
+{{citation}}
+
+{{citation|en}}
+
+{{citation|en|http://www.sun.com}}
+
+A @@code@@ statement.
+
+<<plugin-name param1 param2 param\ 3>>
+
+<<plugin-name name1=param1 name2=param2 name3=param\ 3>>
+
+<<<name1>>>
+
+<<set myname Joe\ Roger>>
+

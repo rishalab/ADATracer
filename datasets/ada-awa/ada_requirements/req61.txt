@@ -1,0 +1,1 @@
+The job process bean instance shall execute the job described by the event.

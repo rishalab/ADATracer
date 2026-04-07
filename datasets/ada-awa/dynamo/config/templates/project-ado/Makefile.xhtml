@@ -1,0 +1,39 @@
+<f:view xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+        xmlns:g="http://code.google.com/p/ada-ado/generator"
+        xmlns:f="http://java.sun.com/jsf/core"
+        file="Makefile"><![CDATA[
+NAME=#{projectName}
+VERSION=0.1.0
+#{''}
+
+MAKE_ARGS += -X#{fn:toUpperCase(projectName)}_BUILD=$(BUILD)
+#{''}
+
+-include Makefile.conf
+#{''}
+
+include Makefile.defaults
+#{''}
+
+#{''}
+# Model generation arguments with Dynamo
+# --package XXX.XXX.Models db uml/xxx.zargo
+DYNAMO_ARGS=db
+
+#{''}
+
+build:: lib-setup
+	$(BUILD_COMMAND) $(GPRFLAGS) $(MAKE_ARGS)
+
+#{''}
+
+generate::
+	mkdir -p db
+	$(DYNAMO) generate $(DYNAMO_ARGS)
+
+#{''}
+$(eval $(call ada_library,$(NAME),.))
+]]>
+</f:view>

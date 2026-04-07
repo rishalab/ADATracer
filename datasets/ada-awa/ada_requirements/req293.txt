@@ -1,0 +1,1 @@
+Inform life cycle listeners that an item has been created, updated, or deleted.

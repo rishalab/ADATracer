@@ -1,0 +1,445 @@
+openapi: 3.0.0
+servers:
+  - url: 'https://localhost:8082/v1'
+  - url: 'http://localhost:8082/v1'
+info:
+  description: API to validate
+  version: 1.0.0
+  title: REST API Validation
+  termsOfService: 'https://github.com/terms/'
+  contact:
+    email: Stephane.Carrez@gmail.com
+  license:
+    name: Apache Licence
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: tickets
+    description: Tickets operations
+paths:
+  /tickets:
+    get:
+      tags:
+        - tickets
+      summary: List the tickets
+      description: |
+        List the tickets created for the project.
+      operationId: do_list_tickets
+      parameters:
+        - name: status
+          in: query
+          description: The ticket status
+          required: false
+          schema:
+            type: string
+            enum:
+              - open
+              - onhold
+              - assigned
+              - closed
+              - rejected
+        - name: owner
+          in: query
+          description: The owner
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ticket'
+        '400':
+          description: Invalid status value
+      security:
+        - ticket_auth:
+            - 'read:ticket'
+    post:
+      tags:
+        - ticket
+      summary: Create a ticket
+      description: ''
+      operationId: do_create_ticket
+      responses:
+        '201':
+          description: ticket created
+          headers:
+            Location:
+              description: The URL of the new ticket
+              schema:
+                type: string
+        '405':
+          description: Invalid input
+      security:
+        - ticket_auth:
+            - 'write:ticket'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                owner:
+                  description: Ticket owner
+                  type: string
+                status:
+                  description: Ticket status
+                  type: string
+                  enum:
+                    - open
+                    - assigned
+                    - closed
+                title:
+                  description: Ticket title
+                  type: string
+                description:
+                  description: Ticket description
+                  type: string
+              required:
+                - title
+    head:
+      tags:
+        - ticket
+      summary: List the tickets
+      description: ''
+      operationId: do_head_ticket
+      responses:
+        '200':
+          description: successful operation
+      security:
+        - ticket_auth:
+            - 'read:ticket'
+  '/tickets/{tid}':
+    get:
+      tags:
+        - tickets
+      summary: Get a ticket
+      description: Get a ticket
+      operationId: do_get_ticket
+      parameters:
+        - name: tid
+          in: path
+          description: Ticket identifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Ticket not found
+      security:
+        - ticket_auth:
+            - 'read:ticket'
+    put:
+      tags:
+        - ticket
+      summary: Update a ticket
+      description: ''
+      operationId: do_update_ticket
+      parameters:
+        - name: tid
+          in: path
+          description: Ticket identifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+        '405':
+          description: Invalid input
+      security:
+        - ticket_auth:
+            - 'write:ticket'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                owner:
+                  description: Ticket owner
+                  type: string
+                status:
+                  description: Ticket status
+                  type: string
+                  enum:
+                    - open
+                    - onhold
+                    - assigned
+                    - closed
+                    - rejected
+                title:
+                  description: Ticket title
+                  type: string
+                description:
+                  description: Ticket description
+                  type: string
+    patch:
+      tags:
+        - ticket
+      summary: Patch a ticket
+      description: ''
+      operationId: do_patch_ticket
+      parameters:
+        - name: tid
+          in: path
+          description: Ticket identifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+        '405':
+          description: Invalid input
+      security:
+        - ticket_auth:
+            - 'write:ticket'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                owner:
+                  description: Ticket owner
+                  type: string
+                status:
+                  description: Ticket status
+                  type: string
+                  enum:
+                    - open
+                    - onhold
+                    - assigned
+                    - closed
+                    - rejected
+                title:
+                  description: Ticket title
+                  type: string
+                description:
+                  description: Ticket description
+                  type: string
+    delete:
+      tags:
+        - ticket
+      summary: Delete a ticket
+      description: ''
+      operationId: do_delete_ticket
+      parameters:
+        - name: tid
+          in: path
+          description: Ticket identifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: No content.
+        '404':
+          description: Invalid ticket identifier.
+      security:
+        - ticket_auth:
+            - 'write:ticket'
+    options:
+      tags:
+        - tickets
+      summary: Get a ticket
+      description: Get a ticket
+      operationId: do_options_ticket
+      parameters:
+        - name: tid
+          in: path
+          description: Ticket identifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Ticket not found
+      security:
+        - ticket_auth:
+            - 'read:ticket'
+  /orchestration:
+    post:
+      description: Query an orchestrated service instance
+      operationId: orchStore
+      responses:
+        '200':
+          description: Response to a service orchestration request
+        default:
+          description: Unexpected error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                requestedQoS:
+                  $ref: '#/components/schemas/stringsMap'
+                commands:
+                  $ref: '#/components/schemas/stringsMap'
+              x-ada-no-vector: true
+        description: Requests an orchestrated service instance
+        required: true
+  /testTextResponse:
+    get:
+      operationId: testTextResponse
+      parameters:
+        - name: options
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+  /testInt:
+    get:
+      operationId: testInt
+      parameters:
+        - name: options
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IntStruct'
+externalDocs:
+  description: Find out more about Swagger
+  url: 'http://swagger.io'
+components:
+  securitySchemes:
+    ticket_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: /oauth/authorize
+          scopes:
+            'write:ticket': Update a ticket
+            'read:ticket': Read a ticket
+  schemas:
+    Ticket:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+          description: Title of the ticket
+        description:
+          type: string
+          description: Description of the ticket
+        owner:
+          type: string
+          description: The ticket owner
+        create_date:
+          type: string
+          format: date-time
+          description: Ticket creation date
+        end_date:
+          type: string
+          format: date-time
+          description: Ticket deadline date
+        update_date:
+          type: string
+          format: date-time
+          description: Ticket last change date
+        status:
+          type: string
+          description: Ticket status
+          enum:
+            - open
+            - onhold
+            - assigned
+            - closed
+            - rejected
+      required:
+        - id
+        - title
+        - create_date
+        - status
+        - description
+      title: Information about a ticket
+      xml:
+        name: Ticket
+    IntStruct:
+      type: object
+      properties:
+        long_int:
+          type: integer
+          format: int64
+        short_int:
+          type: integer
+          format: int32
+        short_int2:
+          type: integer
+          format: int32
+          nullable: true
+        float_a:
+          type: number
+          format: float
+        float_b:
+          type: number
+          format: double
+      required:
+        - long_int
+        - short_int
+        - short_int2
+        - float_a
+        - float_b
+      x-ada-no-vector: true
+    stringsMap:
+      type: object
+      properties:
+        key:
+          type: string
+    Options:
+      type: object
+      properties:
+        a:
+          type: array
+          items:
+            type: string
+            pattern: '^[A-Z].*'

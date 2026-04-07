@@ -1,0 +1,1 @@
+The dispatcher shall start the processing of events from the queues when its Start procedure is called.

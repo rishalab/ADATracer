@@ -1,0 +1,107 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Sample debian/rules that uses debhelper.
+# This file was originally written by Joey Hess and Craig Small.
+# As a special exception, when this file is copied by dh-make into a
+# dh-make output file, you may use that output file without restriction.
+# This special exception was added by Craig Small in version 0.37 of dh-make.
+
+$(foreach line,$(shell sed -n '\
+  s/^ gnat, gnat-\([0-9.]\+\),$$/ \
+    GNAT_VERSION:=\1 \
+  /p;\
+  s/^Package: libawa\([0-9.]\+\)$$/ \
+    soname:=libawa.so.\1 \
+  /p;\
+  ' debian/control),$(eval $(line)))
+
+DH_VERBOSE=1
+export DH_OPTIONS=-v
+
+DEB_BUILD_MAINT_OPTIONS := hardening=+all
+include /usr/share/dpkg/buildflags.mk
+include /usr/share/ada/debian_packaging-$(GNAT_VERSION).mk
+ADAFLAGS += -gnatafno -gnatVa -gnatwa
+
+%:
+	dh $@ --with ada-library
+
+override_dh_auto_configure:
+	dh_auto_configure -- --enable-shared --enable-default-shared
+
+override_dh_auto_build:
+	make GPRFLAGS="-R -m -q"
+
+override_dh_auto_test::
+
+override_dh_auto_install::
+
+ali=3
+sover=2.4.0
+pkgver=2.4.0
+
+awa_SRCDIR := src
+awa_LNAME = libawa
+awa_SONAME = libawa.so.$(sover)
+awa_ANAME = libawa.a
+awa_LIB_PKG = libawa$(pkgver)
+awa_DEV_PKG = libawa$(ali)-dev
+
+awa_markedit_DEV_PKG = libawa-markedit$(pkgver)
+awa_trumbowyg_DEV_PKG = libawa-trumbowyg$(pkgver)
+awa_flotcharts_DEV_PKG = libawa-flotcharts$(pkgver)
+awa_easymde_DEV_PKG = libawa-easymde$(pkgver)
+
+define awa_declare_plugin
+awa_$(plugin)_DEV_PKG = libawa-$(plugin)$(ali)-dev
+endef
+
+awa_ada_plugins=blogs changelogs comments counters \
+ countries images jobs mail questions settings \
+ setup storages tags votes wikis workspaces
+
+awa_pkg_plugins=awa awa_blogs awa_changelogs awa_comments awa_counters \
+ awa_countries awa_images awa_jobs awa_mail awa_questions awa_settings \
+ awa_setup awa_storages awa_tags awa_votes awa_wikis awa_workspaces
+
+$(foreach plugin, \
+  $(awa_ada_plugins) \
+  ,$(eval $(call awa_declare_plugin)))
+
+$(foreach library, \
+  $(awa_pkg_plugins) \
+  ,$(eval $(call awa_plugin_template)))
+
+override_dh_install::
+	# Files installed in the dynamo/awa directory are part of the binary
+	# because they are used by servers.
+	$(MAKE) prefix=$(CURDIR)/debian/tmp/usr install
+	rm -rf $(CURDIR)/debian/tmp/usr/lib
+
+define awa_plugin_web_template
+
+  override_dh_install::
+	dh_installdirs --package=$($(plugin)_DEV_PKG) \
+	   usr/share/dynamo/$(plugin)
+	dirs=`cd $(CURDIR)/debian/tmp/usr/share/dynamo && find $(plugin) -type d`; \
+	for i in $$$$dirs; do \
+		dh_installdirs --package=$($(plugin)_DEV_PKG) usr/share/dynamo/$$$$i ; \
+	done
+	files=`cd $(CURDIR)/debian/tmp/usr/share/dynamo && find $(plugin) -type f`; \
+	for i in $$$$files; do \
+	  dir=`dirname $$$$i`; \
+	  dh_install --package=$($(plugin)_DEV_PKG) \
+	     usr/share/dynamo/$$$$i usr/share/dynamo/$$$$dir ; \
+	done
+
+endef
+
+$(foreach plugin, \
+ awa_markedit awa_trumbowyg awa_flotcharts awa_easymde $(awa_pkg_plugins) \
+  ,$(eval $(call awa_plugin_web_template)))
+
+.PHONY: override_dh_installdocs-indep
+
+override_dh_installdocs-indep:
+	make docs/awa-book.pdf docs/awa-book.html
+	dh_installdocs -i

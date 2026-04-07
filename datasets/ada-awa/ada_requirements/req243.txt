@@ -1,0 +1,1 @@
+The user management command allows the addition, disabling, and enabling of users.

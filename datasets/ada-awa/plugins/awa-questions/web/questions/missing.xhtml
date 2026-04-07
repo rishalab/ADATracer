@@ -1,0 +1,27 @@
+<!-- Question is missing or invalid
+  -  Copyright (C) 2018 - 2022 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<ui:composition template="/WEB-INF/layouts/layout.xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:awa="http://code.google.com/p/ada-awa/jsf"
+                xmlns:auth="http://code.google.com/p/ada-awa/auth"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jstl/core"
+                xmlns:u="http://code.google.com/p/ada-asf/util"
+                xmlns:h="http://java.sun.com/jsf/html">
+    <ui:param name="title" value="#{questionMsg.question_not_found_title}"/>
+    <ui:param name="pageStyle" value="page-question"/>
+
+    <ui:define name="pageHeader">
+
+    </ui:define>
+
+    <!-- Main page body -->
+    <ui:define name="pageBody">
+      <div class='awa-error'>
+        <p>#{questionMsg.question_not_found}</p>
+      </div>
+    </ui:define>
+</ui:composition>

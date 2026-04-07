@@ -1,0 +1,45 @@
+<!-- List of blog posts for the blog administrator
+  -  Copyright (C) 2011, 2012, 2013, 2014, 2017, 2019 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<ui:composition
+        xmlns:awa="http://code.google.com/p/ada-awa/jsf"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:c="http://java.sun.com/jstl/core"
+	    xmlns:u="http://code.google.com/p/ada-asf/util"
+        xmlns:h="http://java.sun.com/jsf/html">
+    <c:choose>
+        <c:when test="#{adminBlog.posts.count == 0}">
+            <div class='awa-list-empty'>#{blogMsg.blog_admin_list_post_empty_message}</div>
+        </c:when>
+        <c:otherwise>
+           <h:list var="post" value="#{adminBlog.posts}">
+                <div class='post-info ui-list-item' id="p_#{post.id}">
+                    <div class='post-status-#{post.status}' title="#{post.status eq 'POST_PUBLISHED' ? blogMsg.blog_post_published_title : blogMsg.blog_post_pending_title}"></div>
+                    <div class='post-title'>
+                        <a href="edit/#{adminBlog.id}/#{post.id}">#{post.title}</a>
+                    </div>
+                    <div class='post-date'>
+                        <h:outputText value="#{post.date}"/>
+                    </div>
+                    <div class='post-author'>
+                        #{post.username}
+                    </div>
+                    <div class='post-read-count'>
+                        #{post.read_count}
+                    </div>
+                    <div class='post-comment-count'>
+                        #{post.comment_count}
+                    </div>
+                    <div class='post-view'>
+                        <a href="#{contextPath}/blogs/admin/#{adminBlog.id}/preview/#{post.id}">
+                            #{blogMsg.blog_post_preview_label}
+                        </a>
+                    </div>
+                </div>
+            </h:list>
+        </c:otherwise>
+    </c:choose>
+</ui:composition>

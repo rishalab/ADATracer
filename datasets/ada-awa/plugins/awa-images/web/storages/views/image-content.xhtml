@@ -1,0 +1,26 @@
+<!-- Display the image content
+  -  Copyright (C) 2019 Stephane Carrez
+  -  Written by Stephane Carrez (Stepfhane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<div class="storage-file-content"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:c="http://java.sun.com/jstl/core"
+     xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+     xmlns:util="http://code.google.com/p/ada-asf/util"
+     xmlns:h="http://java.sun.com/jsf/html">
+    <h:panelGroup rendered="#{fn:startsWith(imageInfo.mime_type, 'image/') and imageInfo.width ne 0}">
+        <img class="storage-image-content"
+             alt="#{imageInfo.name}"
+             src="#{contextPath}/storages/files/#{imageInfo.id}/view/#{imageInfo.name}"
+             width="#{imageInfo.width}" height="#{imageInfo.height}" />
+    </h:panelGroup>
+    <h:panelGroup rendered="#{fn:startsWith(imageInfo.mime_type, 'image/') and imageInfo.width eq 0}">
+        <img class="storage-image-content"
+             alt="#{imageInfo.name}"
+             src="#{contextPath}/storages/files/#{imageInfo.id}/view/#{imageInfo.name}" />
+    </h:panelGroup>
+</div>
+
+

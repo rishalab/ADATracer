@@ -1,0 +1,1 @@
+The command provides a database schema migration feature for managing database schema changes.

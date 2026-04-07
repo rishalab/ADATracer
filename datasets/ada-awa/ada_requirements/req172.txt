@@ -1,0 +1,1 @@
+Test creation of wiki space and page by simulating web requests.

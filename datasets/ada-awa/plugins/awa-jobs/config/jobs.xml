@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<module version="1.0">
+
+  <managed-bean>
+    <description>The jobHandler is the bean that is created to execute a job.</description>
+    <managed-bean-name>jobHandler</managed-bean-name>
+    <managed-bean-class>AWA.Jobs.Beans.Process_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>
+
+  <!--  When a job is created, use the 'job-queue' and execute
+        the action by using the 'jobHandler' bean.  -->
+  <on-event name="job-create" queue="job-queue">
+     <action>#{jobHandler.execute}</action>
+  </on-event>
+
+</module>

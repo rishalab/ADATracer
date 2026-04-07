@@ -1,0 +1,58 @@
+-----------------------------------------------------------------------
+--  awa-storages-stores-databases -- Database store
+--  Copyright (C) 2012, 2020, 2022 Stephane Carrez
+--  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+--  SPDX-License-Identifier: Apache-2.0
+-----------------------------------------------------------------------
+with ADO.Sessions;
+
+with ASF.Applications.Main.Configs;
+with AWA.Storages.Models;
+
+--  === Database store ===
+--  The `AWA.Storages.Stores.Databases` store uses the database to save a data content.
+--  The data is saved in a specific table in a database blob column.
+--  The database store uses another store service to temporarily save the data content
+--  in a local file when the application needs a file access to the data.
+package AWA.Storages.Stores.Databases is
+
+   --  Parameter that indicates the maximum size of files stored in the database.
+   package Max_Size_Parameter is
+     new ASF.Applications.Main.Configs.Parameter (Name    => "database_max_size",
+                                                  Default => "100000");
+
+   --  ------------------------------
+   --  Storage Service
+   --  ------------------------------
+   type Database_Store is new AWA.Storages.Stores.Store with record
+      Tmp : AWA.Storages.Stores.Store_Access;
+   end record;
+
+   --  Save the file represented by the `Path` variable into a store and associate that
+   --  content with the storage reference represented by `Into`.
+   overriding
+   procedure Save (Storage : in Database_Store;
+                   Session : in out ADO.Sessions.Master_Session;
+                   Into    : in out AWA.Storages.Models.Storage_Ref'Class;
+                   Path    : in String);
+
+   overriding
+   procedure Load (Storage : in Database_Store;
+                   Session : in out ADO.Sessions.Session'Class;
+                   From    : in AWA.Storages.Models.Storage_Ref'Class;
+                   Into    : in out AWA.Storages.Storage_File);
+
+   --  Create a storage
+   overriding
+   procedure Create (Storage : in Database_Store;
+                     Session : in out ADO.Sessions.Master_Session;
+                     From    : in AWA.Storages.Models.Storage_Ref'Class;
+                     Into    : in out AWA.Storages.Storage_File);
+
+   --  Delete the content associate with the storage represented by `From`.
+   overriding
+   procedure Delete (Storage : in Database_Store;
+                     Session : in out ADO.Sessions.Master_Session;
+                     From    : in out AWA.Storages.Models.Storage_Ref'Class);
+
+end AWA.Storages.Stores.Databases;

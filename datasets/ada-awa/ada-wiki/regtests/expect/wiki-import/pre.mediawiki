@@ -1,0 +1,8 @@
+This is a pre~-formatted block:
+
+<pre>
+  procedure Test is
+  begin
+     null;
+  end Test;
+</pre>

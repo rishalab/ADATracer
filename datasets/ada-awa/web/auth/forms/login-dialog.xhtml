@@ -1,0 +1,13 @@
+<!-- Add a new comment for the post
+  -  Copyright (C) 2014 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<f:view contentType="text/html; charset=UTF-8"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+    <ui:include src="login-openid.xhtml">
+        <ui:param name="title" value="#{userMsg.login_openid_title}"/>
+        <ui:param name="redirect" value="#{param['redirect']}"/>
+    </ui:include>
+</f:view>

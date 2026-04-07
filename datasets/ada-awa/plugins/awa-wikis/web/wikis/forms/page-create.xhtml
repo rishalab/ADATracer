@@ -1,0 +1,15 @@
+<!-- Create a new wiki page
+  -  Copyright (C) 2014 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets">
+
+  <div class='awa-post'>
+    <ui:include src="page-form.xhtml">
+       <ui:param name="title" value="#{wikiMsg.wiki_create_page_title}"/>
+    </ui:include>
+  </div>
+
+</ui:composition>
+

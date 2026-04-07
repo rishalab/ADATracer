@@ -1,0 +1,1 @@
+A permission bean provides some methods that can be used in a Method_Expression.

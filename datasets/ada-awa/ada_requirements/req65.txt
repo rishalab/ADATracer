@@ -1,0 +1,1 @@
+The job status can be retrieved using the Get_Job_Status function.

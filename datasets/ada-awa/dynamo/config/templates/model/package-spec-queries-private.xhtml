@@ -1,0 +1,35 @@
+<ui:composition xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+        xmlns:g="http://code.google.com/p/ada-ado/generator"
+        xmlns:f="http://java.sun.com/jsf/core">
+
+<h:list value="#{package.queries}" var="query">
+#{''}
+   package File_#{query.rowIndex} is
+      new ADO.Queries.Loaders.File (Path => "#{query.path}",
+                                    Sha1 => "#{query.sha1}");
+
+   <h:list value="#{query.queries}" var="basic_query">
+#{''}
+   <h:panelGroup rendered="#{not empty basic_query.sorts}">
+      <h:list value="#{basic_query.sorts}" var="sort">
+   #{fn:capitalize(g:adaIdent(basic_query.name))}_#{sort.rowIndex} : aliased constant String := "#{sort.sql}";
+      </h:list>);
+#{''}
+   #{fn:capitalize(g:adaIdent(basic_query.name))}_Order : constant String_Array (1 .. #{basic_query.sorts.size})
+      := (
+   <h:list value="#{basic_query.sorts}" var="sort">
+         #{fn:capitalize(g:adaIdent(basic_query.name))}_#{sort.rowIndex}'Access#{1 + sort.rowIndex lt basic_query.sorts.size ? ', ' : ''}
+   </h:list>);
+   </h:panelGroup>
+   package Def_#{fn:capitalize(g:adaIdent(query.type))}#{not empty query.type ? '_' : ''}#{fn:capitalize(g:adaIdent(basic_query.name))} is
+      new ADO.Queries.Loaders.Query (Name => "#{basic_query.name}",
+                                     File => File_#{query.rowIndex}.File'Access);
+
+   Query_#{fn:capitalize(g:adaIdent(basic_query.name))} : constant ADO.Queries.Query_Definition_Access
+   := Def_#{fn:capitalize(g:adaIdent(query.type))}#{not empty query.type ? '_' : ''}#{fn:capitalize(g:adaIdent(basic_query.name))}.Query'Access;
+   </h:list>
+</h:list>
+
+</ui:composition>

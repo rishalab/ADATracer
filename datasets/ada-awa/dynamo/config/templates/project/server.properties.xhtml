@@ -1,0 +1,133 @@
+<f:view xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+        xmlns:g="http://code.google.com/p/ada-ado/generator"
+        xmlns:f="http://java.sun.com/jsf/core"
+        file="#{projectName}.properties">
+# Global directory search paths
+app_search_dirs=\#{empty dynamo_search_dirs ? '.' : dynamo_search_dirs}
+#{''}
+
+# AWA module configuration directory search paths
+app.modules.dir=\#{fn:composePath(app_search_dirs,'config')}
+#{''}
+
+# Main XML configuration files that are read to configure the application.
+app.config=awa.xml
+#{''}
+
+# Additional XML configuration files that are read after 'app.config'
+app.config.plugins=#{projectName}.xml
+#{''}
+
+# The main application context path.
+contextPath=/#{fn:toLowerCase(projectName)}
+#{''}
+# Directory search paths for web files.
+view.dir=\#{fn:composePath(app_search_dirs,'web')}
+#{''}
+# Directory search paths for bundle files.
+bundle.dir=\#{fn:composePath(app_search_dirs,'bundles')}
+
+#{''}
+# Number of tasks dedicated to async job and event dispatching.
+awa_dispatcher_count=0
+
+#{''}
+# AWA counters module configuration
+counters.counter_age_limit=1
+counters.counter_limit=10
+
+#{''}
+view.ignore_spaces=false
+view.escape_unknown_tags=true
+view.ext=.html
+#{''}
+
+# Login page
+user.auth-filter.redirect=\#{contextPath}/auth/login.html
+#{''}
+
+# The base URL to construct URL to the application page.
+app_url_base=http://localhost:8080\#{contextPath}
+#{''}
+
+# The application name
+app_name=#{fn:capitalize(projectName)}
+#{''}
+
+# The mail address of the application administrator
+app_mail_from=#{project.author_email}
+#{''}
+
+# SMTP mail server
+mail.smtp.host=localhost
+#{''}
+
+# SMTP mail server port
+mail.smtp.port=25
+#{''}
+
+# Optional mail account for mail server
+mail.smtp.user=
+#{''}
+
+# Optional mail account password for mail server
+mail.smtp.password=
+
+#{''}
+bundle.var.samplesMsg=samples
+openid.realm=http://localhost:8080\#{contextPath}/auth
+openid.callback_url=http://localhost:8080\#{contextPath}/auth/verify
+openid.provider.orange=http://openid.orange.fr
+openid.provider.google=https://www.google.com/accounts/o8/id
+openid.provider.yahoo=http://open.login.yahooapis.com/openid20/www.yahoo.com/xrds
+openid.provider.myopenid=http://www.myopenid.com/server
+#{''}
+# Facebook API
+facebook.client_id=PUT-HERE-YOUR-FACEBOOK-CLIENT-ID
+facebook.secret=PUT-HERE-YOUR-FACEBOOK-API-SECRET
+facebook.scope=email
+#{''}
+
+# Get an account on Google+ and setup your own client_id and secret.
+google-plus.client_id=PUT-HERE-GOOGLE-CLIENT-ID.apps.googleusercontent.com
+google-plus.secret=PUT-HERE_GOOGLE-SECRET
+
+#{''}
+# Configuration for log4j
+log4j.rootCategory=INFO,console,result
+
+#{''}
+log4j.appender.console=Console
+log4j.appender.console.level=ERROR
+log4j.appender.console.layout=level-message
+
+#{''}
+log4j.appender.result=File
+log4j.appender.result.File=#{projectName}.log
+
+#{''}
+# Logger configuration
+log4j.logger.log=WARN
+
+log4j.logger.Util.Properties=DEBUG
+log4j.logger.Util.Log=WARN
+log4j.logger.Util=DEBUG
+log4j.logger.Util.Serialize.Mappers=WARN
+log4j.logger.Util.Serialize.IO=INFO
+
+#{''}
+log4j.logger.AWA=DEBUG
+log4j.logger.ASF=DEBUG
+log4j.logger.AWA.Modules=INFO
+
+#{''}
+log4j.logger.ADO.Databases=INFO
+log4j.logger.ASF.Views.Nodes.Reader=INFO
+log4j.logger.AWA.Applications.Configs=WARN
+log4j.logger.AWA.Modules=WARN
+#{''}
+
+database=\#{empty dynamo_database?'mysql://localhost:3306/#{projectName}?user=#{projectName}':dynamo_database}
+</f:view>

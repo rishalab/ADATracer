@@ -1,0 +1,1 @@
+Save the audit changes in the database for a given audit manager, session, auditable object, and array of changes.

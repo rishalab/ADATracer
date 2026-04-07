@@ -1,0 +1,17 @@
+<!-- Response sent after a user changes the publication status of a document
+  -  Copyright (C) 2016, 2018, 2019 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<f:view contentType="application/json"
+        xmlns:c="http://java.sun.com/jstl/core"
+        xmlns:util="http://code.google.com/p/ada-asf/util"
+        xmlns:f="http://java.sun.com/jsf/core">
+[
+    { "action": "removeClass", "data": "storage-public" },
+    { "action": "removeClass", "data": "storage-private" },
+    { "action": "notification", "attach": "#storage-doc-message", "id": "#storage-doc-message-notif",
+      "data": "#{util:escapeJavaScript(uploadFile.is_public ? storageMsg.storage_file_becomes_public_message : storageMsg.storage_file_becomes_private_message)}" },
+    { "action": "addClass", "data": "storage-document ui-list-item #{uploadFile.is_public ? 'storage-public' : 'storage-private'}" }
+]
+</f:view>

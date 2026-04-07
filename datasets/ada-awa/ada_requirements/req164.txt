@@ -1,0 +1,1 @@
+Vote for the given element and return the total vote for that element.

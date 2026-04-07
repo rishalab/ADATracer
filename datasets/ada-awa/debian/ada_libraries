@@ -1,0 +1,54 @@
+MODE=distrib AWA_LIBRARY_TYPE=relocatable
+awa.gpr
+
+MODE=distrib AWA_LIBRARY_TYPE=relocatable
+awa_unit.gpr
+
+MODE=distrib AWA_LIBRARY_TYPE=relocatable
+plugins/awa-changelogs/awa_changelogs.gpr
+
+MODE=distrib AWA_LIBRARY_TYPE=relocatable
+plugins/awa-comments/awa_comments.gpr
+
+MODE=distrib AWA_LIBRARY_TYPE=relocatable
+plugins/awa-counters/awa_counters.gpr
+
+MODE=distrib AWA_LIBRARY_TYPE=relocatable
+plugins/awa-countries/awa_countries.gpr
+
+MODE=distrib AWA_LIBRARY_TYPE=relocatable
+plugins/awa-tags/awa_tags.gpr
+
+MODE=distrib AWA_LIBRARY_TYPE=relocatable
+plugins/awa-workspaces/awa_workspaces.gpr
+
+MODE=distrib AWA_LIBRARY_TYPE=relocatable
+plugins/awa-votes/awa_votes.gpr
+
+MODE=distrib AWA_LIBRARY_TYPE=relocatable
+plugins/awa-jobs/awa_jobs.gpr
+
+MODE=distrib AWA_LIBRARY_TYPE=relocatable
+plugins/awa-mail/awa_mail.gpr
+
+MODE=distrib AWA_LIBRARY_TYPE=relocatable
+plugins/awa-settings/awa_settings.gpr
+
+MODE=distrib AWA_LIBRARY_TYPE=relocatable
+plugins/awa-setup/awa_setup.gpr
+
+MODE=distrib AWA_LIBRARY_TYPE=relocatable
+plugins/awa-storages/awa_storages.gpr
+
+MODE=distrib AWA_LIBRARY_TYPE=relocatable
+plugins/awa-images/awa_images.gpr
+
+MODE=distrib AWA_LIBRARY_TYPE=relocatable
+plugins/awa-questions/awa_questions.gpr
+
+MODE=distrib AWA_LIBRARY_TYPE=relocatable
+plugins/awa-wikis/awa_wikis.gpr
+
+MODE=distrib AWA_LIBRARY_TYPE=relocatable
+plugins/awa-blogs/awa_blogs.gpr
+

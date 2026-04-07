@@ -1,0 +1,1 @@
+The dispatcher shall dispatch events from the queue, incrementing the count of dispatched events.

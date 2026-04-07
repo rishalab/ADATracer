@@ -1,0 +1,40 @@
+<query-mapping package='AWA.Blogs.Models'>
+    <description>
+      List of blogs
+    </description>
+
+    <class name="AWA.Blogs.Models.Blog_Info" bean="yes">
+        <comment>The list of blogs.</comment>
+        <property type='Identifier' name="id">
+            <comment>the blog identifier.</comment>
+        </property>
+        <property type='String' name="title">
+            <comment>the blog title.</comment>
+        </property>
+        <property type='String' name="uid">
+            <comment>the blog uuid.</comment>
+        </property>
+        <property type='Date' name="create_date">
+            <comment>the blog creation date.</comment>
+        </property>
+        <property type='Integer' name="post_count">
+            <comment>the number of posts published.</comment>
+        </property>
+    </class>
+
+    <query name='blog-list'>
+       <comment>Get the list of blogs that the current user can update</comment>
+       <sql>
+    SELECT
+      blog.id,
+      blog.name,
+      blog.uid,
+      blog.create_date,
+      (SELECT count(*) FROM awa_post WHERE awa_post.blog_id = blog.id AND awa_post.status = 1)
+    FROM awa_blog AS blog
+    INNER JOIN awa_acl AS acl ON acl.entity_id = blog.id AND acl.entity_type = :table AND acl.user_id = :user_id AND acl.permission = $permission[blog-create-post]
+    ORDER BY blog.create_date DESC
+       </sql>
+    </query>
+
+</query-mapping>

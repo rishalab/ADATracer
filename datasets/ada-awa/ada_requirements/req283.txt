@@ -1,0 +1,1 @@
+Create a selector list from the definition of a discrete type such as an enum, with the enum value as value and the label is created by localizing the string Prefix_enum name.

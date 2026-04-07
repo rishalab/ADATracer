@@ -1,0 +1,1 @@
+The OAuth/OpenID authentication flow is implemented by using two servlets that participate in the authentication.

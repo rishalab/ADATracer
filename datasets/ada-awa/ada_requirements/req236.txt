@@ -1,0 +1,1 @@
+Check and run the SQL migration scripts if necessary.

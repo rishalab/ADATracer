@@ -1,0 +1,1 @@
+The <tt>awa:tagList</tt> component displays a list of tags.

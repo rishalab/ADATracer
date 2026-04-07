@@ -1,0 +1,16 @@
+Ada Server Faces           https://github.com/stcarrez/ada-asf
+Ada Database Objects       https://github.com/stcarrez/ada-ado
+Ada Utility Library        https://github.com/stcarrez/ada-util
+Ada Wiki                   https://github.com/stcarrez/ada-wiki
+Ada EL                     https://github.com/stcarrez/ada-el
+Ada Security               https://github.com/stcarrez/ada-security
+AWS                        https://github.com/AdaCore/aws
+Dynamo                     https://github.com/stcarrez/dynamo
+Java Bean                  https://en.wikipedia.org/wiki/JavaBean
+Java Log4j                 https://logging.apache.org/log4j/2.x/
+Log4cxx                    https://logging.apache.org/log4cxx/latest_stable/index.html
+RFC7231                    https://tools.ietf.org/html/rfc7231
+RFC 6749                   https://tools.ietf.org/html/rfc6749
+RFC 7519                   https://www.rfc-editor.org/rfc/rfc7519
+OpenID Authentication 2.0  https://openid.net/specs/openid-authentication-2_0.html
+OpenID Connect Core 1.0    https://openid.net/specs/openid-connect-core-1_0.html

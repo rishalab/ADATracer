@@ -1,0 +1,1 @@
+A module is a software component that can be integrated in the web application.

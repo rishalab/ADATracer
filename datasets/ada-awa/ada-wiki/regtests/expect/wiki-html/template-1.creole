@@ -1,0 +1,4 @@
+<p>Include 1 (img):</p><p><img src="photo.jpg" alt="Photo" /></p><p>Include 2 (pre):</p><pre><code>* item 1
+''item''
+== dd ==
+</code></pre><ul><li>item 2</li></ul>

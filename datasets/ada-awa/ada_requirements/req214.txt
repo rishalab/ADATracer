@@ -1,0 +1,1 @@
+Test creation of user by simulating web requests.

@@ -1,0 +1,46 @@
+body.awa {
+  background-color: #81CFB7;
+}
+
+.awa-title {
+  margin: 1em;
+  float: left;
+  clear: both;
+  width: 90%;
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-bottom: 20px;
+  font-size: 24px;
+  background-color: #C2EFDD;
+  border-color: #FFFFFF #4CAF91 #4CAF91 #FFFFFF;
+  border-style: solid;
+  border-width: 1px;
+}
+.awa-title dl {
+  float: left;
+  clear: both;
+  margin: 1em;
+}
+.awa-title dt {
+  float: left;
+  clear: both;
+  font-weight: bold;
+  padding-top: 10px;
+  font-size: 20px;
+}
+div.awa-title dd {
+  float: left;
+  clear: both;
+  padding-left: 20px;
+  font-size: 16px;
+}
+.awa-ok {
+  float: left;
+  width: 48px;
+  height: 48px;
+  margin-left: 5px;
+  margin-right: 15px;
+}
+.awa-title div {
+  float: left;
+}

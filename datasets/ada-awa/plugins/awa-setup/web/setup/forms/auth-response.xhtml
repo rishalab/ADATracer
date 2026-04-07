@@ -1,0 +1,22 @@
+<!-- Response sent after the Auth step
+  -  Copyright (C) 2023 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<f:view contentType="application/json"
+        xmlns:c="http://java.sun.com/jstl/core"
+        xmlns:f="http://java.sun.com/jsf/core">
+[
+    { "action": "removeClass", "id": "#setup-steps", "data": "setup-auth" },
+<c:choose>
+  <c:when test="#{setup.app_login_openid}">
+    { "action": "get", "url": "#{contextPath}/setup/forms/oauth.html" },
+    { "action": "addClass", "id": "#setup-steps", "data": "setup-oauth" }
+  </c:when>
+  <c:otherwise>
+    { "action": "get", "url": "#{contextPath}/setup/forms/finish.html" },
+    { "action": "addClass", "id": "#setup-steps", "data": "setup-finish" }
+  </c:otherwise>
+</c:choose>
+]
+</f:view>

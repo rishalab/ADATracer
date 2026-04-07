@@ -1,0 +1,1 @@
+The counter value is held by the `Value` member of `Counter_Bean` and it should be initialized programatically when the Ada bean instance is loaded.

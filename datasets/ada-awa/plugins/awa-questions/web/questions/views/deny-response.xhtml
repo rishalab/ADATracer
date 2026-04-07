@@ -1,0 +1,20 @@
+<!-- Response sent when a user does not have the permission.
+  -  Copyright (C) 2013 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<f:view contentType="application/json"
+        xmlns:c="http://java.sun.com/jstl/core"
+        xmlns:util="http://code.google.com/p/ada-asf/util"
+        xmlns:f="http://java.sun.com/jsf/core">
+[
+    { "action": "message", "data": "<util:escape>
+    <div class='awa-message'>
+        <p>
+            #{questionMsg.question_must_be_logged}
+        </p>
+        <a href="#{contextPath}/auth/login.html">#{questionMsg.question_please_login}</a>
+    </div>
+    </util:escape>" }
+]
+</f:view>

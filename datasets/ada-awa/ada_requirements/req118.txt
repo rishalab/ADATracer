@@ -1,0 +1,1 @@
+The setup application allows to configure the database, the Google and Facebook application identifiers and some other configuration parameters.

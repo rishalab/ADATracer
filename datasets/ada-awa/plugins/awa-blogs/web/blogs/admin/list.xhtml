@@ -1,0 +1,94 @@
+<!-- List the posts for the blog administrator
+  -  Copyright (C) 2011 - 2026 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<ui:composition template="/WEB-INF/layouts/layout.xhtml"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:c="http://java.sun.com/jstl/core"
+        xmlns:ajax="http://code.google.com/p/ada-asf/ajax"
+	xmlns:util="http://code.google.com/p/ada-asf/util"
+        xmlns:h="http://java.sun.com/jsf/html">
+    <ui:param name="title" value="#{blogMsg.blog_admin_post_list_title}"/>
+
+    <!-- Main page body -->
+    <ui:define name="pageBody">
+        <f:metadata>
+            <f:viewParam id='id' value='#{adminBlog.id}'/>
+        </f:metadata>
+
+        <h:panelGroup rendered="#{empty adminBlog.id}">
+          <div class="awa-grid-3">
+            <img src="#{contextPath}/images/blogs/blog-icon.png"/>
+          </div>
+          <div class="awa-grid-6">
+            <p>#{blogMsg.blog_create_blog_message}</p>
+            <div class="asf-container awa-form">
+              <ajax:include id='blog-create' src="/blogs/admin/forms/blog-create-form.xhtml"/>
+            </div>
+          </div>
+        </h:panelGroup>
+
+        <h:panelGroup rendered="#{not empty adminBlog.id}">
+          <ui:include src="lists/menu-list.xhtml"/>
+          <div id="blog-stats" class="blog-post-graph"></div>
+          <div class='blog-admin post-header' id="blog-post-list-header">
+            <div class='post-status'></div>
+            <div class='post-title'>
+              #{blogMsg.blog_post_title_label}
+            </div>
+            <div class='post-date'>
+              #{blogMsg.blog_post_date_label}
+            </div>
+            <div class='post-author'>
+              #{blogMsg.blog_post_author_label}
+            </div>
+            <div class='post-read-count'>
+              #{blogMsg.blog_post_read_count_label}
+            </div>
+            <div class='post-comment-count'>
+              #{blogMsg.blog_post_comment_label}
+            </div>
+          </div>
+          <div id='blog-post-list' class='blog-admin awa-list'>
+            <ui:include src="lists/post-list.xhtml"/>
+          </div>
+          <div id='blog-post-action' class='asf-list-action'>
+            <a href="#" class='asf-icon asf-delete' title='#{blogMsg.blog_post_delete_action_tooltip}'></a>
+          </div>
+        </h:panelGroup>
+
+        <div id="blog-graph-tooltip"/>
+        <util:script>
+            $('#blog-post-list').list({
+                actionId: '#blog-post-action',
+                itemPrefix: 'p_',
+                deleteUrl: '#{contextPath}/blogs/admin/forms/post-delete.html?post_id='
+            });
+            $("#blog-stats").post_graph({url: "#{contextPath}/blogs/admin/#{adminBlog.id}/stats", barWidth: 1});
+            $("#blog-stats").bind("plothover", function(event, pos, item) {
+                if (item) {
+                    var cnt = item.datapoint[1], date = new Date(item.datapoint[0]);
+                    var year = date.getFullYear();
+                    var month = date.getMonth();
+                    $("#blog-graph-tooltip").html(cnt + " posts on " + year + "-" + month).css({top: item.pageY - 25, left: item.pageX + 5}).fadeIn(200);
+                } else {
+                    $("#blog-graph-tooltip").hide();
+                }
+            });
+        </util:script>
+    </ui:define>
+    <ui:define name="pageScript">
+        <script src="#{contextPath}/js/jquery.canvaswrapper.js"></script>
+        <script src="#{contextPath}/js/jquery.colorhelpers.js"></script>
+        <script src="#{contextPath}/js/jquery.flot.js"></script>
+        <script src="#{contextPath}/js/jquery.flot.saturated.js"></script>
+        <script src="#{contextPath}/js/jquery.flot.browser.js"></script>
+        <script src="#{contextPath}/js/jquery.flot.time.js"></script>
+        <script src="#{contextPath}/js/jquery.flot.drawSeries.js"></script>
+        <script src="#{contextPath}/js/jquery.flot.uiConstants.js"></script>
+        <script src="#{contextPath}/js/awa-blogs.js"></script>
+    </ui:define>
+</ui:composition>
+

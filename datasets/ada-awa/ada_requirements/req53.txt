@@ -1,0 +1,1 @@
+Job worker procedure to identify an image and generate its thumbnail.

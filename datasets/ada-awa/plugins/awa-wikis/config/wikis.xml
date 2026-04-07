@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module version="1.0">
+
+  <context-param>
+    <param-name>wikis.image_prefix</param-name>
+    <param-value>#{contextPath}/wikis/images/</param-value>
+    <description>
+       The URL base prefix to be used for Wiki images.
+    </description>
+  </context-param>
+
+  <context-param>
+    <param-name>wikis.page_prefix</param-name>
+    <param-value>#{contextPath}/wikis/view/</param-value>
+    <description>
+       The URL base prefix to be used for Wiki pages.
+    </description>
+  </context-param>
+
+  <context-param>
+    <param-name>wikis.wiki_copy_list</param-name>
+    <param-value></param-value>
+    <description>
+       A list of wiki page ID top copy when a new wiki space is created.
+    </description>
+  </context-param>
+
+  <managed-bean>
+    <description>The wiki page with all its information to display it.</description>
+    <managed-bean-name>wikiView</managed-bean-name>
+    <managed-bean-class>AWA.Wikis.Beans.Wiki_View_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>image_prefix</property-name>
+      <property-class>String</property-class>
+      <value>#{contextPath}/images/</value>
+    </managed-property>
+    <managed-property>
+      <property-name>page_prefix</property-name>
+      <property-class>String</property-class>
+      <value>#{contextPath}/wikis/view/</value>
+    </managed-property>
+  </managed-bean>
+
+  <managed-bean>
+    <description>The information about an image used by a wiki page.</description>
+    <managed-bean-name>wikiImageInfo</managed-bean-name>
+    <managed-bean-class>AWA.Wikis.Beans.Wiki_Image_Info_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>image_prefix</property-name>
+      <property-class>String</property-class>
+      <value>#{contextPath}/images/</value>
+    </managed-property>
+    <managed-property>
+      <property-name>page_prefix</property-name>
+      <property-class>String</property-class>
+      <value>#{contextPath}/wikis/view/</value>
+    </managed-property>
+  </managed-bean>
+
+  <managed-bean>
+    <description>The wiki page information bean gives the various statistics and information about a wiki page.</description>
+    <managed-bean-name>wikiPageInfo</managed-bean-name>
+    <managed-bean-class>AWA.Wikis.Beans.Wiki_Page_Info_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>
+
+  <managed-bean>
+    <description>A localized list of wiki page formats to be used for a f:selectItems</description>
+    <managed-bean-name>wikiFormatList</managed-bean-name>
+    <managed-bean-class>AWA.Wikis.Beans.Format_List_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>
+
+  <managed-bean>
+    <description>The list of wikis and pages that the current user can access and update.</description>
+    <managed-bean-name>adminWiki</managed-bean-name>
+    <managed-bean-class>AWA.Wikis.Beans.Wiki_Admin_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>
+
+  <managed-bean>
+    <description>The wiki space bean to create and edit the wiki space configuration.</description>
+    <managed-bean-name>adminWikiSpace</managed-bean-name>
+    <managed-bean-class>AWA.Wikis.Beans.Wiki_Space_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>
+
+  <managed-bean>
+    <description>The wiki page bean gives the full content and information about a wiki page.</description>
+    <managed-bean-name>wikiPage</managed-bean-name>
+    <managed-bean-class>AWA.Wikis.Beans.Wiki_Page_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>
+
+  <managed-bean>
+    <description>The list of wiki pages.</description>
+    <managed-bean-name>wikiList</managed-bean-name>
+    <managed-bean-class>AWA.Wikis.Beans.Wiki_List_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>
+
+  <managed-bean>
+    <description>The list of wiki page versions.</description>
+    <managed-bean-name>wikiVersionList</managed-bean-name>
+    <managed-bean-class>AWA.Wikis.Beans.Wiki_Version_List_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>
+
+  <managed-bean>
+    <description>The wiki tag search bean.</description>
+    <managed-bean-name>wikiTagSearch</managed-bean-name>
+    <managed-bean-class>AWA.Tags.Beans.Tag_Search_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>entity_type</property-name>
+      <property-class>String</property-class>
+      <value>awa_wiki_page</value>
+    </managed-property>
+  </managed-bean>
+
+  <managed-bean>
+    <description>The list of tags associated with a wiki page entities.</description>
+    <managed-bean-name>wikiTagCloud</managed-bean-name>
+    <managed-bean-class>AWA.Tags.Beans.Tag_Info_List_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>entity_type</property-name>
+      <property-class>String</property-class>
+      <value>awa_wiki_page</value>
+    </managed-property>
+  </managed-bean>
+
+  <managed-bean>
+    <description>The wiki tag editor bean.</description>
+    <managed-bean-name>wikiTags</managed-bean-name>
+    <managed-bean-class>AWA.Tags.Beans.Tag_List_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>entity_type</property-name>
+      <property-class>String</property-class>
+      <value>awa_wiki_page</value>
+    </managed-property>
+    <managed-property>
+      <property-name>permission</property-name>
+      <property-class>String</property-class>
+      <value>wiki-page-edit</value>
+    </managed-property>
+  </managed-bean>
+
+  <managed-bean>
+    <description>The counter statistics for a wiki page</description>
+    <managed-bean-name>wikiPageStats</managed-bean-name>
+    <managed-bean-class>AWA.Counters.Beans.Stat_List_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>entity_type</property-name>
+      <property-class>String</property-class>
+      <value>awa_wiki_page</value>
+    </managed-property>
+    <managed-property>
+      <property-name>counter_name</property-name>
+      <property-class>String</property-class>
+      <value>read_count</value>
+    </managed-property>
+    <managed-property>
+      <property-name>query_name</property-name>
+      <property-class>String</property-class>
+      <value>page-access-stats</value>
+    </managed-property>
+  </managed-bean>
+
+  <navigation-rule>
+    <from-view-id>/wikis/setup.xhtml</from-view-id>
+    <navigation-case>
+      <from-outcome>success</from-outcome>
+      <to-view-id>/wikis/list/#{adminWikiSpace.id}/recent/grid</to-view-id>
+      <redirect/>
+    </navigation-case>
+  </navigation-rule>
+
+  <navigation-rule>
+    <from-view-id>/wikis/settings.xhtml</from-view-id>
+    <navigation-case>
+      <from-outcome>loaded</from-outcome>
+      <to-view-id>/wikis/settings.xhtml</to-view-id>
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>success</from-outcome>
+      <to-view-id>/wikis/list/#{adminWikiSpace.id}/recent/grid</to-view-id>
+      <redirect/>
+    </navigation-case>
+  </navigation-rule>
+
+  <navigation-rule>
+    <from-view-id>/wikis/create.xhtml</from-view-id>
+    <navigation-case>
+      <from-outcome>loaded</from-outcome>
+      <to-view-id>/wikis/create.xhtml</to-view-id>
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>success</from-outcome>
+      <to-view-id>/wikis/view/#{wikiPage.wiki_id}/#{wikiPage.name}</to-view-id>
+      <redirect/>
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>failure</from-outcome>
+      <to-view-id>/wikis/create.xhtml</to-view-id>
+    </navigation-case>
+  </navigation-rule>
+
+  <navigation-rule>
+    <from-view-id>/wikis/edit.xhtml</from-view-id>
+    <navigation-case>
+      <from-outcome>loaded</from-outcome>
+      <to-view-id>/wikis/edit.xhtml</to-view-id>
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>success</from-outcome>
+      <to-view-id>/wikis/view/#{wikiPage.wiki_id}/#{wikiPage.name}</to-view-id>
+      <redirect/>
+    </navigation-case>
+  </navigation-rule>
+
+  <navigation-rule>
+    <from-view-id>/wikis/view.xhtml</from-view-id>
+    <navigation-case>
+      <from-outcome>loaded</from-outcome>
+      <to-view-id>/wikis/view.xhtml</to-view-id>
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>not-visible</from-outcome>
+      <to-view-id>/wikis/protected.xhtml</to-view-id>
+      <status>403</status>
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>not-created</from-outcome>
+      <to-view-id>/wikis/missing.xhtml</to-view-id>
+      <status>404</status>
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>ado.objects.not_found</from-outcome>
+      <to-view-id>/wikis/create/#{wikiView.wiki_id}/#{wikiView.name}</to-view-id>
+      <redirect/>
+    </navigation-case>
+  </navigation-rule>
+
+  <navigation-rule>
+    <from-view-id>/wikis/history.xhtml</from-view-id>
+    <navigation-case>
+      <from-outcome>loaded</from-outcome>
+      <to-view-id>/wikis/history.xhtml</to-view-id>
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>not-found</from-outcome>
+      <to-view-id>/wikis/create/#{wikiView.wiki_id}/#{wikiView.name}</to-view-id>
+      <redirect/>
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>not-created</from-outcome>
+      <status>404</status>
+      <to-view-id>/wikis/missing.xhtml</to-view-id>
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>ado.objects.not_found</from-outcome>
+      <to-view-id>/wikis/create/#{wikiView.wiki_id}/#{wikiView.name}</to-view-id>
+      <redirect/>
+    </navigation-case>
+  </navigation-rule>
+
+  <navigation-rule>
+    <from-view-id>/wikis/info.xhtml</from-view-id>
+    <navigation-case>
+      <from-outcome>loaded</from-outcome>
+      <to-view-id>/wikis/info.xhtml</to-view-id>
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>not-visible</from-outcome>
+      <to-view-id>/wikis/protected.xhtml</to-view-id>
+      <status>403</status>
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>not-created</from-outcome>
+      <to-view-id>/wikis/missing.xhtml</to-view-id>
+      <status>404</status>
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>not-found</from-outcome>
+      <to-view-id>/wikis/create/#{wikiView.wiki_id}/#{wikiView.name}</to-view-id>
+      <redirect/>
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>ado.objects.not_found</from-outcome>
+      <to-view-id>/wikis/create/#{wikiView.wiki_id}/#{wikiView.name}</to-view-id>
+      <redirect/>
+    </navigation-case>
+  </navigation-rule>
+
+  <navigation-rule>
+    <from-view-id>/wikis/image-info.xhtml</from-view-id>
+    <navigation-case>
+      <from-outcome>loaded</from-outcome>
+      <to-view-id>/wikis/image-info.xhtml</to-view-id>
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>not-visible</from-outcome>
+      <to-view-id>/wikis/protected.xhtml</to-view-id>
+      <status>403</status>      
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>not-found</from-outcome>
+      <to-view-id>/wikis/image-info.xhtml</to-view-id>
+      <redirect/>
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>ado.objects.not_found</from-outcome>
+      <to-view-id>/wikis/image-info.xhtml</to-view-id>
+      <redirect/>
+    </navigation-case>
+  </navigation-rule>
+
+  <navigation-rule>
+    <from-view-id>/wikis/forms/delete-page.xhtml</from-view-id>
+    <navigation-case>
+      <from-outcome>success</from-outcome>
+      <to-view-id>/wikis/forms/delete-page-response.xhtml</to-view-id>
+    </navigation-case>
+  </navigation-rule>
+
+  <navigation-rule>
+    <from-view-id>/wikis/forms/upload-form.xhtml</from-view-id>
+    <navigation-case>
+      <from-outcome>success</from-outcome>
+      <to-view-id>/wikis/forms/upload-form-response.xhtml</to-view-id>
+    </navigation-case>
+  </navigation-rule>
+
+  <entity-permission>
+    <name>wiki-space-create</name>
+    <entity-type>awa_workspace</entity-type>
+    <description>
+      Grants the creation of a wiki space for the given user
+      in a specific workspace.
+    </description>
+    <sql>
+      SELECT acl.id FROM awa_acl AS acl
+      WHERE acl.entity_type = :entity_type
+      AND acl.user_id = :user_id
+      AND acl.entity_id = :entity_id
+      AND acl.permission = $permission[wiki-space-create]
+    </sql>
+  </entity-permission>
+
+  <entity-permission>
+    <name>wiki-space-update</name>
+    <entity-type>awa_wiki_space</entity-type>
+    <description>
+      Grants the edit permission on the wiki space owner only
+    </description>
+    <sql>
+      SELECT acl.id FROM awa_acl AS acl
+      WHERE acl.entity_type = :entity_type
+      AND acl.user_id = :user_id
+      AND acl.entity_id = :entity_id
+      AND acl.permission = $permission[wiki-space-update]
+    </sql>
+  </entity-permission>
+
+  <entity-permission>
+    <name>wiki-space-delete</name>
+    <entity-type>awa_wiki_space</entity-type>
+    <description>
+      Granta the delete permission on the wiki space owner only
+    </description>
+    <sql>
+      SELECT acl.id FROM awa_acl AS acl
+      WHERE acl.entity_type = :entity_type
+      AND acl.user_id = :user_id
+      AND acl.entity_id = :entity_id
+      AND acl.permission = $permission[wiki-space-delete]
+    </sql>
+  </entity-permission>
+
+  <entity-permission>
+    <name>wiki-page-view</name>
+    <entity-type>awa_wiki_space</entity-type>
+    <description>Grant the view wiki page permission when the page is public
+    or when an ACL link exist betwen the user and the wiki space</description>
+    <sql>
+      SELECT page.id FROM awa_wiki_page AS page
+      LEFT JOIN awa_acl AS acl ON acl.entity_type = :entity_type AND acl.entity_id = page.wiki_id AND acl.user_id = :user_id
+      AND acl.permission = $permission[wiki-page-view]
+      WHERE page.id = :entity_id AND (page.is_public OR acl.id IS NOT NULL)
+    </sql>
+  </entity-permission>
+
+  <entity-permission>
+    <name>wiki-page-create</name>
+    <entity-type>awa_wiki_space</entity-type>
+    <description>Grant the create wiki page permission when an ACL link exist betwen the user and the wiki space</description>
+    <sql>
+      SELECT acl.id FROM awa_acl AS acl
+      WHERE acl.entity_type = :entity_type
+      AND acl.user_id = :user_id
+      AND acl.entity_id = :entity_id
+      AND acl.permission = $permission[wiki-page-create]
+    </sql>
+  </entity-permission>
+
+  <entity-permission>
+    <name>wiki-page-update</name>
+    <entity-type>awa_wiki_space</entity-type>
+    <description>
+      Grants the permission to edit the wiki page to the given user and for the
+      given wiki space.
+    </description>
+    <sql>
+       SELECT acl.id FROM awa_wiki_page AS page
+       INNER JOIN awa_acl AS acl ON acl.entity_type = :entity_type AND acl.entity_id = page.wiki_id
+       WHERE page.id = :entity_id
+       AND acl.user_id = :user_id
+       AND acl.permission = $permission[wiki-page-update]
+    </sql>
+  </entity-permission>
+
+  <entity-permission>
+    <name>wiki-page-delete</name>
+    <entity-type>awa_wiki_space</entity-type>
+    <description>
+      Grants the permission to delete the wiki page to the given user and for the
+      given wiki space.
+    </description>
+    <sql>
+       SELECT acl.id FROM awa_wiki_page AS page
+       INNER JOIN awa_acl AS acl ON acl.entity_type = :entity_type AND acl.entity_id = page.wiki_id
+       WHERE page.id = :entity_id
+       AND acl.user_id = :user_id
+       AND acl.permission = $permission[wiki-page-delete]
+    </sql>
+  </entity-permission>
+
+  <servlet-mapping>
+    <servlet-name>wiki-image</servlet-name>
+    <url-pattern>/wikis/images/:wiki_id/:image_id/:size/:name</url-pattern>
+  </servlet-mapping>
+
+  <filter-mapping>
+    <filter-name>service</filter-name>
+    <url-pattern>/wikis/view/#{wikiView.wiki_id}/#{wikiView.name}</url-pattern>
+    <url-pattern>/wikis/stats/#{wikiPageStats.entity_id}/#{wikiPageStats.first_date}</url-pattern>
+    <url-pattern>/wikis/edit/#{wikiPage.wiki_id}/#{wikiPage.name}</url-pattern>
+    <url-pattern>/wikis/create/#{wikiPage.wiki_id}</url-pattern>
+    <url-pattern>/wikis/create/#{wikiPage.wiki_id}/#{wikiPage.name}</url-pattern>
+    <url-pattern>/wikis/list/#{wikiList.wiki_id}/#{wikiList.sort}</url-pattern>
+    <url-pattern>/wikis/list/#{wikiList.wiki_id}/#{wikiList.sort}/grid</url-pattern>
+    <url-pattern>/wikis/tags/#{wikiList.wiki_id}</url-pattern>
+    <url-pattern>/wikis/tags/#{wikiList.wiki_id}/#{wikiList.tag}/#{wikiList.sort}</url-pattern>
+    <url-pattern>/wikis/tags/#{wikiList.wiki_id}/#{wikiList.tag}/#{wikiList.sort}/grid</url-pattern>
+    <url-pattern>/wikis/history/#{wikiVersionList.wiki_id}/#{wikiVersionList.page_id}</url-pattern>
+    <url-pattern>/wikis/info/#{wikiPageInfo.wiki_id}/#{wikiPageInfo.page_id}</url-pattern>
+    <url-pattern>/wikis/image-info/#{wikiImageInfo.wiki_id}/#{wikiImageInfo.page_id}/#{wikiImageInfo.folder_name}/#{wikiImageInfo.name}</url-pattern>
+    <url-pattern>/wikis/settings/#{adminWikiSpace.id}</url-pattern>
+    <url-pattern>/wikis/*.html</url-pattern>
+    <url-pattern>/wikis/images/*</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>auth-filter</filter-name>
+    <url-pattern>/wikis/view/#{wikiView.wiki_id}/#{wikiView.name}</url-pattern>
+    <url-pattern>/wikis/stats/#{wikiPageStats.entity_id}/#{wikiPageStats.first_date}</url-pattern>
+    <url-pattern>/wikis/edit/#{wikiPage.wiki_id}/#{wikiPage.name}</url-pattern>
+    <url-pattern>/wikis/create/#{wikiPage.wiki_id}</url-pattern>
+    <url-pattern>/wikis/create/#{wikiPage.wiki_id}/#{wikiPage.name}</url-pattern>
+    <url-pattern>/wikis/tags/#{wikiList.wiki_id}</url-pattern>
+    <url-pattern>/wikis/list/#{wikiList.wiki_id}/#{wikiList.sort}</url-pattern>
+    <url-pattern>/wikis/list/#{wikiList.wiki_id}/#{wikiList.sort}/grid</url-pattern>
+    <url-pattern>/wikis/tags/#{wikiList.wiki_id}/#{wikiList.tag}/#{wikiList.sort}</url-pattern>
+    <url-pattern>/wikis/tags/#{wikiList.wiki_id}/#{wikiList.tag}/#{wikiList.sort}/grid</url-pattern>
+    <url-pattern>/wikis/history/#{wikiVersionList.wiki_id}/#{wikiVersionList.page_id}</url-pattern>
+    <url-pattern>/wikis/info/#{wikiPageInfo.wiki_id}/#{wikiPageInfo.page_id}</url-pattern>
+    <url-pattern>/wikis/image-info/#{wikiImageInfo.wiki_id}/#{wikiImageInfo.page_id}/#{wikiImageInfo.folder_name}/#{wikiImageInfo.name}</url-pattern>
+    <url-pattern>/wikis/settings/#{adminWikiSpace.id}</url-pattern>
+    <url-pattern>/wikis/*.html</url-pattern>
+  </filter-mapping>
+
+  <url-policy>
+    <description>
+      Security rule to allow anonymous users to display the wiki page.
+    </description>
+    <permission>anonymous</permission>
+    <url-pattern>/wikis/view/.*</url-pattern>
+    <url-pattern>/wikis/stats/.*</url-pattern>
+    <url-pattern>/wikis/tags/.*</url-pattern>
+    <url-pattern>/wikis/list/.*</url-pattern>
+    <url-pattern>/wikis/history/.*</url-pattern>
+    <url-pattern>/wikis/info/.*</url-pattern>
+    <url-pattern>/wikis/image-info/.*</url-pattern>
+    <url-pattern>/wikis/images/.*</url-pattern>
+  </url-policy>
+
+  <url-policy>
+    <permission>logged-user</permission>
+    <url-pattern>/wikis/admin/.*</url-pattern>
+    <url-pattern>/wikis/edit/.*</url-pattern>
+    <url-pattern>/wikis/settings/.*</url-pattern>
+    <url-pattern>/wikis/create/.*</url-pattern>
+    <url-pattern>/wikis/edit.html</url-pattern>
+    <url-pattern>/wikis/settings.html</url-pattern>
+    <url-pattern>/wikis/create.html</url-pattern>
+    <url-pattern>/wikis/lists/tag-search.html</url-pattern>
+    <url-pattern>/wikis/view/.*</url-pattern>
+    <url-pattern>/wikis/tags/#{wikiList.wiki_id}/#{wikiList.tag}</url-pattern>
+    <url-pattern>/wikis/forms/.*</url-pattern>
+    <url-pattern>/wikis/setup.html</url-pattern>
+  </url-policy>
+
+  <url-mapping>
+    <pattern>/wikis/view/#{wikiView.wiki_id}/#{wikiView.name}</pattern>
+    <view-id>/wikis/view.html</view-id>
+  </url-mapping>
+
+  <url-mapping>
+    <pattern>/wikis/info/#{wikiPageInfo.wiki_id}/#{wikiPageInfo.page_id}</pattern>
+    <view-id>/wikis/info.html</view-id>
+  </url-mapping>
+
+  <url-mapping>
+    <pattern>/wikis/image-info/#{wikiImageInfo.wiki_id}/#{wikiImageInfo.page_id}/#{wikiImageInfo.folder_name}/#{wikiImageInfo.name}</pattern>
+    <view-id>/wikis/image-info.html</view-id>
+  </url-mapping>
+
+  <url-mapping>
+    <pattern>/wikis/list/#{wikiList.wiki_id}/#{wikiList.sort}</pattern>
+    <view-id>/wikis/list.html</view-id>
+  </url-mapping>
+
+  <url-mapping>
+    <pattern>/wikis/list/#{wikiList.wiki_id}/#{wikiList.sort}/grid</pattern>
+    <view-id>/wikis/grid.html</view-id>
+  </url-mapping>
+
+  <url-mapping>
+    <pattern>/wikis/tags/#{wikiList.wiki_id}/#{wikiList.tag}/#{wikiList.sort}</pattern>
+    <view-id>/wikis/tagged.html</view-id>
+  </url-mapping>
+
+  <url-mapping>
+    <pattern>/wikis/tags/#{wikiList.wiki_id}</pattern>
+    <view-id>/wikis/tags.html</view-id>
+  </url-mapping>
+
+  <url-mapping>
+    <pattern>/wikis/tags/#{wikiList.wiki_id}/#{wikiList.tag}/#{wikiList.sort}/grid</pattern>
+    <view-id>/wikis/tagged-grid.html</view-id>
+  </url-mapping>
+
+  <url-mapping>
+    <pattern>/wikis/edit/#{wikiPage.wiki_id}/#{wikiPage.name}</pattern>
+    <view-id>/wikis/edit.html</view-id>
+  </url-mapping>
+
+  <url-mapping>
+    <pattern>/wikis/create/#{wikiPage.wiki_id}</pattern>
+    <view-id>/wikis/create.html</view-id>
+  </url-mapping>
+
+  <url-mapping>
+    <pattern>/wikis/create/#{wikiPage.wiki_id}/#{wikiPage.name}</pattern>
+    <view-id>/wikis/create.html</view-id>
+  </url-mapping>
+
+  <url-mapping>
+    <pattern>/wikis/history/#{wikiVersionList.wiki_id}/#{wikiVersionList.page_id}</pattern>
+    <view-id>/wikis/history.html</view-id>
+  </url-mapping>
+
+  <url-mapping>
+    <pattern>/wikis/settings/#{adminWikiSpace.id}</pattern>
+    <view-id>/wikis/settings.html</view-id>
+  </url-mapping>
+
+  <url-mapping>
+    <pattern>/wikis/stats/#{wikiPageStats.entity_id}/#{wikiPageStats.first_date}</pattern>
+    <view-id>/wikis/views/page-stats.html</view-id>
+  </url-mapping>
+
+</module>

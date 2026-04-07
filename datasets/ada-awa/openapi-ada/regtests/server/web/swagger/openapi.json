@@ -1,0 +1,228 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "contact" : {
+      "email" : "Stephane.Carrez@gmail.com"
+    },
+    "description" : "API to validate",
+    "license" : {
+      "name" : "Apache Licence",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "termsOfService" : "https://github.com/terms/",
+    "title" : "REST API Validation",
+    "version" : "1.0.0"
+  },
+  "externalDocs" : {
+    "description" : "Find out more about Swagger",
+    "url" : "http://swagger.io"
+  },
+  "servers" : [ {
+    "url" : "https://localhost:8082/v1"
+  }, {
+    "url" : "http://localhost:8082/v1"
+  } ],
+  "paths" : {
+    "/enums/{status}" : {
+      "get" : {
+        "operationId" : "do_get_enums",
+        "parameters" : [ {
+          "description" : "status information",
+          "explode" : false,
+          "in" : "path",
+          "name" : "status",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/Status"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/Stat"
+                  },
+                  "type" : "array"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/Stat"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "successful operation",
+            "headers" : {
+              "X-RateLimit-Limit" : {
+                "explode" : false,
+                "schema" : {
+                  "description" : "Request limit per hour.",
+                  "type" : "integer"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "successful operation"
+          }
+        },
+        "summary" : "Get some stat from external struct"
+      }
+    },
+    "/object" : {
+      "get" : {
+        "description" : "Get an object\n",
+        "operationId" : "do_get_object",
+        "parameters" : [ {
+          "description" : "The image status",
+          "explode" : true,
+          "in" : "query",
+          "name" : "status",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/Status"
+          },
+          "style" : "form"
+        }, {
+          "description" : "The owner",
+          "explode" : true,
+          "in" : "query",
+          "name" : "owner",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "successful operation",
+            "headers" : {
+              "X-RateLimit-Limit" : {
+                "explode" : false,
+                "schema" : {
+                  "description" : "Request limit per hour.",
+                  "type" : "integer"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "successful operation"
+          }
+        },
+        "summary" : "Get an object"
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Status" : {
+        "enum" : [ "open", "onhold", "assigned", "closed", "rejected" ],
+        "type" : "string"
+      },
+      "Mode" : {
+        "default" : "fast",
+        "enum" : [ "fast", "optimized", "accurate" ],
+        "type" : "string",
+        "x-ada-no-vector" : true
+      },
+      "Stat" : {
+        "example" : {
+          "mode" : "fast",
+          "count" : 0,
+          "name" : "plop",
+          "value" : 6,
+          "status" : "open"
+        },
+        "properties" : {
+          "count" : {
+            "default" : 300,
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "value" : {
+            "default" : 500,
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "name" : {
+            "default" : "plop",
+            "type" : "string"
+          },
+          "mode" : {
+            "$ref" : "#/components/schemas/Mode"
+          },
+          "status" : {
+            "$ref" : "#/components/schemas/Status"
+          }
+        },
+        "required" : [ "count", "name" ],
+        "type" : "object"
+      },
+      "Error" : {
+        "description" : "",
+        "example" : {
+          "code" : "code",
+          "param" : "param",
+          "error_type" : "error_type",
+          "message" : "message"
+        },
+        "properties" : {
+          "message" : {
+            "description" : "",
+            "type" : "string"
+          },
+          "error_type" : {
+            "description" : "",
+            "type" : "string"
+          },
+          "param" : {
+            "description" : "",
+            "type" : "string"
+          },
+          "code" : {
+            "description" : "",
+            "type" : "string"
+          }
+        },
+        "type" : "object",
+        "x-ada-no-vector" : true
+      }
+    }
+  }
+}

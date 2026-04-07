@@ -1,0 +1,1 @@
+The ACL table records permissions which are granted for a user to access a given database entity.

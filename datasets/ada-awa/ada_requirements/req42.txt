@@ -1,0 +1,1 @@
+A counter may be associated with a database table.

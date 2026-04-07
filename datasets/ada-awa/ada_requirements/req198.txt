@@ -1,0 +1,1 @@
+The selector should be created from an SQL query.

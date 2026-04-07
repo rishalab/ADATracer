@@ -1,0 +1,603 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<module version="1.0">
+
+  <context-param>
+    <param-name>blogs.image_prefix</param-name>
+    <param-value>#{contextPath}/blogs/images/</param-value>
+    <description>
+       The URL base prefix to be used for blog post images.
+    </description>
+  </context-param>
+
+  <context-param>
+    <param-name>blogs.post_uri</param-name>
+    <param-value>#{app_url_base}/blogs/posts/\#{uri}</param-value>
+    <description>
+      The post URI to write in generated sitemaps.  The URI must be absolute and
+      specify the host and domain.  This EL expression is evaluated twice: a first time
+      during application setup and a second time for each URI that must be generated.
+      The blog post base URI is defined in the variable #{uri} (be careful to escape
+      the '#' by using \#{uri} due to the double EL evaluation).
+    </description>
+  </context-param>
+
+  <context-param>
+    <param-name>blogs.image_uri</param-name>
+    <param-value>#{app_url_base}/blogs/images/\#{post_id}/\#{image_id}/default/\#{image_title}</param-value>
+    <description>
+      The image URI to write in generated sitemaps.  Similar to the blogs.post_uri,
+      this must be absolute and specify the host and domain.  This EL expression is
+      evaluated twice: a first time during application setup and a second time for each URI
+      that must be generated. The blog post base URI is defined in the variable #{post_id}
+      (be careful to escape the '#' by using \#{post_id} due to the double EL evaluation).
+    </description>
+  </context-param>
+
+  <managed-bean>
+    <description>This bean describes a blog post for the creation or the update</description>
+    <managed-bean-name>post</managed-bean-name>
+    <managed-bean-class>AWA.Blogs.Beans.Post_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>
+
+  <managed-bean>
+    <description>This bean describes a blog post for the creation or the update</description>
+    <managed-bean-name>postList</managed-bean-name>
+    <managed-bean-class>AWA.Blogs.Beans.Post_List_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>
+
+  <managed-bean>
+    <description>A localized list of post statuses to be used for a f:selectItems</description>
+    <managed-bean-name>postStatusList</managed-bean-name>
+    <managed-bean-class>AWA.Blogs.Beans.Status_List_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>
+
+  <managed-bean>
+    <description>The counter statistics for a blog post</description>
+    <managed-bean-name>postAccessStats</managed-bean-name>
+    <managed-bean-class>AWA.Counters.Beans.Stat_List_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>entity_type</property-name>
+      <property-class>String</property-class>
+      <value>awa_post</value>
+    </managed-property>
+    <managed-property>
+      <property-name>counter_name</property-name>
+      <property-class>String</property-class>
+      <value>read_count</value>
+    </managed-property>
+    <managed-property>
+      <property-name>query_name</property-name>
+      <property-class>String</property-class>
+      <value>post-access-stats</value>
+    </managed-property>
+  </managed-bean>
+
+  <managed-bean>
+    <description>A localized list of blog post formats to be used for a f:selectItems</description>
+    <managed-bean-name>blogFormatList</managed-bean-name>
+    <managed-bean-class>AWA.Blogs.Beans.Format_List_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>
+
+  <managed-bean>
+    <description>The list of blogs and posts that the current user can access and update.</description>
+    <managed-bean-name>adminBlog</managed-bean-name>
+    <managed-bean-class>AWA.Blogs.Beans.Blog_Admin_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>
+
+  <managed-bean>
+    <description>Information about the current blog.</description>
+    <managed-bean-name>blog</managed-bean-name>
+    <managed-bean-class>AWA.Blogs.Beans.Blog_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>
+
+  <managed-bean>
+    <description>Information about the RSS feed blog.</description>
+    <managed-bean-name>feed_blog</managed-bean-name>
+    <managed-bean-class>AWA.Blogs.Beans.Blog_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>id</property-name>
+      <property-class>String</property-class>
+      <value>1</value>
+    </managed-property>
+  </managed-bean>
+
+  <managed-bean>
+    <description>The blog tag search bean.</description>
+    <managed-bean-name>blogTagSearch</managed-bean-name>
+    <managed-bean-class>AWA.Tags.Beans.Tag_Search_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>entity_type</property-name>
+      <property-class>String</property-class>
+      <value>awa_post</value>
+    </managed-property>
+  </managed-bean>
+
+  <managed-bean>
+    <description>A list of tags associated with all post entities.</description>
+    <managed-bean-name>blogTagCloud</managed-bean-name>
+    <managed-bean-class>AWA.Tags.Beans.Tag_Info_List_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>entity_type</property-name>
+      <property-class>String</property-class>
+      <value>awa_post</value>
+    </managed-property>
+  </managed-bean>
+
+  <managed-bean>
+    <description>A list of comments associated with a post.</description>
+    <managed-bean-name>postComments</managed-bean-name>
+    <managed-bean-class>AWA.Comments.Beans.Comment_List_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>entity_type</property-name>
+      <property-class>String</property-class>
+      <value>awa_post</value>
+    </managed-property>
+    <managed-property>
+      <property-name>sort</property-name>
+      <property-class>String</property-class>
+      <value>newest</value>
+    </managed-property>
+  </managed-bean>
+
+  <managed-bean>
+    <description>A list of all comments associated with a post (for admin purposes).</description>
+    <managed-bean-name>postAdminComments</managed-bean-name>
+    <managed-bean-class>AWA.Comments.Beans.Comment_List_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>entity_type</property-name>
+      <property-class>String</property-class>
+      <value>awa_post</value>
+    </managed-property>
+    <managed-property>
+      <property-name>sort</property-name>
+      <property-class>String</property-class>
+      <value>newest</value>
+    </managed-property>
+    <managed-property>
+      <property-name>status</property-name>
+      <property-class>String</property-class>
+      <value>all</value>
+    </managed-property>
+  </managed-bean>
+
+  <managed-bean>
+    <description>
+       The bean to allow a user to post a new comment.  This is a specific bean because
+       the permission to create a new post is different from other permissions.  If the permission
+       is granted, the comment will be created and put in the COMMENT_WAITING state.
+       An email will be sent to the post author for approval.
+    </description>
+    <managed-bean-name>postNewComment</managed-bean-name>
+    <managed-bean-class>AWA.Comments.Beans.Comment_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>entity_type</property-name>
+      <property-class>String</property-class>
+      <value>awa_post</value>
+    </managed-property>
+    <managed-property>
+      <property-name>permission</property-name>
+      <property-class>String</property-class>
+      <value>blog-add-comment</value>
+    </managed-property>
+    <managed-property>
+      <property-name>status</property-name>
+      <property-class>String</property-class>
+      <value>COMMENT_WAITING</value>
+    </managed-property>
+    <managed-property>
+      <property-name>format</property-name>
+      <property-class>String</property-class>
+      <value>FORMAT_TEXT</value>
+    </managed-property>
+  </managed-bean>
+
+  <managed-bean>
+    <description>
+       The bean to allow the blog administrator to change the publication status of a comment.
+    </description>
+    <managed-bean-name>blogPublishComment</managed-bean-name>
+    <managed-bean-class>AWA.Comments.Beans.Comment_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>entity_type</property-name>
+      <property-class>String</property-class>
+      <value>awa_post</value>
+    </managed-property>
+    <managed-property>
+      <property-name>permission</property-name>
+      <property-class>String</property-class>
+      <value>blog-publish-comment</value>
+    </managed-property>
+  </managed-bean>
+
+  <managed-bean>
+    <description>
+       The bean to allow the blog administrator to change the publication status of a comment.
+    </description>
+    <managed-bean-name>blogDeleteComment</managed-bean-name>
+    <managed-bean-class>AWA.Comments.Beans.Comment_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>entity_type</property-name>
+      <property-class>String</property-class>
+      <value>awa_post</value>
+    </managed-property>
+    <managed-property>
+      <property-name>permission</property-name>
+      <property-class>String</property-class>
+      <value>blog-delete-comment</value>
+    </managed-property>
+  </managed-bean>
+
+  <managed-bean>
+    <description>
+       The bean to allow a user to edit the comment.  This is a specific bean because
+       the permission to edit the comment is different from other permissions.
+    </description>
+    <managed-bean-name>commentEdit</managed-bean-name>
+    <managed-bean-class>AWA.Comments.Beans.Comment_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>entity_type</property-name>
+      <property-class>String</property-class>
+      <value>awa_post</value>
+    </managed-property>
+    <managed-property>
+      <property-name>permission</property-name>
+      <property-class>String</property-class>
+      <value>logger-user</value>
+    </managed-property>
+  </managed-bean>
+
+  <managed-bean>
+    <description>This bean provides statistics about the blog</description>
+    <managed-bean-name>blogStats</managed-bean-name>
+    <managed-bean-class>AWA.Blogs.Beans.Stat_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>
+
+  <navigation-rule>
+    <from-view-id>/blogs/post.xhtml</from-view-id>
+    <navigation-case>
+      <from-outcome>not-found</from-outcome>
+      <to-view-id>/blogs/post-missing.xhtml</to-view-id>
+      <status>404</status>
+    </navigation-case>
+  </navigation-rule>
+
+  <navigation-rule>
+    <from-view-id>/blogs/admin/edit.xhtml</from-view-id>
+    <navigation-case>
+      <from-outcome>success</from-outcome>
+      <to-view-id>/blogs/admin/#{post.blogId}/preview/#{post.id}</to-view-id>
+      <redirect/>
+    </navigation-case>
+  </navigation-rule>
+
+  <navigation-rule>
+    <from-view-id>/blogs/admin/forms/blog-create-form.xhtml</from-view-id>
+    <navigation-case>
+      <from-outcome>success</from-outcome>
+      <to-view-id>/blogs/admin/#{post.blogId}/preview/#{post.id}</to-view-id>
+    </navigation-case>
+  </navigation-rule>
+
+  <navigation-rule>
+    <from-view-id>/blogs/admin/create.xhtml</from-view-id>
+    <navigation-case>
+      <from-outcome>not-found</from-outcome>
+      <to-view-id>/blogs/admin/create-blog.xhtml</to-view-id>
+      <redirect/>
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>loaded</from-outcome>
+      <to-view-id>/blogs/admin/create.xhtml</to-view-id>
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>success</from-outcome>
+      <to-view-id>/blogs/admin/edit/#{post.blogId}/#{post.id}</to-view-id>
+      <redirect/>
+    </navigation-case>
+  </navigation-rule>
+
+  <navigation-rule>
+    <from-view-id>/blogs/admin/create-blog.xhtml</from-view-id>
+    <navigation-case>
+      <from-outcome>success</from-outcome>
+      <to-view-id>/blogs/admin/create.xhtml?id=#{blog.id}</to-view-id>
+      <redirect/>
+    </navigation-case>
+  </navigation-rule>
+
+  <navigation-rule>
+    <from-view-id>/blogs/admin/blog-list.xhtml</from-view-id>
+    <navigation-case>
+      <from-outcome>success</from-outcome>
+      <to-view-id>/blogs/admin/blog-list.xhtml?blog_id=#{blog.id}</to-view-id>
+      <redirect/>
+    </navigation-case>
+  </navigation-rule>
+
+    <navigation-rule>
+      <from-view-id>/blogs/admin/forms/post-delete.xhtml</from-view-id>
+      <navigation-case>
+        <from-outcome>success</from-outcome>
+        <to-view-id>/blogs/admin/forms/post-delete-response.xhtml</to-view-id>
+      </navigation-case>
+    </navigation-rule>
+
+  <navigation-rule>
+    <from-view-id>/blogs/admin/forms/comment-delete.xhtml</from-view-id>
+    <navigation-case>
+      <from-outcome>success</from-outcome>
+      <to-view-id>/blogs/admin/forms/comment-delete-response.xhtml</to-view-id>
+    </navigation-case>
+  </navigation-rule>
+
+  <navigation-rule>
+    <from-view-id>/workspaces/main.xhtml</from-view-id>
+    <navigation-case>
+      <from-outcome>success</from-outcome>
+      <to-view-id>/workspaces/main.xhtml</to-view-id>
+      <redirect/>
+    </navigation-case>
+  </navigation-rule>
+
+  <navigation-rule>
+    <from-view-id>/blogs/forms/comment-add-form.xhtml</from-view-id>
+    <navigation-case>
+      <from-outcome>success</from-outcome>
+      <to-view-id>/blogs/forms/comment-add-form-response.xhtml</to-view-id>
+    </navigation-case>
+  </navigation-rule>
+
+  <navigation-rule>
+    <from-view-id>/ajax/blogPublishComment/*</from-view-id>
+    <navigation-case>
+      <from-outcome>success</from-outcome>
+      <to-view-id>/blogs/admin/views/publish-response.xhtml</to-view-id>
+    </navigation-case>
+  </navigation-rule>
+
+  <entity-permission>
+    <name>blog-create</name>
+    <entity-type>awa_workspace</entity-type>
+    <description>Permission to create a new blog.</description>
+    <sql>
+       SELECT acl.id FROM awa_acl AS acl
+       WHERE acl.entity_type = :entity_type
+       AND acl.entity_id = :entity_id
+       AND acl.user_id = :user_id
+       AND acl.permission = $permission[blog-create]
+    </sql>
+    <grant>SELECT id FROM awa_workspace WHERE id = :workspace_id</grant>
+  </entity-permission>
+
+  <entity-permission>
+    <name>blog-delete</name>
+    <entity-type>awa_blog</entity-type>
+    <description>Permission to delete a blog.</description>
+    <sql>
+       SELECT acl.id FROM awa_acl AS acl
+       WHERE acl.entity_type = :entity_type
+       AND acl.user_id = :user_id
+       AND acl.entity_id = :entity_id
+       AND acl.permission = $permission[blog-delete]
+    </sql>
+    <grant>SELECT id FROM awa_blog WHERE workspace_id = :workspace_id</grant>
+  </entity-permission>
+
+  <entity-permission>
+    <name>blog-create-post</name>
+    <entity-type>awa_blog</entity-type>
+    <description>Permission to create a new post.</description>
+    <sql>
+       SELECT acl.id FROM awa_acl AS acl
+       WHERE acl.entity_type = :entity_type
+       AND acl.user_id = :user_id
+       AND acl.entity_id = :entity_id
+       AND acl.permission = $permission[blog-create-post]
+    </sql>
+    <grant>SELECT id FROM awa_blog WHERE workspace_id = :workspace_id</grant>
+  </entity-permission>
+
+  <entity-permission>
+    <name>blog-update-post</name>
+    <entity-type>awa_blog</entity-type>
+    <description>Permission to modify a post.</description>
+    <sql>
+       SELECT acl.id FROM awa_post AS blog_post
+       INNER JOIN awa_acl AS acl ON acl.entity_id = blog_post.blog_id
+       WHERE acl.entity_type = :entity_type
+       AND acl.user_id = :user_id
+       AND blog_post.id = :entity_id
+       AND acl.permission = $permission[blog-update-post]
+    </sql>
+    <grant>SELECT id FROM awa_blog WHERE workspace_id = :workspace_id</grant>
+  </entity-permission>
+
+  <entity-permission>
+    <name>blog-delete-post</name>
+    <entity-type>awa_blog</entity-type>
+    <description>Permission to delete a post.</description>
+    <sql>
+       SELECT acl.id FROM awa_post AS blog_post
+       INNER JOIN awa_acl AS acl ON acl.entity_id = blog_post.blog_id
+       WHERE acl.entity_type = :entity_type
+       AND acl.user_id = :user_id
+       AND blog_post.id = :entity_id
+       AND acl.permission = $permission[blog-delete-post]
+    </sql>
+    <grant>SELECT id FROM awa_blog WHERE workspace_id = :workspace_id</grant>
+  </entity-permission>
+
+  <entity-permission>
+    <name>blog-add-comment</name>
+    <entity-type>awa_blog</entity-type>
+    <sql>
+      SELECT user.id FROM awa_user as user
+      INNER JOIN awa_post AS blog_post ON blog_post.id = :entity_id
+      LEFT JOIN awa_acl AS acl ON acl.entity_id = blog_post.blog_id AND acl.entity_type = :entity_type
+          AND acl.permission = $permission[blog-publish-comment]
+      WHERE user.id = :user_id AND (blog_post.allow_comments = 1 OR acl.id IS NOT NULL)
+    </sql>
+    <grant>SELECT id FROM awa_blog WHERE workspace_id = :workspace_id</grant>
+  </entity-permission>
+
+  <entity-permission>
+    <name>blog-publish-comment</name>
+    <entity-type>awa_blog</entity-type>
+    <entity-type>awa_post</entity-type>
+    <description>Permission to change the publish status of a comment.</description>
+    <sql>
+       SELECT acl.id FROM awa_comment AS cmt
+       INNER JOIN awa_post AS blog_post ON cmt.entity_id = blog_post.id
+       INNER JOIN awa_acl AS acl ON acl.entity_id = blog_post.blog_id AND acl.entity_type = :entity_type_1
+          AND acl.permission = $permission[blog-publish-comment]
+       WHERE cmt.id = :entity_id AND cmt.entity_type = :entity_type_2 AND acl.user_id = :user_id
+    </sql>
+    <grant>SELECT id FROM awa_blog WHERE workspace_id = :workspace_id</grant>
+  </entity-permission>
+
+  <entity-permission>
+    <name>blog-delete-comment</name>
+    <entity-type>awa_blog</entity-type>
+    <entity-type>awa_post</entity-type>
+    <description>Permission to delete the comment.</description>
+    <sql>
+       SELECT acl.id FROM awa_comment AS cmt
+       INNER JOIN awa_post AS blog_post ON cmt.entity_id = blog_post.id
+       INNER JOIN awa_acl AS acl ON acl.entity_id = blog_post.blog_id AND acl.entity_type = :entity_type_1
+          AND acl.permission = $permission[blog-delete-comment]
+       WHERE cmt.id = :entity_id AND cmt.entity_type = :entity_type_2 AND acl.user_id = :user_id
+    </sql>
+    <grant>SELECT id FROM awa_blog WHERE workspace_id = :workspace_id</grant>
+  </entity-permission>
+
+  <servlet-mapping>
+    <servlet-name>ajax</servlet-name>
+    <url-pattern>/blogs/ajax/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>blog-image</servlet-name>
+    <url-pattern>/blogs/images/:post_id/:image_id/:size/:name</url-pattern>
+  </servlet-mapping>
+
+  <filter-mapping>
+    <filter-name>service</filter-name>
+    <url-pattern>/blogs/*.html</url-pattern>
+    <url-pattern>/blogs/ajax/*</url-pattern>
+    <url-pattern>/blogs/admin/#{adminBlog.id}/lists</url-pattern>
+    <url-pattern>/blogs/admin/#{adminBlog.id}/preview/#{post.uid}</url-pattern>
+    <url-pattern>/blogs/admin/#{blogStats.blog_id}/stats</url-pattern>
+    <url-pattern>/blogs/admin/create/#{post.blogId}</url-pattern>
+    <url-pattern>/blogs/admin/edit/#{post.blogId}/#{post.id}</url-pattern>
+    <url-pattern>/blogs/post/#{postAccessStats.entity_id}/stats/#{postAccessStats.first_date}</url-pattern>
+    <url-pattern>/blogs/posts/#{post.uri}</url-pattern>
+    <url-pattern>/blogs/posts/#{post.year}/#{post.month}/#{post.day}/#{post.uri}</url-pattern>
+    <url-pattern>/blogs/feeds</url-pattern>
+    <url-pattern>/blogs/images/*</url-pattern>
+    <url-pattern>/blogs/tags/#{postList.tag}</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>auth-filter</filter-name>
+    <url-pattern>/blogs/ajax/*</url-pattern>
+    <url-pattern>/blogs/forms/comment-add-form.html</url-pattern>
+    <url-pattern>/blogs/admin/*.html</url-pattern>
+    <url-pattern>/blogs/admin/#{adminBlog.id}/lists</url-pattern>
+    <url-pattern>/blogs/admin/#{adminBlog.id}/preview/#{post.uid}</url-pattern>
+    <url-pattern>/blogs/admin/#{blogStats.blog_id}/stats</url-pattern>
+    <url-pattern>/blogs/post/#{postAccessStats.entity_id}/stats/#{postAccessStats.first_date}</url-pattern>
+    <url-pattern>/blogs/admin/create/#{post.blogId}</url-pattern>
+    <url-pattern>/blogs/admin/edit/#{post.blogId}/#{post.id}</url-pattern>
+    <url-pattern>/blogs/feeds</url-pattern>
+    <url-pattern>/blogs/view.html</url-pattern>
+    <url-pattern>/blogs/post.html</url-pattern>
+    <url-pattern>/blogs/tagged.html</url-pattern>
+    <url-pattern>/blogs/index.html</url-pattern>
+  </filter-mapping>
+
+  <url-policy>
+    <permission>anonymous</permission>
+    <url-pattern>/blogs/view.html</url-pattern>
+    <url-pattern>/blogs/post.html</url-pattern>
+    <url-pattern>/blogs/tagged.html</url-pattern>
+    <url-pattern>/blogs/index.html</url-pattern>
+    <url-pattern>/blogs/feeds.html</url-pattern>
+    <url-pattern>/blogs/feeds</url-pattern>
+    <url-pattern>/blogs/images/.*</url-pattern>
+  </url-policy>
+
+  <url-policy>
+    <permission>logged-user</permission>
+    <url-pattern>/blogs/admin/.*</url-pattern>
+    <url-pattern>/blogs/forms/comment-add-form.html</url-pattern>
+    <url-pattern>/blogs/ajax/blogPublishComment/publish</url-pattern>
+    <url-pattern>/blogs/admin/#{adminBlog.id}/preview/#{post.uid}</url-pattern>
+    <url-pattern>/blogs/admin/create/#{post.blogId}</url-pattern>
+    <url-pattern>/blogs/admin/edit/#{post.blogId}/#{post.id}</url-pattern>
+    <url-pattern>/blogs/post/.*/stats/.*</url-pattern>
+  </url-policy>
+
+  <url-mapping>
+    <pattern>/blogs/admin/create/#{post.blogId}</pattern>
+    <view-id>/blogs/admin/create.html</view-id>
+  </url-mapping>
+
+  <url-mapping>
+    <pattern>/blogs/admin/edit/#{post.blogId}/#{post.id}</pattern>
+    <view-id>/blogs/admin/edit.html</view-id>
+  </url-mapping>
+
+  <url-mapping>
+    <pattern>/blogs/admin/#{adminBlog.id}/lists</pattern>
+    <view-id>/blogs/admin/list.html</view-id>
+  </url-mapping>
+
+  <url-mapping>
+    <pattern>/blogs/admin/#{adminBlog.id}/preview/#{post.uid}</pattern>
+    <view-id>/blogs/admin/preview.html</view-id>
+  </url-mapping>
+
+  <url-mapping>
+    <pattern>/blogs/post/#{postAccessStats.entity_id}/stats/#{postAccessStats.first_date}</pattern>
+    <view-id>/blogs/admin/views/post-stats.html</view-id>
+  </url-mapping>
+
+  <url-mapping>
+    <pattern>/blogs/admin/#{blogStats.blog_id}/stats</pattern>
+    <view-id>/blogs/admin/views/blog-stats.html</view-id>
+  </url-mapping>
+
+  <url-mapping>
+    <pattern>/blogs/posts/#{post.uri}</pattern>
+    <pattern>/blogs/posts/#{post.year}/#{post.month}/#{post.day}/#{post.uri}</pattern>
+    <view-id>/blogs/post.html</view-id>
+  </url-mapping>
+
+  <url-mapping>
+    <pattern>/blogs/tags/#{postList.tag}</pattern>
+    <view-id>/blogs/tagged.html</view-id>
+  </url-mapping>
+
+  <url-mapping>
+    <pattern>/blogs/feeds</pattern>
+    <view-id>/blogs/feeds.html</view-id>
+  </url-mapping>
+
+</module>

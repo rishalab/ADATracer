@@ -1,0 +1,26 @@
+<!-- Dialog box to confirm the deletion of the answer.
+  -  Copyright (C) 2013 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<f:view contentType="text/html; charset=UTF-8"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:h="http://java.sun.com/jsf/html">
+    <f:metadata>
+        <f:viewParam id='id' value='#{answer.id}'/>
+    </f:metadata>
+    <h2>#{questionMsg.question_delete_answer_title}</h2>
+    <h:form id='answer-delete'>
+        <h:inputHidden id='answer-delete-id' value='#{answer.id}'/>
+        <p>
+            <h:outputText value="#{questionMsg.question_confirm_delete_answer_message}"/>
+        </p>
+        <ul class='awa-buttons'>
+            <li>
+                <h:commandButton id='answer-delete-button' value='#{questionMsg.question_delete_button}'
+                                 styleClass="ui-button ui-state-default ui-corner-all"
+                                 action="#{answer.delete}" title="#{questionMsg.question_delete_tooltip}"/>
+            </li>
+        </ul>
+    </h:form>
+</f:view>

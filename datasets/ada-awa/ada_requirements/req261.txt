@@ -1,0 +1,1 @@
+When setting the configuration value identified by <b>Value</b> after having parsed the element identified by <b>Field</b>, update the corresponding field in the Controller_Config object.

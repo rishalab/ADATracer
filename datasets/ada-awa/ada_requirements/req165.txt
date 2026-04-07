@@ -1,0 +1,1 @@
+An instance of the `Vote_Module` must be declared and registered in the AWA application.

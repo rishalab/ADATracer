@@ -1,0 +1,1 @@
+The application servlets and filters should be registered.

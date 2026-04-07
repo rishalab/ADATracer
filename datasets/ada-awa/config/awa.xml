@@ -1,0 +1,259 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<module version="1.0">
+
+  <application>
+    <message-bundle var='layoutMsg'>layout</message-bundle>
+    <message-bundle var='markeditMsg'>markedit</message-bundle>
+  </application>
+
+  <dispatcher name="async">
+     <count>#{empty awa_dispatcher_count ? 1 : awa_dispatcher_count}</count>
+     <priority>#{empty awa_dispatcher_priority ? 1 : awa_dispatcher_priority}</priority>
+     <queue match="*"/>
+  </dispatcher>
+
+  <queue name="job-queue" type="persist">
+  </queue>
+
+  <context-param>
+    <param-name>awa_url_scheme</param-name>
+    <param-value>#{empty app_url_scheme ? 'http://' : app_url_scheme}</param-value>
+    <description>The application URL scheme to use when building URL.</description>
+  </context-param>
+
+  <context-param>
+    <param-name>awa_url_host</param-name>
+    <param-value>#{empty app_url_host ? 'localhost' : app_url_host}</param-value>
+    <description>The application URL host to use when building URL.</description>
+  </context-param>
+
+  <context-param>
+    <param-name>awa_url_port</param-name>
+    <param-value>#{empty app_url_port ? ':8080' : app_url_port}</param-value>
+    <description>The application TCP port to use when building URL.</description>
+  </context-param>
+
+  <context-param>
+    <param-name>app_url_base</param-name>
+    <param-value>#{empty app_url_base ? 'http://localhost:8080' : app_url_base}</param-value>
+    <description>The application URL base to use when building URL.</description>
+  </context-param>
+
+  <context-param>
+    <param-name>app_oauth_url_base</param-name>
+    <param-value>#{empty app_oauth_url_base ? 'http://localhost:8080' : app_oauth_url_base}</param-value>
+  </context-param>
+
+  <context-param>
+    <param-name>app_page_500_report</param-name>
+    <param-value>#{empty app_page_500_report ? 'full' : app_page_500_report}</param-value>
+    <description>
+      Controls the level of information that is printed by the 500 error page when an error occurs.
+      When `full`, report the full stack track if available, when `minimal` report minimal information
+      but without a stack track, when 'none' don't give any information.
+    </description>
+  </context-param>
+
+  <context-param>
+    <param-name>view.ext</param-name>
+    <param-value>.html</param-value>
+    <description>
+      Defines the extension used for Ada Server Faces presentation pages.
+    </description>
+  </context-param>
+
+  <context-param>
+    <param-name>view.dir</param-name>
+    <param-value>#{fn:composePath(app_search_dirs,'web')}</param-value>
+    <description>
+      Defines a list of paths separated by ';' where the XHTML files are searched.
+      The default searches for the 'web' directory in the application search paths.
+    </description>
+  </context-param>
+
+  <context-param>
+    <param-name>content-type.default</param-name>
+    <param-value>text/plain</param-value>
+    <description>
+      Defines the default content type for the file servlet.
+    </description>
+  </context-param>
+
+  <context-param>
+    <param-name>ado.queries.load</param-name>
+    <param-value>true</param-value>
+    <description>
+      Controls whether the database query definitions are loaded.
+    </description>
+  </context-param>
+
+  <context-param>
+    <param-name>ado.queries.paths</param-name>
+    <param-value>#{fn:composePath(app_search_dirs,'db')}</param-value>
+    <description>
+      Defines a list of paths separated by ';' where the database query files are searched.
+      The default searches for the 'db' directory in the application search paths.
+    </description>
+  </context-param>
+
+  <context-param>
+    <param-name>ado.migrate.paths</param-name>
+    <param-value>#{fn:composePath(app_search_dirs,'db/migrate')}</param-value>
+    <description>
+      Defines a list of paths separated by ';' where the database migration files are searched.
+      The default searches for the 'db/migrate' directory in the application search paths.
+    </description>
+  </context-param>
+
+  <context-param>
+    <param-name>bundle.dir</param-name>
+    <param-value>#{fn:composePath(app_search_dirs,'bundles')}</param-value>
+    <description>
+      Defines a list of paths separated by ';' where the resource bundle files are searched.
+      The default searches for the 'bundles' directory in the application search paths.
+    </description>
+  </context-param>
+
+  <context-param>
+    <param-name>app.modules.dir</param-name>
+    <param-value>#{fn:composePath(app_search_dirs,'config')}</param-value>
+    <description>
+      Defines a list of paths separated by ';' where the module configuration files are searched.
+      The default searches for the 'config' directory in the application search paths.
+    </description>
+  </context-param>
+
+  <managed-bean>
+    <managed-bean-name>jquery</managed-bean-name>
+    <managed-bean-class>ASF.Beans.Map_Bean</managed-bean-class>
+    <managed-bean-scope>application</managed-bean-scope>
+    <managed-property>
+      <property-name>path</property-name>
+      <property-class>String</property-class>
+      <value>#{contextPath}/js/jquery-4.0.0.js</value>
+    </managed-property>
+    <managed-property>
+      <property-name>uiPath</property-name>
+      <property-class>String</property-class>
+      <value>#{contextPath}/js/jquery-ui-1.14.2/</value>
+    </managed-property>
+    <managed-property>
+      <property-name>chosenPath</property-name>
+      <property-class>String</property-class>
+      <value>#{contextPath}/js/jquery-chosen-3.0.0/chosen.jquery.js</value>
+    </managed-property>
+    <managed-property>
+      <property-name>uiCssPath</property-name>
+      <property-class>String</property-class>
+      <value>#{contextPath}/css/jquery-ui-1.14.2/</value>
+    </managed-property>
+    <managed-property>
+      <property-name>chosenCssPath</property-name>
+      <property-class>String</property-class>
+      <value>#{contextPath}/css/jquery-chosen-3.0.0/chosen.css</value>
+    </managed-property>
+  </managed-bean>
+
+  <servlet-mapping>
+    <servlet-name>faces</servlet-name>
+    <url-pattern>*.html</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>ajax</servlet-name>
+    <url-pattern>/ajax/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>files</servlet-name>
+    <url-pattern>*.css</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>files</servlet-name>
+    <url-pattern>*.js</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>files</servlet-name>
+    <url-pattern>*.svg</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>files</servlet-name>
+    <url-pattern>*.png</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>files</servlet-name>
+    <url-pattern>*.woff</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>files</servlet-name>
+    <url-pattern>*.woff2</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>files</servlet-name>
+    <url-pattern>*.ttf</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>files</servlet-name>
+    <url-pattern>*.jpg</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>files</servlet-name>
+    <url-pattern>*.gif</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>files</servlet-name>
+    <url-pattern>*.ico</url-pattern>
+  </servlet-mapping>
+
+  <grant-permission>
+    <name>anonymous</name>
+  </grant-permission>
+
+  <auth-permission>
+    <name>logged-user</name>
+  </auth-permission>
+
+
+  <error-page>
+    <error-code>401</error-code>
+    <location>/errors/401.html</location>
+  </error-page>
+
+  <error-page>
+    <error-code>403</error-code>
+    <location>/errors/403.html</location>
+  </error-page>
+
+  <error-page>
+    <error-code>404</error-code>
+    <location>/errors/404.html</location>
+  </error-page>
+
+  <error-page>
+    <error-code>500</error-code>
+    <location>/errors/500.html</location>
+  </error-page>
+
+  <filter-mapping>
+    <filter-name>service</filter-name>
+    <url-pattern>/errors/*.html</url-pattern>
+  </filter-mapping>
+
+  <url-policy>
+    <description>
+      Anybody should be able to access an error page.
+    </description>
+    <permission>anonymous</permission>
+    <url-pattern>/errors/.*</url-pattern>
+  </url-policy>
+
+</module>

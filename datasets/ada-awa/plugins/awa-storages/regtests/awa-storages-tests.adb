@@ -1,0 +1,115 @@
+-----------------------------------------------------------------------
+--  awa-storages-tests -- Unit tests for storages module
+--  Copyright (C) 2018, 2019, 2020, 2021, 2023, 2025 Stephane Carrez
+--  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+--  SPDX-License-Identifier: Apache-2.0
+-----------------------------------------------------------------------
+
+with Ada.Strings.Unbounded;
+
+with Util.Test_Caller;
+
+with ASF.Tests;
+with AWA.Tests.Helpers.Users;
+with Servlet.Requests.Mockup;
+with Servlet.Responses.Mockup;
+
+package body AWA.Storages.Tests is
+
+   package Caller is new Util.Test_Caller (Test, "Storages.Beans");
+
+   procedure Add_Tests (Suite : in Util.Tests.Access_Test_Suite) is
+   begin
+      Caller.Add_Test (Suite, "Test AWA.Storages.Beans.Create",
+                       Test_Create_Document'Access);
+      Caller.Add_Test (Suite, "Test AWA.Storages.Servlets (missing)",
+                       Test_Missing_Document'Access);
+   end Add_Tests;
+
+   --  ------------------------------
+   --  Get some access on the wiki as anonymous users.
+   --  ------------------------------
+   procedure Verify_Anonymous (T     : in out Test;
+                               Page  : in String;
+                               Title : in String) is
+      pragma Unreferenced (Page, Title);
+
+      Request   : Servlet.Requests.Mockup.Request;
+      Reply     : Servlet.Responses.Mockup.Response;
+   begin
+      ASF.Tests.Do_Get (Request, Reply, "/storages/documents.html",
+                        "storage-anonymous-list.html");
+      ASF.Tests.Assert_Contains (T, "List of pages", Reply,
+                                 "Wiki list recent page is invalid");
+   end Verify_Anonymous;
+
+   --  ------------------------------
+   --  Verify that the wiki lists contain the given page.
+   --  ------------------------------
+   procedure Verify_List_Contains (T    : in out Test;
+                                   Page : in String) is
+      pragma Unreferenced (Page);
+
+      Request   : Servlet.Requests.Mockup.Request;
+      Reply     : Servlet.Responses.Mockup.Response;
+   begin
+      ASF.Tests.Do_Get (Request, Reply, "/storages/documents.html",
+                        "storage-list.html");
+      ASF.Tests.Assert_Contains (T, "Documents of the workspace", Reply,
+                                 "List of documents is invalid");
+   end Verify_List_Contains;
+
+   --  ------------------------------
+   --  Test access to the blog as anonymous user.
+   --  ------------------------------
+   procedure Test_Anonymous_Access (T : in out Test) is
+   begin
+      T.Verify_Anonymous ("", "");
+   end Test_Anonymous_Access;
+
+   --  ------------------------------
+   --  Test creation of document by simulating web requests.
+   --  ------------------------------
+   procedure Test_Create_Document (T : in out Test) is
+      Request   : Servlet.Requests.Mockup.Request;
+      Reply     : Servlet.Responses.Mockup.Response;
+   begin
+      AWA.Tests.Helpers.Users.Login ("test-storage@test.com", Request);
+      ASF.Tests.Do_Get (Request, Reply,
+                        "/storages/forms/folder-create.html",
+                        "folder-create-form-get-storage.html");
+
+      Request.Set_Parameter ("folder-name", "Test Folder Name");
+      Request.Set_Parameter ("storage-folder-create-button", "1");
+      ASF.Tests.Set_CSRF (Request, "storage-folder-create-form",
+                          "folder-create-form-get-storage.html");
+      ASF.Tests.Do_Post (Request, Reply,
+                         "/storages/forms/folder-create.html",
+                         "folder-create-form.html");
+
+      T.Assert (Reply.Get_Status = Servlet.Responses.SC_OK,
+                "Invalid response after folder creation");
+
+      ASF.Tests.Do_Get (Request, Reply, "/storages/documents.html",
+                        "storage-list.html");
+      ASF.Tests.Assert_Contains (T, "Documents of the workspace", Reply,
+                                 "List of documents is invalid (title)");
+      ASF.Tests.Assert_Contains (T, "Test Folder Name", Reply,
+                                 "List of documents is invalid (content)");
+   end Test_Create_Document;
+
+   --  ------------------------------
+   --  Test getting a document which does not exist.
+   --  ------------------------------
+   procedure Test_Missing_Document (T : in out Test) is
+      Request   : Servlet.Requests.Mockup.Request;
+      Reply     : Servlet.Responses.Mockup.Response;
+   begin
+      ASF.Tests.Do_Get (Request, Reply, "/storages/files/12345345/view/missing.pdf",
+                        "storage-file-missing.html");
+      ASF.Tests.Assert_Matches (T, ".title.Page not found./title.", Reply,
+                                "Page for a missing document is invalid",
+                                Servlet.Responses.SC_NOT_FOUND);
+   end Test_Missing_Document;
+
+end AWA.Storages.Tests;

@@ -1,0 +1,27 @@
+<!-- Last finish step to redirect to the application after it is started
+  -  Copyright (C) 2016 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<f:view contentType="text/html; charset=UTF-8"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:util="http://code.google.com/p/ada-asf/util"
+        xmlns:w="http://code.google.com/p/ada-asf/widget"
+        xmlns:h="http://java.sun.com/jsf/html">
+    <f:metadata>
+        <!--  Wait for the application to be started.  -->
+        <f:viewAction action="#{setup.start}"/>
+    </f:metadata>
+    <h2>
+        #{setupMsg.setup_finish_message}
+    </h2>
+    <div id="setup-starting">
+        Redirecting to the #{setup.app_name} application in 5 seconds.
+    </div>
+    <!--  Wait a little and do the redirection using Javascript.  -->
+    <util:script>
+        setTimeout(function() {
+            document.location = "#{contextPath}/index.html";
+        }, 5000);
+    </util:script>
+</f:view>

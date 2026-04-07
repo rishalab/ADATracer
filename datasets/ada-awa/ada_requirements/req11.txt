@@ -1,0 +1,1 @@
+A user may own several blogs, each blog having a name and its own base URI.

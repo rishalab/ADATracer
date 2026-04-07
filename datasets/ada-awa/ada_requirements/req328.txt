@@ -1,0 +1,1 @@
+A user can register himself by using a subscription form.

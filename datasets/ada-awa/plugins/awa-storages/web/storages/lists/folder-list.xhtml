@@ -1,0 +1,13 @@
+<!-- List of folders
+  -  Copyright (C) 2012, 2018 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html">
+   <h:list var="folder" value="#{folderList}">
+       <div id='folder-#{folder.id}' class='storage-folder-name'>
+           <div>#{folder.name}</div>
+       </div>
+   </h:list>
+</ui:composition>

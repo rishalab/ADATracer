@@ -1,0 +1,1 @@
+The AWA component factory provides a means to create UI components for AWA applications.

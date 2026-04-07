@@ -1,0 +1,1 @@
+Extract from the Location header the part that is after the given base string.

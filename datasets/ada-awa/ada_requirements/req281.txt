@@ -1,0 +1,1 @@
+Get the parameter identified by the given name and return it as an identifier, returns NO_IDENTIFIER if the parameter does not exist or is not valid.

@@ -1,0 +1,1 @@
+Create the queue associated with the given name and configure it by using the configuration properties.

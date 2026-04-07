@@ -1,0 +1,34 @@
+<!-- List of wiki pages for the wiki user
+  -  Copyright (C) 2015, 2016, 2018 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<ui:composition
+        xmlns:awa="http://code.google.com/p/ada-awa/jsf"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:c="http://java.sun.com/jstl/core"
+	    xmlns:u="http://code.google.com/p/ada-asf/util"
+        xmlns:h="http://java.sun.com/jsf/html">
+    <h:panelGroup rendered="#{wikiVersionList.versions.count == 0}">
+        #{wikiMsg.wiki_page_no_version}
+    </h:panelGroup>
+    <h:panelGroup rendered="#{wikiVersionList.versions.count != 0 or true}">
+        <h:list var="version" value="#{wikiVersionList.versions}">
+            <div class='awa-list-item ui-list-item' id="v_#{version.id}">
+                <div class='awa-list-col wiki-page-version'>
+                    #{version.page_version}
+                </div>
+                <div class='awa-list-col wiki-page-date'>
+                    <h:outputText value="#{version.create_date}"/>
+                </div>
+                <div class='awa-list-col wiki-page-author'>
+                    #{version.author}
+                </div>
+                <div class='awa-list-col wiki-page-title'>
+                    #{version.comment}
+                </div>
+            </div>
+        </h:list>
+    </h:panelGroup>
+</ui:composition>

@@ -1,0 +1,71 @@
+<!-- Form to configure the application settings
+  -  Copyright (C) 2016 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<f:view contentType="text/html; charset=UTF-8"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:w="http://code.google.com/p/ada-asf/widget"
+        xmlns:h="http://java.sun.com/jsf/html">
+    <h:form id='setup-database'>
+        <h2>#{setupMsg.setup_database_result}</h2>
+        <div class="setup-result">
+            <pre>#{setup.result}</pre>
+        </div>
+        <h2>
+            #{setupMsg.setup_general_settings_message}
+        </h2>
+        <div>
+            <w:inputText id='app-name' title="#{setupMsg.setup_app_name}"
+                         styleClass="awa-required ui-corner-all"
+                         size='80' placeholder="#{setupMsg.setup_app_name_placeholder}"
+                         value="#{setup.app_name}"/>
+
+            <w:inputText id='app-url' title="#{setupMsg.setup_app_url}"
+                         styleClass="awa-required ui-corner-all"
+                         size='80' placeholder="#{setupMsg.setup_app_url_placeholder}"
+                         value="#{setup.app_url_base}"/>
+
+            <w:inputText id='app-mail-from' title="#{setupMsg.setup_app_mail_from}"
+                         styleClass="awa-required ui-corner-all"
+                         size='80'
+                         value="#{setup.app_mail_from}"/>
+        </div>
+        <h2>
+            #{setupMsg.setup_mail_settings_message}
+        </h2>
+        <div>
+            <w:inputText id='smtp-host' title="#{setupMsg.setup_smtp_host}"
+                         styleClass="awa-required ui-corner-all" required="false"
+                         size='80'
+                         value="#{setup['mail.smtp.host']}"/>
+
+            <w:inputText id='smtp-port' title="#{setupMsg.setup_smtp_port}"
+                         styleClass="awa-required ui-corner-all" required="false"
+                         size='80' placeholder="#{setupMsg.setup_smtp_port_placeholder}"
+                         value="#{setup['mail.smtp.port']}"/>
+
+            <w:inputText id='smtp-user' title="#{setupMsg.setup_smtp_user}"
+                         styleClass="awa-required ui-corner-all" required="false"
+                         size='80' placeholder="#{setupMsg.setup_smtp_user_placeholder}"
+                         value="#{setup['mail.smtp.user']}"/>
+
+            <w:inputText id='smtp-password' title="#{setupMsg.setup_smtp_password}"
+                         styleClass="awa-required ui-corner-all" required="false"
+                         size='80' placeholder="#{setupMsg.setup_smtp_password_placeholder}"
+                         value="#{setup['mail.smtp.password']}"/>
+        </div>
+        <ul class='awa-buttons'>
+            <li class="previous">
+                <input type="submit" value="#{setupMsg.setup_previous_label}"
+                       class="ui-button ui-state-default ui-corner-all"
+                       onclick="return previous_step('database');"/>
+            </li>
+            <li>
+                <h:commandButton id='setup-save-button' value='#{setupMsg.setup_next_label}'
+                                 styleClass="ui-button ui-state-default ui-corner-all"
+                                 action="#{setup.save}" title="#{setupMsg.setup_next_tooltip}"/>
+            </li>
+        </ul>
+    </h:form>
+</f:view>

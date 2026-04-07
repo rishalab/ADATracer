@@ -1,0 +1,45 @@
+<!-- Display a list of question
+  -  Copyright (C) 2013, 2018 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<div class='question-list'
+        xmlns:awa="http://code.google.com/p/ada-awa/jsf"
+        xmlns:h="http://java.sun.com/jsf/html">
+
+    <h:list var="questionInfo" value="#{questionList.questions}">
+        <div class='question' id='q_#{questionInfo.id}'>
+            <div class='question-stats'>
+                <div class='answer-stat'>
+                    <b>#{questionInfo.answer_count}</b>
+                    <span>#{questionMsg.question_answers_label}</span>
+                </div>
+                <div class='vote-stat'>
+                    <b>#{questionInfo.rating}</b>
+                    <span>#{questionMsg.question_votes_label}</span>
+                </div>
+            </div>
+            <div class='question-content'>
+                <h2><a href="#{contextPath}/questions/view/#{questionInfo.id}">
+                    #{questionInfo.title}</a>
+                </h2>
+                <div class='question-summary'>
+                    #{questionInfo.description}
+                </div>
+                <div class='question-info'>
+
+                    <div class='question-author'>
+                        #{questionInfo.author_name}
+                        <h:outputText id="date" styleClass='question-date' value="#{questionInfo.create_date}"
+                                      converter="dateConverter"/>
+                    </div>
+                </div>
+                <awa:tagList value='#{questionList.tags}' id='qtags' styleClass="tagedit-list"
+                             tagLink="#{contextPath}/questions/tagged.html?tag=#{tagName}"
+                             var="tagName"
+                             tagClass="tagedit-listelement tagedit-listelement-old"/>
+
+            </div>
+        </div>
+    </h:list>
+</div>

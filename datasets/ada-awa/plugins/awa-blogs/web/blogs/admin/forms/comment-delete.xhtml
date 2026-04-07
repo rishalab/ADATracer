@@ -1,0 +1,33 @@
+<!-- Form to ask deletion of a comment
+  -  Copyright (C) 2017 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<f:view contentType="text/html; charset=UTF-8"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:util="http://code.google.com/p/ada-asf/util"
+        xmlns:h="http://java.sun.com/jsf/html">
+    <f:metadata>
+        <f:viewParam id='id' value='#{blogDeleteComment.id}'/>
+    </f:metadata>
+    <div class='awa-post awa-form'>
+        <h2>#{blogMsg.blog_comment_delete_title}</h2>
+        <h:form id='delete-post'>
+            <h:inputHidden id='comment-delete-id' value='#{blogDeleteComment.id}'/>
+            <dl class="awa-required#{util:hasMessage('title') ? ' awa-error' : ''}">
+                <dt>
+                    #{blogMsg.blog_comment_confirm_delete}
+                </dt>
+                <dd>
+                </dd>
+            </dl>
+            <ul class='awa-buttons'>
+                <li>
+                    <h:commandButton id='delete-comment-button' value='#{blogMsg.blog_comment_delete_button}'
+                                     styleClass="ui-button ui-state-default ui-corner-all"
+                                     action="#{blogDeleteComment.delete}" title="#{blogMsg.blog_comment_delete_button_title}"/>
+                </li>
+            </ul>
+        </h:form>
+    </div>
+</f:view>

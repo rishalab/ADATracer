@@ -1,0 +1,36 @@
+<!-- List the wiki pages
+  -  Copyright (C) 2015 - 2026 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<ui:composition template="/WEB-INF/layouts/layout.xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:awa="http://code.google.com/p/ada-awa/jsf"
+                xmlns:c="http://java.sun.com/jstl/core"
+                xmlns:ajax="http://code.google.com/p/ada-asf/ajax"
+                xmlns:util="http://code.google.com/p/ada-asf/util"
+                xmlns:h="http://java.sun.com/jsf/html">
+  <ui:define name="pageTitle">
+    <h:outputFormat value="History of page: {0}">
+      <f:param value="#{wikiView.title}"/>
+    </h:outputFormat>
+  </ui:define>
+    <ui:param name="title" value="#{wikiMsg.wiki_history_list_title}"/>
+    <ui:param name="pageStyle" value="page-wiki"/>
+
+    <!-- Main page body -->
+    <ui:define name="pageBody">
+        <f:metadata>
+            <f:viewAction action='#{wikiVersionList.load}'/>
+        </f:metadata>
+        <h:panelGroup rendered="#{user.isLogged}">
+          <ui:include src="views/wiki-nav.xhtml">
+            <ui:param name="wikiSpaceId" value="#{wikiVersionList.wiki_id}"/>
+            <ui:param name="page_link" value="/grid"/>
+          </ui:include>
+        </h:panelGroup>
+        <ui:include src="views/page-history.xhtml"/>
+    </ui:define>
+</ui:composition>
+

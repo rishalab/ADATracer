@@ -1,0 +1,96 @@
+<!-- ASF Widget tag library documentation
+  -  Copyright (C) 2013, 2015 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:util="http://code.google.com/p/ada-asf/util"
+                xmlns:ajax="http://code.google.com/p/ada-asf/ajax"
+                xmlns:w="http://code.google.com/p/ada-asf/widget"
+                template="/WEB-INF/layouts/layout.xhtml">
+    <ui:param name="title" value="Ada Server Faces Examples" />
+    <ui:param name="pageStyle" value="sample-widgets"/>
+    <ui:param name="source_file" value="widgets/view.xhtml"/>
+    <!-- Main page body -->
+    <ui:define name="pageBody">
+
+        <ui:decorate template="/WEB-INF/layouts/example.xhtml">
+            <ui:param name="namespace" value='xmlns:w="http://code.google.com/p/ada-asf/widget"'/>
+            <ui:param name="basename" value="widgets"/>
+            <ui:param name="compliance" value="ASF extension"/>
+            <ui:define name="tabs">
+                <li class="ui-state-default ui-corner-top">
+                    <a href="#" onclick="return sample_select(this, 'accordion');">
+                        w:accordion
+                    </a>
+                </li>
+                <li class="ui-state-default ui-corner-top">
+                    <a href="#" onclick="return sample_select(this, 'autocomplete');">
+                        w:autocomplete
+                    </a>
+                </li>
+                <li class="ui-state-default ui-corner-top">
+                    <a href="#" onclick="return sample_select(this, 'chosen');">
+                        w:chosen
+                    </a>
+                </li>
+                <li class="ui-state-default ui-corner-top">
+                    <a href="#" onclick="return sample_select(this, 'inputDate');">
+                        w:inputDate
+                    </a>
+                </li>
+                <li class="ui-state-default ui-corner-top">
+                    <a href="#" onclick="return sample_select(this, 'inputText');">
+                        w:inputText
+                    </a>
+                </li>
+                <li class="ui-state-default ui-corner-top">
+                    <a href="#" onclick="return sample_select(this, 'gravatar');">
+                        w:gravatar
+                    </a>
+                </li>
+                <li class="ui-state-default ui-corner-top">
+                    <a href="#" onclick="return sample_select(this, 'like');">
+                        w:like
+                    </a>
+                </li>
+                <li class="ui-state-default ui-corner-top">
+                    <a href="#" onclick="return sample_select(this, 'panel');">
+                        w:panel
+                    </a>
+                </li>
+                <li class="ui-state-default ui-corner-top">
+                    <a href="#" onclick="return sample_select(this, 'progress');">
+                        w:progress
+                    </a>
+                </li>
+                <li class="ui-state-default ui-corner-top">
+                    <a href="#" onclick="return sample_select(this, 'tab');">
+                        w:tab
+                    </a>
+                </li>
+                <li class="ui-state-default ui-corner-top">
+                    <a href="#" onclick="return sample_select(this, 'tabView');">
+                        w:tabView
+                    </a>
+                </li>
+            </ui:define>
+            <ui:define name="doc">
+                <ajax:include src="/widgets/doc.xhtml"/>
+            </ui:define>
+            <ui:define name="example">
+                <ajax:include src="/widgets/accordion.xhtml"/>
+            </ui:define>
+            <ui:define name="xhtml">
+                <ajax:include src="/widgets/code.xhtml" async="true"/>
+            </ui:define>
+            <ui:define name="html">
+            </ui:define>
+        </ui:decorate>
+
+    </ui:define>
+    <ui:define name="pageScript">
+        <script type="text/javascript" src="#{contextPath}/js/samples.js"></script>
+    </ui:define>
+
+</ui:composition>

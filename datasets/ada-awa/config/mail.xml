@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<module version="1.0">
+
+  <managed-bean>
+    <description>Bean used to send an email with a specific template to the user.</description>
+    <managed-bean-name>userMail</managed-bean-name>
+    <managed-bean-class>AWA.Mail.Beans.Mail_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>
+
+  <!--  When a user is created, send him a welcome message.  -->
+  <on-event name="user-register">
+     <action>#{userMail.send}</action>
+     <property name="template">/mail/user-register-email.html</property>
+  </on-event>
+
+  <!--  When a user is losts his password, send him a message with the reset password key.  -->
+  <on-event name="user-lost-password">
+     <action>#{userMail.send}</action>
+     <property name="template">/mail/user-lost-password-email.html</property>
+  </on-event>
+
+  <!--  When a user successfully resets his password, send him a message to inform him.  -->
+  <on-event name="user-reset-password">
+     <action>#{userMail.send}</action>
+     <property name="template">/mail/user-reset-password-email.html</property>
+  </on-event>
+
+  <!--  When an invitation is created, send the user a message with the invitation key.  -->
+  <on-event name="invite-user">
+     <action>#{userMail.send}</action>
+     <property name="template">/mail/invite-user-email.html</property>
+  </on-event>
+
+  <url-policy>
+    <description>
+    </description>
+    <permission>logged-user</permission>
+    <url-pattern>/mail/.*</url-pattern>
+  </url-policy>
+
+</module>

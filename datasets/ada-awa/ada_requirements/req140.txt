@@ -1,0 +1,1 @@
+The sysadmin user must be authenticated by entering the correct password, which is "sysadmin".

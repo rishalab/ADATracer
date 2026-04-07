@@ -1,0 +1,55 @@
+<ui:decorate template="/WEB-INF/layouts/mail.xhtml"
+             xmlns:mail="http://code.google.com/p/ada-awa/mail"
+             xmlns:h="http://java.sun.com/jsf/html"
+             xmlns:f="http://java.sun.com/jsf/core"
+             xmlns:ui="http://java.sun.com/jsf/facelets">
+    <ui:define name="subject">
+        <h:outputFormat value="Register to {0}">
+            <f:param value="#{initParam['app_name']}"/>
+        </h:outputFormat>
+    </ui:define>
+    <ui:define name="mailTo">
+        <mail:from address="#{initParam['app_mail_name']}">#{initParam['app_mail_from']}</mail:from>
+        <mail:to address="#{event.name}">#{event.email}</mail:to>
+    </ui:define>
+    <ui:define name="mailTextBody">
+Dear #{event.name},
+
+You have started a registration on the #{initParam['app_name']} application
+under the name #{event.first_name} #{event.last_name}
+and with the email address #{event.email}.
+
+To finish the registration process, click on the following link:
+
+#{initParam['app_url_base']}/auth/validate/#{event.key}
+
+Sincerely,
+
+The #{initParam['app_name']} Team
+</ui:define>
+
+<ui:define name="mailBody">
+Dear #{event.name},
+
+<p>
+You have started a registration on the #{initParam['app_name']} application
+under the name #{event.first_name} #{event.last_name}
+and with the email address #{event.email}.
+</p>
+
+<p>
+To finish the registration process, click on the following link:
+</p>
+
+<a href="#{initParam['app_url_base']}/auth/validate/#{event.key}">#{initParam['app_url_base']}/auth/validate/#{event.key}</a>
+
+<p>
+Sincerely,
+</p>
+
+<p>
+The #{initParam['app_name']} Team
+</p>
+</ui:define>
+
+</ui:decorate>

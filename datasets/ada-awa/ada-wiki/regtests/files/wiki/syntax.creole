@@ -1,0 +1,99 @@
+First paragraph.
+
+Second paragraph.
+
+= Section h1 (largest)
+
+== Section h2
+
+=== Section h3
+
+==== Section h4
+
+===== Section h5
+
+===== Section h5 (second) ==
+
+=== **not** //parsed// ===
+
+----
+
+* item 1
+** item 1.1
+** item 1.2
+* item 2
+* item 3
+*# item 3.1
+*# item 3.2
+
+# num 1
+# num 2
+
+Section bloc:
+
+ L1: line 1
+ L2: line 2
+ L3: line 3
+
+Formatting
+
+//emphasis//
+
+**strong**
+
+
+**//bold italics**//
+//**also bold italics//**
+
+Line\\break
+
+[[A link]]
+[[A link|title]]
+
+{{myimage.png}}
+{{link|Alt text}}
+
+{{{
+//A// **pre**-formatted section 
+== [[Nowiki]]
+}}}
+
+
+|=Heading Col 1 |=Heading Col 2         |
+|Cell 1.1       |Two lines\\in Cell 1.2 |
+|Cell 2.1       |Cell 2.2               |
+
+Some examples of markup are: {{{** <i>this</i> ** }}}
+
+~#1
+
+Escape ~**not bold**
+
+* **bold** item
+* //italic// item
+# item about a [[certain page]]
+# {{{ //this// is **not** [[processed]] }}}
+
+
+== Creole Additions
+
+<<plugin-name param1 param2 param\ 3>>
+
+<<plugin-name name1=param1 name2=param2 name3=param\ 3>>
+
+<<<name1>>>
+
+<<set myname Joe\ Roger>>
+
+This is ##monospace## text. 
+
+This is ^^superscripted^^ text. 
+
+This is ,,subscripted,, text. 
+ 
+This is __underlined__ text.
+
+; First title of definition list
+: Definition of first item.
+; Second title: Second definition
+beginning on the same line.

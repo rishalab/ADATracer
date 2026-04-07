@@ -1,0 +1,1 @@
+The application initializes servlets and filters provided by the application.

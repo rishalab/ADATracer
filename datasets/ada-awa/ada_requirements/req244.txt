@@ -1,0 +1,1 @@
+Configure the application by loading its configuration file and merging it with the keystore file if there is one.

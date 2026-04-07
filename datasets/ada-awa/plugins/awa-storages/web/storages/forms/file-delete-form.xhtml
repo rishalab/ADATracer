@@ -1,0 +1,28 @@
+<!-- Dialog box to confirm and perform the deletion of a storage file.
+  -  Copyright (C) 2012 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<f:view contentType="text/html; charset=UTF-8"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:h="http://java.sun.com/jsf/html">
+    <f:metadata>
+        <f:viewParam id='storeId' value='#{uploadFile.id}'/>
+    </f:metadata>
+    <h2>#{storageMsg.storage_delete_file_title}</h2>
+    <h:form id='file-delete'>
+        <h:inputHidden id='file-delete-id' value='#{uploadFile.id}'/>
+        <p>
+            <h:outputFormat value="#{storageMsg.storage_confirm_delete_file_message}">
+                <f:param value="#{uploadFile.name}"/>
+            </h:outputFormat>
+        </p>
+        <ul class='awa-buttons'>
+            <li>
+                <h:commandButton id='file-delete-button' value='#{storageMsg.storage_delete_file_button}'
+                                 styleClass="ui-button ui-state-default ui-corner-all"
+                                 action="#{uploadFile.delete}" title="#{storageMsg.storage_delete_file_tooltip}"/>
+            </li>
+        </ul>
+    </h:form>
+</f:view>

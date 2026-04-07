@@ -1,0 +1,56 @@
+<query-mapping package='AWA.Storages.Models'>
+    <description>
+      The list of posts for the blog administrator.
+    </description>
+
+    <query name='storage-get-data'>
+       <comment>Get the data content of the storage object.</comment>
+       <sql>
+    SELECT
+      store.mime_type,
+      store.create_date,
+      store.name,
+      store.uri,
+      store.storage,
+      data.data
+    FROM awa_storage AS store
+    LEFT JOIN awa_acl AS acl ON acl.entity_id = store.workspace_id AND acl.entity_type = $entity_type[awa_workspace]
+       AND acl.user_id = :user_id AND acl.permission = $permission[storage-create]
+    LEFT JOIN awa_storage_data AS data ON store.store_data_id = data.id
+    WHERE store.id = :store_id AND (store.is_public OR acl.id IS NOT NULL)
+       </sql>
+    </query>
+
+    <query name='storage-get-local'>
+       <comment>Get the local data storage that can be used to read locally a storage object.</comment>
+       <sql>
+    INNER JOIN awa_storage AS store ON o.storage_id = store.id AND o.store_version = store.version
+    LEFT JOIN awa_acl AS acl ON acl.entity_id = store.workspace_id AND acl.entity_type = $entity_type[awa_workspace]
+       AND acl.user_id = :user_id AND acl.permission = $permission[storage-create]
+    WHERE o.storage_id = :store_id AND o.shared = 1 AND (store.is_public OR acl.id IS NOT NULL)
+       </sql>
+       <sql driver='postgresql'>
+    INNER JOIN awa_storage AS store ON o.storage_id = store.id AND o.store_version = store.version
+    LEFT JOIN awa_acl AS acl ON acl.entity_id = store.workspace_id AND acl.entity_type = $entity_type[awa_workspace]
+       AND acl.user_id = :user_id AND acl.permission = $permission[storage-create]
+    WHERE o.storage_id = :store_id AND o.shared = TRUE AND (store.is_public OR acl.id IS NOT NULL)
+       </sql>
+    </query>
+
+    <query name='storage-get-storage'>
+       <comment>Get the local data storage that can be used to read locally a storage object.</comment>
+       <sql>
+    INNER JOIN awa_acl AS acl ON acl.entity_id =o.workspace_id AND acl.entity_type = $entity_type[awa_workspace]
+      AND acl.user_id = :user_id AND acl.permission = $permission[storage-create]
+    WHERE o.id = :store_id
+       </sql>
+    </query>
+
+    <query name='storage-delete-local'>
+       <comment>Delete the local storage data</comment>
+       <sql>
+    DELETE FROM awa_store_local WHERE storage_id = :store_id
+       </sql>
+    </query>
+
+</query-mapping>

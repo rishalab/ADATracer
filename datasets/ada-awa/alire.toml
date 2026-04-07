@@ -1,0 +1,110 @@
+description = "Ada Web Application"
+name = "awa"
+version = "2.6.0"
+tags = ["web", "users", "jobs", "wiki", "framework", "storage", "blog"]
+website = "https://gitlab.com/stcarrez/ada-awa"
+
+licenses = "Apache-2.0"
+authors = ["Stephane.Carrez@gmail.com"]
+maintainers = ["Stephane.Carrez@gmail.com"]
+maintainers-logins = ["stcarrez"]
+long-description = """
+
+[![Build Status](https://img.shields.io/endpoint?url=https://porion.vacs.fr/porion/api/v1/projects/ada-util/badges/build.json)](https://porion.vacs.fr/porion/projects/view/ada-util/summary)
+[![Test Status](https://img.shields.io/endpoint?url=https://porion.vacs.fr/porion/api/v1/projects/ada-util/badges/tests.json)](https://porion.vacs.fr/porion/projects/view/ada-util/xunits)
+[![Coverage](https://img.shields.io/endpoint?url=https://porion.vacs.fr/porion/api/v1/projects/ada-util/badges/coverage.json)](https://porion.vacs.fr/porion/projects/view/ada-util/summary)
+[![Documentation Status](https://readthedocs.org/projects/ada-util/badge/?version=latest)](https://ada-util.readthedocs.io/en/latest/?badge=latest)
+
+Ada Web Application is a framework to build a Web Application in Ada 2012.
+The framework provides several ready to use and extendable modules that are common
+to many web application.  This includes the login, authentication, users, permissions,
+managing comments, tags, votes, documents, images.  It provides a complete blog,
+question and answers and a wiki module.
+
+AWA simplifies the Web Application development by taking care of user management with
+Google+, Facebook authentication and by providing the foundations on top of which you
+can construct your own application.  AWA provides a powerful permission management
+that gives flexibility to applications to grant access and protect your user's resources.
+
+![AWA Features](https://github.com/stcarrez/ada-awa/wiki/images/awa-features.png)
+
+# Documentation
+
+The Ada Web Application programmer's guide describes how to setup the framework,
+how you can setup and design your first web application with it,
+and it provides detailed description of AWA components:
+
+  * [Ada Web Application programmer's guide](https://ada-awa.readthedocs.io/en/latest/) [PDF](https://github.com/stcarrez/ada-awa/blob/master/awa/docs/awa-book.pdf)
+  * [Ada Database Objects Programmer's Guide](https://ada-ado.readthedocs.io/en/latest/)
+  * [Ada Security Programmer's Guide](https://ada-security.readthedocs.io/en/latest/)
+  * [Ada Utility Library Programmer's Guide](https://ada-util.readthedocs.io/en/latest/)
+
+"""
+
+project-files = [
+"awa.gpr",
+"plugins/awa-seo/awa_seo.gpr",
+"plugins/awa-blogs/awa_blogs.gpr",
+"plugins/awa-settings/awa_settings.gpr",
+"plugins/awa-wikis/awa_wikis.gpr",
+"plugins/awa-changelogs/awa_changelogs.gpr",
+"plugins/awa-images/awa_images.gpr",
+"plugins/awa-setup/awa_setup.gpr",
+"plugins/awa-workspaces/awa_workspaces.gpr",
+"plugins/awa-comments/awa_comments.gpr",
+"plugins/awa-jobs/awa_jobs.gpr",
+"plugins/awa-storages/awa_storages.gpr",
+"plugins/awa-counters/awa_counters.gpr",
+"plugins/awa-mail/awa_mail.gpr",
+"plugins/awa-tags/awa_tags.gpr",
+"plugins/awa-countries/awa_countries.gpr",
+"plugins/awa-questions/awa_questions.gpr",
+"plugins/awa-votes/awa_votes.gpr",
+"plugins/awa-sysadmin/awa_sysadmin.gpr"
+]
+
+[[depends-on]]
+utilada = "^2.8.2"
+utilada_xml = "^2.8.2"
+ado = "^2.5.0"
+wikiada = "^1.5.0"
+elada = "^1.8.6"
+security = "^1.5.0"
+serverfaces = "^1.6.0"
+servletada = "^1.8.0"
+keystoreada = "^1.4.0"
+openapi = "~0.9.0"
+openapi_server = "~0.9.0"
+aws = "^24.0|^25.0"
+
+[[actions]]
+type = "post-fetch"
+command = ["sh", "./alire-setup.sh"]
+
+[gpr-externals]
+AWA_LIBRARY_TYPE = ["relocatable", "static", "static-pic"]
+AWA_BUILD = ["distrib", "debug", "optimize", "profile", "coverage"]
+AWA_AWS_IMPL = ["none", "1", "2", "3", "4"]
+
+[gpr-set-externals]
+AWA_AWS_IMPL = "4"
+
+[environment]
+DYNAMO_SEARCH_PATH.prepend = "${CRATE_ROOT}/plugins"
+DYNAMO_UML_PATH.prepend = "${CRATE_ROOT}/uml"
+
+[configuration]
+disabled = true
+
+[[pins]]
+utilada = { path = 'ada-util' }
+utilada_xml = { path = 'ada-util/xml' }
+elada = { path = 'ada-el' }
+wikiada = { path = 'ada-wiki' }
+ado = { path = 'ada-ado' }
+serverfaces = { path = 'ada-asf' }
+servletada = { path = 'ada-servlet' }
+keystoreada = { path = 'ada-keystore' }
+openapi = { path = 'openapi-ada' }
+openapi_server = { path = 'openapi-ada/server' }
+security = { path = 'ada-security' }

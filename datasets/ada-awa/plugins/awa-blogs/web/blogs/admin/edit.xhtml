@@ -1,0 +1,46 @@
+<!-- Edit an existing post
+  -  Copyright (C) 2011 - 2026 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<ui:composition template="/WEB-INF/layouts/layout.xhtml"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:h="http://java.sun.com/jsf/html">
+    <ui:param name="pageStyle" value="page-edit-post"/>
+    <ui:param name="title" value="#{blogMsg.blog_admin_edit_post_title}"/>
+
+    <ui:define name="pageHeader">
+        <link media="screen" type="text/css" rel="stylesheet" href="#{contextPath}/css/dropzone.css"/>
+        <link media="screen" type="text/css" rel="stylesheet" href="#{contextPath}/css/easymde.min.css"/>
+        <link media="screen" type="text/css" rel="stylesheet" href="#{contextPath}/css/fontawesome.min.css"/>
+        <link media="screen" type="text/css" rel="stylesheet" href="#{contextPath}/css/jquery.datetimepicker.css"/>
+    </ui:define>
+
+    <ui:define name="pageScript">
+        <script src="#{jquery.chosenPath}"></script>
+        <script src="#{contextPath}/js/markedit/showdown.js"></script>
+        <script src="#{contextPath}/js/markedit/jquery.markedit.js"></script>
+        <script src="#{contextPath}/js/dropzone.js"></script>
+        <script src="#{contextPath}/js/jquery.datetimepicker.js"></script>
+        <script src="#{contextPath}/js/trumbowyg/trumbowyg.js"></script>
+        <script src="#{contextPath}/js/trumbowyg/plugins/fontfamily/trumbowyg.fontfamily.js"></script>
+        <script src="#{contextPath}/js/trumbowyg/plugins/preformatted/trumbowyg.preformatted.js"></script>
+        <script src="#{contextPath}/js/easymde/easymde.min.js"></script>
+        <script src="#{contextPath}/js/awa-images.js"></script>
+        <script src="#{contextPath}/js/awa-blogs.js"></script>
+    </ui:define>
+
+    <!-- Main page body -->
+    <ui:define name="pageBody">
+      <!-- <ui:include src="lists/menu-list.xhtml"/> -->
+      <div id='blog-post-edit' class='awa-container'>
+        <div class='awa-post'>
+          <ui:include src="forms/post-form.xhtml">
+            <ui:param name="title" value="#{blogMsg.blog_post_update_title}"/>
+          </ui:include>
+        </div>
+      </div>
+    </ui:define>
+</ui:composition>
+

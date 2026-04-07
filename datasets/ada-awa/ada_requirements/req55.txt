@@ -1,0 +1,1 @@
+Load the data content that correspond to the GET request and get the name as well as mime-type and date.

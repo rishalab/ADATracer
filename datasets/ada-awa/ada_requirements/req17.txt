@@ -1,0 +1,1 @@
+Add the log message and associate it with the database entity identified by the given id and the entity type.

@@ -1,0 +1,17 @@
+<!-- Index page to redirect to a real page
+  -  Copyright (C) 2012 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<f:view xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:c="http://java.sun.com/jstl/core"
+        xmlns:awa="http://code.google.com/p/ada-awa/jsf">
+    <c:choose>
+        <c:when test="#{user.isLogged}">
+            <awa:redirect link="#{contextPath}/workspaces/main.html"/>
+        </c:when>
+        <c:otherwise>
+            <awa:redirect link="#{contextPath}/blogs/view.html"/>
+        </c:otherwise>
+    </c:choose>
+</f:view>

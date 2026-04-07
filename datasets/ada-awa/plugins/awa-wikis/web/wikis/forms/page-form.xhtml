@@ -1,0 +1,124 @@
+<!-- Form to create or update a wiki page
+  -  Copyright (C) 2015, 2017, 2018, 2023 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<ui:composition
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:w="http://code.google.com/p/ada-asf/widget"
+        xmlns:util="http://code.google.com/p/ada-asf/util"
+        xmlns:awa="http://code.google.com/p/ada-awa/jsf"
+        xmlns:c="http://java.sun.com/jstl/core"
+        xmlns:h="http://java.sun.com/jsf/html">
+
+  <div class='awa-post awa-form'>
+      <div id="image-selector"/>
+      <h:form id='post'>
+        <h:inputHidden id='page-id' value='#{wikiPage.id}' required='false'/>
+        <h:inputHidden id='page-wiki-id' value='#{wikiPage.wiki_id}'/>
+        <div class='wiki-editor'>
+        <div class='wiki-editor-input'>
+            <h:messages styleClass='awa-error'/>
+            <w:inputText id='name' title="#{wikiMsg.wiki_page_name_label}"
+                         styleClass="awa-required ui-corner-all"
+                         size='80' placeholder="#{wikiMsg.wiki_edit_name_placeholder}"
+                         value="#{wikiPage.name}"/>
+            <w:inputText id='page-title' title="#{wikiMsg.wiki_page_title_label}"
+                         styleClass="awa-required ui-corner-all"
+                         size='80' placeholder="#{wikiMsg.wiki_edit_title_placeholder}"
+                         value="#{wikiPage.title}"/>
+            <dl class="awa-required#{util:hasMessage('title') ? ' awa-error' : ''}">
+                <dt>
+                    <label for='text'>#{wikiMsg.wiki_page_text_label}</label>
+                </dt>
+                <dd>
+                    <h:inputTextarea id='text' rows='20' required='false' value='#{wikiPage.text}'/>
+                </dd>
+                <dt>
+                    <label for='qtags'>#{wikiMsg.wiki_tags_label}</label>
+                </dt>
+                <dd>
+                    <awa:tagList value='#{wikiPage.tags}' id='qtags'
+                                 autoCompleteUrl='#{contextPath}/wikis/lists/tag-search.html'/>
+                </dd>
+            </dl>
+            <w:inputText id='comment' title="#{wikiMsg.wiki_page_comment_label}"
+                         styleClass="awa-required ui-corner-all" size='80'
+                         placeholder="#{wikiMsg.wiki_edit_comment_placeholder}"
+                         value="#{wikiPage.comment}" required="false"/>
+
+            <ul class='awa-buttons'>
+                <li>
+                    <h:commandButton id='save' value='#{wikiMsg.wiki_page_save_button}'
+                                     styleClass="ui-button ui-state-default ui-corner-all"
+                                     action="#{wikiPage.save}" title="#{wikiMsg.wiki_page_save_title}"/>
+                </li>
+            </ul>
+        </div>
+        <div class='wiki-editor-info'>
+            <ul class='awa-buttons'>
+                <li>
+                    <h:commandButton id='save-top' value='#{wikiMsg.wiki_page_save_button}'
+                                     styleClass="ui-button ui-state-default ui-corner-all"
+                                     action="#{wikiPage.save}" title="#{wikiMsg.wiki_page_save_title}"/>
+                </li>
+            </ul>
+            <dl class="awa-required">
+                <dt></dt>
+                <label for='page-is-public'>#{wikiMsg.wiki_page_is_public_label}</label>
+                <dd>
+                    <h:selectOneRadio styleClass="awa-radio" id="page-is-public" value="#{wikiPage.is_public}">
+                        <f:selectItem id="page-public-yes" name="page-is-public" itemLabel="Yes" itemValue="TRUE" />
+                        <f:selectItem id="page-public-no" name="page-is-public" itemLabel="No" itemValue="FALSE" />
+                    </h:selectOneRadio>
+                </dd>
+            </dl>
+            <dl class="awa-required">
+                <dt>
+                    <label for="wiki-format">#{wikiMsg.wiki_page_format_label}</label>
+                </dt>
+                <dd>
+                    <w:chosen id='wiki-format' size='10' value='#{wikiPage.format}'
+                                     styleClass="ui-state-default ui-corner-all">
+                      <f:facet name="options">disable_search: true</f:facet>
+                      <f:selectItems value="#{wikiFormatList}"/>
+                    </w:chosen>
+                </dd>
+            </dl>
+            <dl class="awa-optional" id="wiki-syntax">
+                <dd>
+                    <ui:include src="/markedit/syntax.xhtml">
+                        <ui:param name="syntax" value="#{wikiPage.format}"/>
+                    </ui:include>
+                </dd>
+            </dl>
+        </div>
+        </div>
+    </h:form>
+  </div>
+    <util:script>
+        contextPath = "#{contextPath}";
+        // Create a MarkEdit editor on page load
+        $(function(){
+            var area = $("#text");
+
+            $("#post").wiki_editor({
+                'syntax': "#{wikiPage.format}",
+            });
+
+            function setSyntax() {
+                var syntax = $('#wiki-format').val();
+                $("#wiki-syntax ul").attr('class', 'markedit-syntax ' + syntax);
+                syntax = syntax.replace("FORMAT_", "");
+                $(area).markeditSetSyntax(syntax);
+            };
+            $('#wiki-format').change(function(ev) {
+                setSyntax();
+            });
+            setSyntax();
+        });
+    </util:script>
+
+</ui:composition>
+

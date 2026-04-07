@@ -1,0 +1,18 @@
+<!-- Response sent when an image is uploaded
+  -  Copyright (C) 2018 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<f:view contentType="application/json"
+        xmlns:util="http://code.google.com/p/ada-asf/util"
+        xmlns:c="http://java.sun.com/jstl/core"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core">
+[
+    { "action": "message", "attach": "#awa-upload-button", "data": "<util:escape>
+    <div class='awa-message'>
+      <h:messages styleClass='awa-message-error' globalOnly="true"/>
+    </div>
+</util:escape>" }
+]
+</f:view>

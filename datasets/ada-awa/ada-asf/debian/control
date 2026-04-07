@@ -1,0 +1,64 @@
+Source: libasf
+Priority: optional
+Section: libdevel
+Maintainer: Stephane Carrez <Stephane.Carrez@gmail.com>
+Build-Depends: debhelper (>= 10), autotools-dev,
+ dh-ada-library,
+ gnat, gnat-9,
+# This line is parsed by debian/rules.
+ gprbuild (>= 2015-2),
+# 2015-2 is compatible with gnat-6
+ libservletada3-dev,
+ libservletada-unit3-dev,
+ libutilada-xml3-dev
+Standards-Version: 4.1.4
+Homepage: https://github.com/stcarrez/ada-asf/
+Vcs-Git: https://github.com/stcarrez/ada-asf.git -b debian-gnat-9
+Vcs-Browser: https://github.com/stcarrez/ada-asf/tree/debian-gnat-9
+
+Package: libasf1.5.0
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Ada Server Faces for web applications (runtime)
+ Ada Server Faces is a web framework which follows the Java Server Faces
+ specification (JSR 252, JSR 314 and JSR 344).  It defines a component
+ driven framework which provides a powerful mechanism for Web application.
+ .
+ This package contains the runtime libraries.
+
+Package: libasf-unit1.5.0
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Ada Server Faces unit test framework (runtime)
+ Ada Server Faces is a web framework which follows the Java Server Faces
+ specification (JSR 252, JSR 314 and JSR 344).  It defines a component
+ driven framework which provides a powerful mechanism for Web application.
+ .
+ The package provides an Ada unit test framework to help in testing
+ an Ada web application.
+ .
+ This package contains the runtime libraries.
+
+Package: libasf3-dev
+Section: libdevel
+Architecture: any
+Depends: ${misc:Depends}, ${ada:Depends}
+Description: Ada Server Faces for web applications (Development files)
+ Ada Server Faces is a web framework which follows the Java Server Faces
+ specification (JSR 252, JSR 314 and JSR 344).  It defines a component
+ driven framework which provides a powerful mechanism for Web application.
+ .
+ The package contains the Ada development files to develop web applications
+ using the Ada Server Faces component driven framework.
+
+Package: libasf-unit3-dev
+Section: libdevel
+Architecture: any
+Depends: ${misc:Depends}, ${ada:Depends}
+Description: Ada Server Faces unit test framework (Development files)
+ The package provides an Ada unit test framework to help in testing
+ an Ada web application.
+ .
+ This package contains the development files for the Ada Web Server.

@@ -1,0 +1,1 @@
+The workspace controls the features available in the application for a set of users: the workspace members.

@@ -1,0 +1,1 @@
+If the name cannot be found, the method should return the Null object.

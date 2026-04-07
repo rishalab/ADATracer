@@ -1,0 +1,1 @@
+The UI components package defines the UI components to represent a mail attachment.

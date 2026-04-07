@@ -1,0 +1,30 @@
+<!-- List the wiki page tags.
+  -  Copyright (C) 2015 - 2022 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<ui:composition template="/WEB-INF/layouts/layout.xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:awa="http://code.google.com/p/ada-awa/jsf"
+                xmlns:c="http://java.sun.com/jstl/core"
+                xmlns:ajax="http://code.google.com/p/ada-asf/ajax"
+                xmlns:util="http://code.google.com/p/ada-asf/util"
+                xmlns:h="http://java.sun.com/jsf/html">
+    <ui:param name="title" value="#{wikiMsg.wiki_admin_page_list_title}"/>
+    <ui:param name="pageStyle" value="page-wiki"/>
+
+    <!-- Main page body -->
+    <ui:define name="pageBody">
+      <ui:decorate template="views/wiki-nav.xhtml">
+        <ui:param name="wikiSpaceId" value="#{wikiList.wiki_id}"/>
+        <ui:param name="sort" value="#{wikiList.sort}"/>
+        <ui:param name="page_link" value=""/>
+      </ui:decorate>
+      <awa:tagCloud
+        value="#{wikiTagCloud}" styleClass="tag-cloud" layout="dispatch"
+        var="tagName" maxWeight="48" minWeight="16" rows="60"
+        tagLink="#{contextPath}/wikis/tags/#{wikiList.wiki_id}/#{util:urlEncode(tagName)}/recent"/>
+    </ui:define>
+</ui:composition>
+

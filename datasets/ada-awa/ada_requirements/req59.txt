@@ -1,0 +1,1 @@
+The workspace contains one or several folders. Each image folder contains a set of images that have been uploaded by the user.

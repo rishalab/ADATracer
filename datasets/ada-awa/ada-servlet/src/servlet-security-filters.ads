@@ -1,0 +1,80 @@
+-----------------------------------------------------------------------
+--  security-filters -- Security filter
+--  Copyright (C) 2011, 2012, 2015, 2022, 2026 Stephane Carrez
+--  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+--  SPDX-License-Identifier: Apache-2.0
+-----------------------------------------------------------------------
+
+with Servlet.Filters;
+with Servlet.Requests;
+with Servlet.Responses;
+with Servlet.Core;
+with Servlet.Sessions;
+with Servlet.Principals;
+with Security.Policies;  use Security;
+
+--  The <b>Security.Filters</b> package defines a servlet filter that can be activated
+--  on requests to authenticate users and verify they have the permission to view
+--  a page.
+package Servlet.Security.Filters is
+
+   SID_COOKIE : constant String := Servlet.Requests.SID_COOKIE;
+
+   AID_COOKIE : constant String := "AID";
+
+   type Auth_Filter is new Servlet.Filters.Filter with private;
+
+   --  Called by the servlet container to indicate to a servlet that the servlet
+   --  is being placed into service.
+   overriding
+   procedure Initialize (Server  : in out Auth_Filter;
+                         Config  : in Servlet.Core.Filter_Config);
+
+   --  Set the permission manager that must be used to verify the permission.
+   procedure Set_Permission_Manager (Filter  : in out Auth_Filter;
+                                     Manager : in Policies.Policy_Manager_Access);
+
+   --  Filter the request to make sure the user is authenticated.
+   --  Invokes the <b>Do_Login</b> procedure if there is no user.
+   --  If a permission manager is defined, check that the user has the permission
+   --  to view the page.  Invokes the <b>Do_Deny</b> procedure if the permission
+   --  is denied.
+   overriding
+   procedure Do_Filter (F        : in Auth_Filter;
+                        Request  : in out Servlet.Requests.Request'Class;
+                        Response : in out Servlet.Responses.Response'Class;
+                        Chain    : in out Servlet.Core.Filter_Chain);
+
+   --  Display or redirects the user to the login page.  This procedure is called when
+   --  the user is not authenticated.
+   procedure Do_Login (F        : in Auth_Filter;
+                       Request  : in out Servlet.Requests.Request'Class;
+                       Response : in out Servlet.Responses.Response'Class);
+
+   --  Display the forbidden access page.  This procedure is called when the user is not
+   --  authorized to see the page.  The default implementation returns the SC_FORBIDDEN error.
+   procedure Do_Deny (F        : in Auth_Filter;
+                      Request  : in out Servlet.Requests.Request'Class;
+                      Response : in out Servlet.Responses.Response'Class);
+
+   --  Authenticate a user by using the auto-login cookie.  This procedure is called if the
+   --  current session does not have any principal.  Based on the request and the optional
+   --  auto-login cookie passed in <b>Auth_Id</b>, it should identify the user and return
+   --  a principal object.  The principal object will be freed when the session is closed.
+   --  If the user cannot be authenticated, the returned principal should be null.
+   --
+   --  The default implementation returns a null principal.
+   procedure Authenticate (F        : in Auth_Filter;
+                           Request  : in out Servlet.Requests.Request'Class;
+                           Response : in out Servlet.Responses.Response'Class;
+                           Session  : in Servlet.Sessions.Session;
+                           Auth_Id  : in String;
+                           Principal : out Servlet.Principals.Principal_Access);
+
+private
+
+   type Auth_Filter is new Servlet.Filters.Filter with record
+      Manager : Policies.Policy_Manager_Access := null;
+   end record;
+
+end Servlet.Security.Filters;

@@ -1,0 +1,1 @@
+Print the configuration about the application.

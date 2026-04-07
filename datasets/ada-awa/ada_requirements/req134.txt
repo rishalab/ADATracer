@@ -1,0 +1,1 @@
+The file system store uses the file system to save a data content.

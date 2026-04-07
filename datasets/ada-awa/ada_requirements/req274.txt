@@ -1,0 +1,1 @@
+Queue the event. The event is saved in the database with a relation to the user, the user session, the event queue and the event type.

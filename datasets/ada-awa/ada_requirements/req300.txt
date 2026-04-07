@@ -1,0 +1,1 @@
+The OAuth Authentication filter verifies that the access token passed for the OAuth operation is valid and it extracts the user to configure the request principal.

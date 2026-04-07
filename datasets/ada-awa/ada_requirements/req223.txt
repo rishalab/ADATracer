@@ -1,0 +1,1 @@
+The security manager is created during the initialization phase of the application.

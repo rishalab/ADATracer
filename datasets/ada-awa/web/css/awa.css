@@ -1,0 +1,1187 @@
+/**
+ * main.css - Main style for AWA pages
+ * Copyright (C) 2011, 2012, 2014, 2016, 2017, 2019 Stephane Carrez
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ */
+html, body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, textarea, p, blockquote, th, td, label {
+    margin: 0;
+    padding: 0;
+}
+html, body {
+  height: 100%;
+}
+body {
+  font-family: Arial, Verdana, sans-serif;
+  font-size: 1.0em;
+  background-color: var(--bg-body);
+  overflow-y: scroll;
+  position: relative;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+main {
+    padding-top: 0;
+    flex-grow: 1;
+    background-color: white;
+    display: block;
+    height: auto;
+    position: inherit;
+}
+body.awa {
+  background-color: var(--accent-teal);
+}
+footer {
+    width: 100%;
+    bottom: 0;
+    height: 30px;
+    clear: both;
+}
+* {
+    box-sizing: border-box;
+}
+#awa-page {
+    margin-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+}
+#awa-hdr {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 27px;
+    background-color: var(--bg-header);
+    border-bottom: 5px solid var(--bg-header);
+    z-index: 1;
+}
+.awa-side-nav {
+    max-height: 27px;
+    transition: max-height .5s ease-out;
+    z-index: 10;
+}
+.awa-side-nav li {
+    line-height: 20px;
+}
+#awa-hdr ul {
+  list-style-type: none;
+  padding-right: 20px;
+}
+#awa-tools {
+    float: right;
+}
+#awa-tools li {
+  float: right;
+  padding-left: 5px;
+  padding-right: 5px;
+  line-height: 24px;
+}
+#awa-hdr li a, #awa-hdr li {
+    color: var(--text-light);
+    font-size: 0.9em;
+    text-decoration: none;
+}
+#awa-hdr #awa-top-nav {
+    float: left;
+}
+#awa-top-nav li {
+    border-bottom: none;
+    float: left;
+    line-height: 20px;
+}
+#awa-top-nav li a {
+    display: inline-block;
+    font-size: 1.1em;
+    font-weight: bold;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.awa-nav-separator {
+    content: '|';
+}
+#awa-top {
+    position: fixed;
+    overflow: hidden;
+}
+
+/* Drop down side menu */
+header {
+    position: relative;
+}
+.awa-side-nav {
+    width: calc(100% - 50px);
+    height: 100%;
+    position: absolute;
+}
+.awa-menu {
+    list-style-type: none;
+}
+.awa-menu li {
+    float: left;
+    border-bottom: none;
+    line-height: 20px;
+}
+.awa-menu a {
+    display: block;
+    width: 100%;
+    border-bottom: 3px solid transparent;
+    height: 27px;
+    font-size: 1.1em;
+    font-weight: bold;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-decoration: none;
+}
+.awa-menu a:hover{
+    background-color: var(--bg-hover);
+    border-color: var(--border-accent);
+}
+.awa-hamb-menu {
+    display: none;
+}
+.awa-hamb-menu {
+    cursor: pointer;
+    float: right;
+    padding: 13px 13px; /* 27px = 13 + 13 + 1 */
+}
+.awa-hamb-line {
+    background: var(--border-accent);
+    display: block;
+    height: 2px;
+    position: relative;
+    width: 24px;
+}
+
+.awa-hamb-line::before,
+.awa-hamb-line::after{
+    background: #fff;
+    content: '';
+    display: block;
+    height: 100%;
+    position: absolute;
+    transition: all .2s ease-out;
+    width: 100%;
+}
+.awa-hamb-line::before{
+    top: 5px;
+}
+.awa-hamb-line::after{
+    top: -5px;
+}
+.awa-side-menu {
+    display: none;
+}
+/* Toggle menu icon */
+.awa-side-menu:checked ~ nav {
+    max-height: 100%;
+}
+.awa-side-menu:checked ~ .awa-hamb-menu .awa-hamb-line {
+    background: transparent;
+}
+.awa-side-menu:checked ~ .awa-hamb-menu .awa-hamb-line::before {
+    transform: rotate(-45deg);
+    top:0;
+}
+.awa-side-menu:checked ~ .awa-hamb-menu .awa-hamb-line::after {
+    transform: rotate(45deg);
+    top:0;
+}
+
+
+.awa-side-panel {
+    display: flex;
+    flex-direction: row;
+    flex-flow: row;
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    border-bottom: 1px solid var(--border-light);
+}
+.awa-left-panel, .awa-right-panel {
+    flex: 1 1 auto;
+}
+.awa-right-panel {
+    flex-grow: 1;
+}
+.awa-right-panel .awa-nav {
+    margin-top: 1em;
+}
+.awa-ok {
+  float: left;
+  width: 48px;
+  height: 48px;
+  margin-left: 5px;
+  margin-right: 15px;
+}
+#awa-copyright {
+  float: left;
+  margin-left: 20px;
+  margin-right: 5px;
+}
+#awa-clfooter {
+  clear: both;
+  height: 30px; /* See #awa-page margin bottom */
+  width: 100%;
+}
+#awa-footer_content {
+  float: right;
+  margin-right: 20px;
+  margin-top: 8px;
+}
+ul.awa-buttons {
+    float: left;
+    list-style-type: none;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    padding-left: 2%;
+    width: 96%;
+}
+.awa-buttons li {
+    float: left;
+    width: auto;
+    padding-right: 2%;
+}
+.awa-cancel {
+    padding: 0.5em;
+    display: inline-block;
+}
+
+/* Global layouts */
+div.awa-side1, div.awa-side2 {
+    float: left;
+}
+div.awa-side1 {
+    padding-right: 1%;
+    padding-left: 1%;
+    width: 50%;
+}
+div.awa-side2 {
+    padding-left: 1%;
+    padding-right: 1%;
+    width: 50%;
+}
+.awa-columns {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+/**
+ * AWA Errors
+ */
+li.awa-error label,
+dl.awa-error dt,
+span.awa-error, dl.awa-error dt label, dl.asf-error dt label, dl.asf-error dd span {
+    color: var(--text-error);
+}
+span.awa-error {
+    margin-bottom: 2px;
+    margin-top: 2px;
+    height: auto;
+}
+ul.awa-error {
+    list-style-type: none;
+    float: left;
+    width: 100%;
+    color: red;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+ul.awa-error li {
+    float: left;
+    width: 100%;
+}
+
+/**
+ * Form definition.
+ */
+div.awa-form, .awa-container, .awa-form-container {
+    float: left;
+    width: 100%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+.awa-form-container {
+    padding-left: 1%;
+    padding-right: 1%;
+}
+
+/**
+ * A form field (optional or required).
+ *  - dt contains the label
+ *  - dd contains the input field
+ */
+dl.awa-optional, dl.awa-required {
+    width: 100%;
+    padding-left: 2%;
+    padding-right: 2%;
+}
+dl.awa-optional dt, dl.awa-required dt {
+    float: left;
+    width: 100%;
+    padding-top: 8px;
+}
+dl.awa-optional dd, dl.awa-required dd {
+    float: left;
+    clear: both;
+    width: 100%;
+}
+dl.awa-error span.awa-error, span.awa-error {
+    font-size: 0.9em;
+}
+dl.awa-optional label, dl.awa-required label {
+    display: inline;
+    float: left;
+    clear: left;
+    text-align: left;
+    color: var(--form-label);
+    font-weight: bold;
+    padding-right: 5px;
+}
+.awa-tag-input,
+dl.awa-optional input, dl.awa-required input {
+    width: 100%;
+    padding: 3px;
+}
+dl.awa-optional textarea, dl.awa-required textarea {
+    width: 100%;
+    padding: 3px;
+    font-family: courier;
+}
+.awa-required .trumbowyg-modal-box input {
+    width: 70%;
+}
+.awa-required .trumbowyg-modal-box label {
+    display: block;
+    width: 93%;
+}
+
+.awa-editable-message {
+    cursor: pointer;
+}
+
+/**
+ * Error messages
+ */
+div.awa-messages {
+    width: 96%;
+    height: 43px;
+    float: left;
+    padding-top: 5px;
+    padding-left: 2%;
+    padding-right: 2%;
+}
+
+#asf-message div.awa-message {
+    width: 400px;
+}
+.awa-message .awa-message-error li {
+    list-style-type: none
+}
+
+/**
+ * A global error message.
+ */
+div.awa-error {
+    width: 640px;
+    margin: auto;
+}
+.awa-error-details {
+    width: 100%;
+}
+.awa-error-details dt {
+    margin-top: 0.5em;
+}
+.awa-error-details dd {
+    margin-bottom: 0.3em;
+}
+.awa-error-traceback {
+    font-family: monospace;
+    white-space: pre;
+}
+
+/**
+ * Modal box
+ */
+#awa-overlay {
+    display: block;
+	position: fixed;
+	visibility: hidden;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 1000;
+	background: #555;
+	opacity: 0;
+	-webkit-transition: all 0.4s;
+	-moz-transition: all 0.4s;
+	transition: all 0.4s;
+}
+#awa-overlay.awa-overlay-show {
+    visibility: visible;
+    opacity: 0.7;
+}
+
+div.awa-modal {
+    display: block;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 50%;
+    max-width: 630px;
+    min-width: 320px;
+    height: auto;
+    z-index: 2000;
+    visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    -moz-transform: translateX(-50%) translateY(-50%);
+    -ms-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+    background: #555;
+}
+
+div.awa-modal-show {
+	visibility: visible;
+}
+div.awa-modal div.awa-login, div.awa-model div.awa-accept-invitation {
+    position: relative;
+}
+
+/* List and list headers */
+.awa-list, .awa-list-header {
+    float: left;
+    padding: 0 2% 0 2%;
+    width: 100%;
+    clear: both;
+}
+.awa-list-header {
+    font-weight: bold;
+}
+.awa-list-col, .awa-header-col {
+    float: left;
+    overflow: hidden;
+    min-height: 1em;
+}
+.awa-list-item, .awa-list-item-header {
+    float: left;
+    clear: both;
+    width: 100%;
+}
+.awa-list-item {
+    border-bottom: 1px solid var(--border-light);
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+.awa-list-item-header {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+.awa-list-empty {
+    padding: 1em;
+}
+/**
+ * Pagination for lists
+ */
+ul.awa-pagination {
+    float: left;
+    width: 100%;
+    list-style-type: none;
+}
+ul.awa-pagination li {
+    float: left;
+    margin-left: 10%;
+    margin-right: 10%;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    font-weight: bold;
+}
+
+/**
+ * The ui.list component.
+ */
+.ui-list .awa-list-item {
+    position: relative;
+}
+
+.awa-button {
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    padding: 0.5em;
+    border: 1px solid var(--button-border);
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+.awa-button:hover {
+    text-decoration: none;
+    background: var(--button-hover);
+}
+.awa-radio input {
+    display: none;
+}
+.awa-radio {
+    border-spacing: 5px 5px;
+    border-collapse: separate;
+}
+.awa-radio input + label {
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    padding: 0.5em;
+    border: 1px solid #c5dbec;
+    text-decoration: none;
+    font-weight: bold;
+    background: #e6e6e3;
+    color: #b5b5b5;
+}
+.awa-radio input:checked + label {
+    border: 1px solid #c5dbec;
+    background: #dfeffc;
+    color: #333;
+}
+/**
+ * Page actions at the right side of titles (wiki, blog).
+ */
+.awa-page-actions {
+    float: right;
+    list-style-type: none;
+}
+.awa-page-actions li {
+    float: left;
+    padding-left: 1em;
+    height: 2em;
+}
+
+/**
+ * Navigation icons
+ */
+.awa-nav {
+    float: left;
+    width: 100%;
+    padding-left: 1%;
+    padding-right: 1%;
+    list-style-type: none;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 10px;
+    padding-top: 1em;
+}
+.awa-nav-left {
+    float: left;
+    padding-right: 10px;
+}
+.awa-nav-right {
+    float: right;
+    padding-left: 10px;
+}
+.awa-nav-icon {
+    width: 150px;
+    display: block;
+}
+.awa-nav-icon span {
+    display: block;
+    float: left;
+    width: 100%;
+    text-align: center;
+}
+.awa-nav-icon img {
+    display: block;
+    width: 64px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/**
+ * Page action and tag presentation lists (general purpose presentation).
+ */
+.awa-tag-list {
+    float: right;
+    list-style-type: none;
+}
+
+.awa-empty-message {
+    float: left;
+    width: 100%;
+    padding: 1em;
+}
+
+.awa-page-tab {
+    float: left;
+    clear: both;
+    list-style-type: none;
+    width: 100%;
+    margin-bottom: 1em;
+    border-bottom: 2px solid #47C;
+    padding-left: 1%;
+    padding-right: 1%;
+    padding-top: 0.5em;
+}
+.awa-page-tab li {
+    float: left;
+    padding: 0.25em;
+    width: auto;
+}
+.awa-page-tab span {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    font-size: 1.2em;
+}
+.awa-page-tab a {
+    text-decoration: none;
+}
+
+/* Workspace page customization */
+.page-workspace h2 {
+    padding-top: 1em;
+    padding-left: 1em;
+}
+.page-workspace ul.awa-nav {
+    margin-bottom: 0.5em;
+}
+
+.ui-widget-content {
+    background-color: #fff;
+}
+
+/**
+ * Responsive style for mobile and tablets.
+ */
+@media (max-width: 768px) {
+    .awa-nav-icon {
+        width: 80px;
+    }
+    .awa-columns {
+        display: block;
+    }
+    footer, body {
+        background-image: none;
+        font-size: 100%;
+    }
+    #awa-hdr ul {
+        padding-right: 0;
+    }
+    .awa-nav-separator {
+        display: none;
+    }
+    .tagedit-list, .container_12 .grid_9, .container_12 .grid_3 {
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    .tagedit-list li.tagedit-listelement {
+        float: right;
+    }
+    h3 {
+        overflow: hidden;
+        width: 100%;
+    }
+    div.post-text div {
+        max-width: 95%;
+        overflow: hidden;
+    }
+    div.awa-side1, div.awa-side2 {
+        width: 100%;
+        padding: 0;
+    }
+
+    /* Top menu as drop down */
+    .awa-menu li {
+        width: 100%;
+        background: #111;
+    }
+    .awa-hamb-menu {
+        display: block;
+    }
+}
+@media screen and (max-width: 600px) {
+    body{
+        font-size:100%;
+    }
+    div.awa-modal {
+        top: 5%;
+        left: 5%;
+        width: 90%;
+        max-width: 530px;
+        min-width: 320px;
+    }
+}
+
+/* Layout from bootstrap 4.0 (adapted) */
+.container {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+@media (min-width:768px) {
+    .container {
+    width: 750px;
+}
+}@media (min-width:992px) {
+    .container {
+    width: 970px;
+}
+}@media (min-width:1200px) {
+    .container {
+    width: 1170px;
+}
+}.container-fluid {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+.row {
+    margin-right: -15px;
+    margin-left: -15px;
+}
+.col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+    position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+.col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+    float: left;
+}
+.col-xs-12 {
+    width: 100%}
+.col-xs-11 {
+    width: 91.66666667%}
+.col-xs-10 {
+    width: 83.33333333%}
+.col-xs-9 {
+    width: 75%}
+.col-xs-8 {
+    width: 66.66666667%}
+.col-xs-7 {
+    width: 58.33333333%}
+.col-xs-6 {
+    width: 50%}
+.col-xs-5 {
+    width: 41.66666667%}
+.col-xs-4 {
+    width: 33.33333333%}
+.col-xs-3 {
+    width: 25%}
+.col-xs-2 {
+    width: 16.66666667%}
+.col-xs-1 {
+    width: 8.33333333%}
+.col-xs-pull-12 {
+    right: 100%}
+.col-xs-pull-11 {
+    right: 91.66666667%}
+.col-xs-pull-10 {
+    right: 83.33333333%}
+.col-xs-pull-9 {
+    right: 75%}
+.col-xs-pull-8 {
+    right: 66.66666667%}
+.col-xs-pull-7 {
+    right: 58.33333333%}
+.col-xs-pull-6 {
+    right: 50%}
+.col-xs-pull-5 {
+    right: 41.66666667%}
+.col-xs-pull-4 {
+    right: 33.33333333%}
+.col-xs-pull-3 {
+    right: 25%}
+.col-xs-pull-2 {
+    right: 16.66666667%}
+.col-xs-pull-1 {
+    right: 8.33333333%}
+.col-xs-pull-0 {
+    right: auto;
+}
+.col-xs-push-12 {
+    left: 100%}
+.col-xs-push-11 {
+    left: 91.66666667%}
+.col-xs-push-10 {
+    left: 83.33333333%}
+.col-xs-push-9 {
+    left: 75%}
+.col-xs-push-8 {
+    left: 66.66666667%}
+.col-xs-push-7 {
+    left: 58.33333333%}
+.col-xs-push-6 {
+    left: 50%}
+.col-xs-push-5 {
+    left: 41.66666667%}
+.col-xs-push-4 {
+    left: 33.33333333%}
+.col-xs-push-3 {
+    left: 25%}
+.col-xs-push-2 {
+    left: 16.66666667%}
+.col-xs-push-1 {
+    left: 8.33333333%}
+.col-xs-push-0 {
+    left: auto;
+}
+.col-xs-offset-12 {
+    margin-left: 100%}
+.col-xs-offset-11 {
+    margin-left: 91.66666667%}
+.col-xs-offset-10 {
+    margin-left: 83.33333333%}
+.col-xs-offset-9 {
+    margin-left: 75%}
+.col-xs-offset-8 {
+    margin-left: 66.66666667%}
+.col-xs-offset-7 {
+    margin-left: 58.33333333%}
+.col-xs-offset-6 {
+    margin-left: 50%}
+.col-xs-offset-5 {
+    margin-left: 41.66666667%}
+.col-xs-offset-4 {
+    margin-left: 33.33333333%}
+.col-xs-offset-3 {
+    margin-left: 25%}
+.col-xs-offset-2 {
+    margin-left: 16.66666667%}
+.col-xs-offset-1 {
+    margin-left: 8.33333333%}
+.col-xs-offset-0 {
+    margin-left: 0;
+}
+@media (min-width:768px) {
+    .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9 {
+    float: left;
+}
+.awa-grid-12, .col-sm-12 {
+    width: 100%}
+.awa-grid-11, .col-sm-11 {
+    width: 91.66666667%}
+.awa-grid-10, .col-sm-10 {
+    width: 83.33333333%}
+.awa-grid-9, .col-sm-9 {
+    width: 75%}
+.awa-grid-8, .col-sm-8 {
+    width: 66.66666667%}
+.awa-grid-7, .col-sm-7 {
+    width: 58.33333333%}
+.awa-grid-6, .col-sm-6 {
+    width: 50%}
+.awa-grid-5, .col-sm-5 {
+    width: 41.66666667%}
+.awa-grid-4, .col-sm-4 {
+    width: 33.33333333%}
+.awa-grid-3, .col-sm-3 {
+    width: 25%}
+.awa-grid-2, .col-sm-2 {
+    width: 16.66666667%}
+.awa-grid-1, .col-sm-1 {
+    width: 8.33333333%}
+.col-sm-pull-12 {
+    right: 100%}
+.col-sm-pull-11 {
+    right: 91.66666667%}
+.col-sm-pull-10 {
+    right: 83.33333333%}
+.col-sm-pull-9 {
+    right: 75%}
+.col-sm-pull-8 {
+    right: 66.66666667%}
+.col-sm-pull-7 {
+    right: 58.33333333%}
+.col-sm-pull-6 {
+    right: 50%}
+.col-sm-pull-5 {
+    right: 41.66666667%}
+.col-sm-pull-4 {
+    right: 33.33333333%}
+.col-sm-pull-3 {
+    right: 25%}
+.col-sm-pull-2 {
+    right: 16.66666667%}
+.col-sm-pull-1 {
+    right: 8.33333333%}
+.col-sm-pull-0 {
+    right: auto;
+}
+.col-sm-push-12 {
+    left: 100%}
+.col-sm-push-11 {
+    left: 91.66666667%}
+.col-sm-push-10 {
+    left: 83.33333333%}
+.col-sm-push-9 {
+    left: 75%}
+.col-sm-push-8 {
+    left: 66.66666667%}
+.col-sm-push-7 {
+    left: 58.33333333%}
+.col-sm-push-6 {
+    left: 50%}
+.col-sm-push-5 {
+    left: 41.66666667%}
+.col-sm-push-4 {
+    left: 33.33333333%}
+.col-sm-push-3 {
+    left: 25%}
+.col-sm-push-2 {
+    left: 16.66666667%}
+.col-sm-push-1 {
+    left: 8.33333333%}
+.col-sm-push-0 {
+    left: auto;
+}
+.col-sm-offset-12 {
+    margin-left: 100%}
+.col-sm-offset-11 {
+    margin-left: 91.66666667%}
+.col-sm-offset-10 {
+    margin-left: 83.33333333%}
+.col-sm-offset-9 {
+    margin-left: 75%}
+.col-sm-offset-8 {
+    margin-left: 66.66666667%}
+.col-sm-offset-7 {
+    margin-left: 58.33333333%}
+.col-sm-offset-6 {
+    margin-left: 50%}
+.col-sm-offset-5 {
+    margin-left: 41.66666667%}
+.col-sm-offset-4 {
+    margin-left: 33.33333333%}
+.col-sm-offset-3 {
+    margin-left: 25%}
+.col-sm-offset-2 {
+    margin-left: 16.66666667%}
+.col-sm-offset-1 {
+    margin-left: 8.33333333%}
+.col-sm-offset-0 {
+    margin-left: 0;
+}
+}@media (min-width:992px) {
+    .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9 {
+    float: left;
+}
+.col-md-12 {
+    width: 100%}
+.col-md-11 {
+    width: 91.66666667%}
+.col-md-10 {
+    width: 83.33333333%}
+.col-md-9 {
+    width: 75%}
+.col-md-8 {
+    width: 66.66666667%}
+.col-md-7 {
+    width: 58.33333333%}
+.col-md-6 {
+    width: 50%}
+.col-md-5 {
+    width: 41.66666667%}
+.col-md-4 {
+    width: 33.33333333%}
+.col-md-3 {
+    width: 25%}
+.col-md-2 {
+    width: 16.66666667%}
+.col-md-1 {
+    width: 8.33333333%}
+.col-md-pull-12 {
+    right: 100%}
+.col-md-pull-11 {
+    right: 91.66666667%}
+.col-md-pull-10 {
+    right: 83.33333333%}
+.col-md-pull-9 {
+    right: 75%}
+.col-md-pull-8 {
+    right: 66.66666667%}
+.col-md-pull-7 {
+    right: 58.33333333%}
+.col-md-pull-6 {
+    right: 50%}
+.col-md-pull-5 {
+    right: 41.66666667%}
+.col-md-pull-4 {
+    right: 33.33333333%}
+.col-md-pull-3 {
+    right: 25%}
+.col-md-pull-2 {
+    right: 16.66666667%}
+.col-md-pull-1 {
+    right: 8.33333333%}
+.col-md-pull-0 {
+    right: auto;
+}
+.col-md-push-12 {
+    left: 100%}
+.col-md-push-11 {
+    left: 91.66666667%}
+.col-md-push-10 {
+    left: 83.33333333%}
+.col-md-push-9 {
+    left: 75%}
+.col-md-push-8 {
+    left: 66.66666667%}
+.col-md-push-7 {
+    left: 58.33333333%}
+.col-md-push-6 {
+    left: 50%}
+.col-md-push-5 {
+    left: 41.66666667%}
+.col-md-push-4 {
+    left: 33.33333333%}
+.col-md-push-3 {
+    left: 25%}
+.col-md-push-2 {
+    left: 16.66666667%}
+.col-md-push-1 {
+    left: 8.33333333%}
+.col-md-push-0 {
+    left: auto;
+}
+.col-md-offset-12 {
+    margin-left: 100%}
+.col-md-offset-11 {
+    margin-left: 91.66666667%}
+.col-md-offset-10 {
+    margin-left: 83.33333333%}
+.col-md-offset-9 {
+    margin-left: 75%}
+.col-md-offset-8 {
+    margin-left: 66.66666667%}
+.col-md-offset-7 {
+    margin-left: 58.33333333%}
+.col-md-offset-6 {
+    margin-left: 50%}
+.col-md-offset-5 {
+    margin-left: 41.66666667%}
+.col-md-offset-4 {
+    margin-left: 33.33333333%}
+.col-md-offset-3 {
+    margin-left: 25%}
+.col-md-offset-2 {
+    margin-left: 16.66666667%}
+.col-md-offset-1 {
+    margin-left: 8.33333333%}
+.col-md-offset-0 {
+    margin-left: 0;
+}
+}@media (min-width:1200px) {
+    .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9 {
+    float: left;
+}
+.col-lg-12 {
+    width: 100%}
+.col-lg-11 {
+    width: 91.66666667%}
+.col-lg-10 {
+    width: 83.33333333%}
+.col-lg-9 {
+    width: 75%}
+.col-lg-8 {
+    width: 66.66666667%}
+.col-lg-7 {
+    width: 58.33333333%}
+.col-lg-6 {
+    width: 50%}
+.col-lg-5 {
+    width: 41.66666667%}
+.col-lg-4 {
+    width: 33.33333333%}
+.col-lg-3 {
+    width: 25%}
+.col-lg-2 {
+    width: 16.66666667%}
+.col-lg-1 {
+    width: 8.33333333%}
+.col-lg-pull-12 {
+    right: 100%}
+.col-lg-pull-11 {
+    right: 91.66666667%}
+.col-lg-pull-10 {
+    right: 83.33333333%}
+.col-lg-pull-9 {
+    right: 75%}
+.col-lg-pull-8 {
+    right: 66.66666667%}
+.col-lg-pull-7 {
+    right: 58.33333333%}
+.col-lg-pull-6 {
+    right: 50%}
+.col-lg-pull-5 {
+    right: 41.66666667%}
+.col-lg-pull-4 {
+    right: 33.33333333%}
+.col-lg-pull-3 {
+    right: 25%}
+.col-lg-pull-2 {
+    right: 16.66666667%}
+.col-lg-pull-1 {
+    right: 8.33333333%}
+.col-lg-pull-0 {
+    right: auto;
+}
+.col-lg-push-12 {
+    left: 100%}
+.col-lg-push-11 {
+    left: 91.66666667%}
+.col-lg-push-10 {
+    left: 83.33333333%}
+.col-lg-push-9 {
+    left: 75%}
+.col-lg-push-8 {
+    left: 66.66666667%}
+.col-lg-push-7 {
+    left: 58.33333333%}
+.col-lg-push-6 {
+    left: 50%}
+.col-lg-push-5 {
+    left: 41.66666667%}
+.col-lg-push-4 {
+    left: 33.33333333%}
+.col-lg-push-3 {
+    left: 25%}
+.col-lg-push-2 {
+    left: 16.66666667%}
+.col-lg-push-1 {
+    left: 8.33333333%}
+.col-lg-push-0 {
+    left: auto;
+}
+.col-lg-offset-12 {
+    margin-left: 100%}
+.col-lg-offset-11 {
+    margin-left: 91.66666667%}
+.col-lg-offset-10 {
+    margin-left: 83.33333333%}
+.col-lg-offset-9 {
+    margin-left: 75%}
+.col-lg-offset-8 {
+    margin-left: 66.66666667%}
+.col-lg-offset-7 {
+    margin-left: 58.33333333%}
+.col-lg-offset-6 {
+    margin-left: 50%}
+.col-lg-offset-5 {
+    margin-left: 41.66666667%}
+.col-lg-offset-4 {
+    margin-left: 33.33333333%}
+.col-lg-offset-3 {
+    margin-left: 25%}
+.col-lg-offset-2 {
+    margin-left: 16.66666667%}
+.col-lg-offset-1 {
+    margin-left: 8.33333333%}
+.col-lg-offset-0 {
+    margin-left: 0;
+}
+}
+@media screen and (max-width: 600px) {
+    .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+    padding-right: 8px;
+    padding-left: 8px;
+    }
+}

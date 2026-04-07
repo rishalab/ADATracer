@@ -1,0 +1,110 @@
+<query-mapping package='AWA.Wikis.Models'>
+    <description>
+      List of images used by wiki pages
+    </description>
+
+    <class name="AWA.Wikis.Models.Wiki_Image_Info" bean="yes">
+        <comment>The information about an image used in a wiki page.</comment>
+        <property type='Identifier' name="folder_id">
+            <comment>the image folder identifier.</comment>
+        </property>
+        <property type='Identifier' name="id">
+            <comment>the image file identifier.</comment>
+        </property>
+        <property type='Nullable_Date' name="create_date" not-null="no">
+            <comment>the file creation date.</comment>
+        </property>
+        <property type='String' name="uri" not-null="no">
+            <comment>the file storage URI.</comment>
+        </property>
+        <property type='AWA.Storages.Models.Storage_Type' name="storage">
+            <comment>the file storage URI.</comment>
+        </property>
+        <property type='String' name="mime_type" not-null="no">
+            <comment>the file mime type.</comment>
+        </property>
+        <property type='Nullable_Integer' name="file_size" not-null="no">
+            <comment>the file size.</comment>
+        </property>
+        <property type='Nullable_Integer' name="width" not-null="no">
+            <comment>the image width.</comment>
+        </property>
+        <property type='Nullable_Integer' name="height" not-null="no">
+            <comment>the image height.</comment>
+        </property>
+    </class>
+
+    <query name='wiki-image-get-data'>
+       <comment>Get the data content of the Wiki image (original image).</comment>
+       <sql>
+    SELECT
+      store.id,
+      store.mime_type,
+      store.create_date,
+      store.uri,
+      store.storage,
+      0,
+      0,
+      data.data
+    FROM awa_storage AS store
+    INNER JOIN awa_wiki_space AS wiki ON store.workspace_id = wiki.workspace_id
+    LEFT JOIN awa_acl AS acl ON acl.entity_id = wiki.workspace_id
+       AND acl.entity_type = $entity_type[awa_workspace] AND acl.user_id = :user_id
+       AND acl.permission = $permission[wiki-page-view]
+    LEFT JOIN awa_storage_data AS data ON store.store_data_id = data.id
+    WHERE store.id = :store_id AND wiki.id = :wiki_id
+       AND (store.is_public OR wiki.is_public OR NOT acl.id IS NULL)
+       </sql>
+    </query>
+
+    <query name='wiki-image-width-get-data'>
+       <comment>Get the data content of the Wiki image for an image with a given width.</comment>
+       <sql>
+    SELECT
+      store.id,
+      store.mime_type,
+      store.create_date,
+      store.uri,
+      store.storage,
+      image.width,
+      image.height,
+      data.data
+    FROM awa_image AS image
+    INNER JOIN awa_storage AS store ON image.storage_id = store.id
+    INNER JOIN awa_wiki_space AS wiki ON store.workspace_id = wiki.workspace_id AND wiki.id = :wiki_id
+    LEFT JOIN awa_acl AS acl ON acl.entity_id = wiki.workspace_id
+       AND acl.entity_type = $entity_type[awa_workspace] AND acl.user_id = :user_id
+       AND acl.permission = $permission[wiki-page-view]
+    LEFT JOIN awa_storage_data AS data ON store.store_data_id = data.id
+    WHERE (store.is_public OR wiki.is_public OR NOT acl.id IS NULL)
+       AND ((store.original_id = :store_id AND image.width = :width) OR store.id = :store_id)
+    ORDER BY store.id DESC LIMIT 1
+       </sql>
+    </query>
+
+    <query name='wiki-image-height-get-data'>
+       <comment>Get the data content of the Wiki image for an image with a given height.</comment>
+       <sql>
+    SELECT
+      store.id,
+      store.mime_type,
+      store.create_date,
+      store.uri,
+      store.storage,
+      image.width,
+      image.height,
+      data.data
+    FROM awa_image AS image
+    INNER JOIN awa_storage AS store ON image.storage_id = store.id
+    INNER JOIN awa_wiki_space AS wiki ON store.workspace_id = wiki.workspace_id AND wiki.id = :wiki_id
+    LEFT JOIN awa_acl AS acl ON acl.entity_id = wiki.workspace_id
+       AND acl.entity_type = $entity_type[awa_workspace] AND acl.user_id = :user_id
+       AND acl.permission = $permission[wiki-page-view]
+    LEFT JOIN awa_storage_data AS data ON store.store_data_id = data.id
+    WHERE (store.is_public OR wiki.is_public OR NOT acl.id IS NULL)
+       AND ((store.original_id = :store_id AND image.height = :height) OR store.id = :store_id)
+    ORDER BY store.id DESC LIMIT 1
+       </sql>
+    </query>
+
+</query-mapping>

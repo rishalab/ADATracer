@@ -1,0 +1,1 @@
+Add a permission for the current user to access the entity identified by <b>Entity</b> and <b>Kind</b> in the <b>Workspace</b>.

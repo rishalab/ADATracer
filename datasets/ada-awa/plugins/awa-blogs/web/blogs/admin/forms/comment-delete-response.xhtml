@@ -1,0 +1,13 @@
+<!-- Response sent when a post is deleted
+  -  Copyright (C) 2012 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<f:view contentType="application/json"
+        xmlns:f="http://java.sun.com/jsf/core">
+[
+ { "action": "delete", "id": "#c_#{blogDeleteComment.id}" },
+ { "action": "closeDialog", "id": "#deleteDialog_#{blogDeleteComment.id}" },
+ { "action": "clear", "id": "#message" }
+]
+</f:view>

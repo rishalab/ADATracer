@@ -1,0 +1,171 @@
+<!-- Form to create or update a blog post
+  -  Copyright (C) 2011, 2012, 2013, 2014, 2015, 2018, 2019, 2022 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<ui:composition
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:w="http://code.google.com/p/ada-asf/widget"
+        xmlns:util="http://code.google.com/p/ada-asf/util"
+        xmlns:awa="http://code.google.com/p/ada-awa/jsf"
+        xmlns:w="http://code.google.com/p/ada-asf/widget"
+        xmlns:c="http://java.sun.com/jstl/core"
+        xmlns:h="http://java.sun.com/jsf/html">
+
+    <div id='awa-post-editor' class='awa-post awa-form'>
+        <div id="image-selector"/>
+        <h:form id='post'>
+            <h:inputHidden id='post-id' value='#{post.id}' required='false'/>
+            <h:inputHidden id='post-blog-id' value='#{post.blogId}'/>
+            <div class="awa-post-buttons">
+                <h2>#{title}</h2>
+                <ul class='awa-buttons'>
+                    <li>
+                      <a class='awa-cancel' href="#{contextPath}/blogs/admin/list.html">#{layoutMsg.layout_cancel_label}</a>
+                    </li>
+                    <li>
+                        <h:commandButton id='save' value='#{blogMsg.blog_post_save_button}'
+                                         styleClass="ui-button ui-state-default ui-corner-all"
+                                         action="#{post.save}" title="#{blogMsg.blog_post_save_title}"/>
+                    </li>
+                    <li>
+                        <h:commandButton id='publish' value='#{blogMsg.blog_post_publish_button}'
+                                         styleClass="ui-button ui-state-default ui-corner-all"
+                                         action="#{post.publish}" title="#{blogMsg.blog_post_publish_title}"/>
+                    </li>
+                </ul>
+            </div>
+            <div class="awa-post-editor post-text">
+                <h:messages styleClass='awa-error'/>
+                <w:tabView id='form-tab' closable="false" toggleable="true"
+                           effect="blind" collapsible="false">
+                    <w:tab title="#{blogMsg.blog_post_tab_summary_label}">
+                        <w:inputText id='post-title'
+                                     title="#{blogMsg.blog_post_title_label}"
+                                     styleClass="awa-required ui-corner-all"
+                                     size='80'
+                                     placeholder="#{blogMsg.blog_post_title_placeholder}"
+                                     value="#{post.title}"/>
+
+                        <dl class="awa-required#{util:hasMessage('summary') ? ' awa-error' : ''}">
+                            <dt>
+                                <label for='summary'>#{blogMsg.blog_post_tab_summary_label}</label>
+                            </dt>
+                            <dd>
+                                <h:inputTextarea id='summary' rows='5' required='false'
+                                                 placeholder="#{blogMsg.blog_post_text_placeholder}"
+                                                 styleClass="awa-required ui-corner-all"
+                                                 value='#{post.summary}'/>
+                            </dd>
+                        </dl>
+                    </w:tab>
+                    <w:tab title="#{blogMsg.blog_post_tab_article_label}">
+                        <dl class="awa-required#{util:hasMessage('title') ? ' awa-error' : ''}">
+                            <dt></dt>
+                            <dd>
+                                <h:inputTextarea id='text' rows='30' required='false'
+                                                 placeholder="#{blogMsg.blog_post_text_placeholder}"
+                                                 value='#{post.text}'/>
+                            </dd>
+                        </dl>
+                    </w:tab>
+                    <w:tab title="#{blogMsg.blog_post_tab_tags_label}">
+                        <dl class="awa-required#{util:hasMessage('title') ? ' awa-error' : ''}">
+                            <dt>
+                                <label for='qtags'>#{blogMsg.blog_tags_label}</label>
+                            </dt>
+                            <dd>
+                                <awa:tagList value='#{post.tags}' id='qtags'
+                                             styleClass="ui-corner-all awa-tag-input"
+                                             autoCompleteUrl='#{contextPath}/blogs/admin/lists/tag-search.html'/>
+                            </dd>
+                        </dl>
+                    </w:tab>
+                    <w:tab title="#{blogMsg.blog_post_tab_options_label}">
+                        <dl class="awa-required">
+                            <dt>
+                                <label for="post-format">#{blogMsg.blog_page_format_label}</label>
+                            </dt>
+                            <dd>
+                                <w:chosen id='post-format' size='10' value='#{post.format}'
+                                                 styleClass="ui-state-default ui-corner-all">
+                                  <f:facet name="options">width: "auto",disable_search: true</f:facet>
+                                  <f:selectItems value="#{blogFormatList}"/>
+                                </w:chosen>
+                            </dd>
+                        </dl>
+                        <w:inputText id='uri' title="#{blogMsg.blog_post_url_label}"
+                                     styleClass="awa-required ui-corner-all" size='80'
+                                     placeholder="#{blogMsg.blog_post_url_placeholder}"
+                                     value="#{post.uri}" required="false"/>
+                        <dl class="awa-required">
+                            <dt>
+                                <label for="post-status">#{blogMsg.blog_post_status_label}</label>
+                            </dt>
+                            <dd>
+                                <w:chosen id='post-status' size='10' value='#{post.status}'
+                                                 styleClass="ui-state-default ui-corner-all">
+                                  <f:facet name="options">width: "auto",disable_search: true</f:facet>
+                                  <f:selectItems value="#{postStatusList}"/>
+                                </w:chosen>
+                            </dd>
+                            <dt><label for='allow-comment'>#{blogMsg.blog_post_allow_comments_label}</label></dt>
+                            <dd>
+                                <h:selectOneRadio styleClass="awa-radio" id="allow-comment" value="#{post.allow_comments}">
+                                    <f:selectItem id="page-public-yes" name="allow-comment" itemLabel="#{layoutMsg.layout_yes_label}" itemValue="TRUE" />
+                                    <f:selectItem id="page-public-no" name="allow-comment" itemLabel="#{layoutMsg.layout_no_label}" itemValue="FALSE" />
+                                </h:selectOneRadio>
+                            </dd>
+                        </dl>
+                        <dl class="awa-required" style="#{empty post.id ? 'display: none' : ''}">
+                            <dt>
+                                <label for="post-status">#{blogMsg.blog_post_publish_date_label}</label>
+                            </dt>
+                            <dd>
+                                <h:inputText id="publish-date"
+                                             required="false"
+                                             styleClass="ui-corner-all"
+                                             value="#{post.publish_date}">
+                                    <f:convertDateTime pattern="%Y-%m-%d %H:%M"/>
+                                </h:inputText>
+                            </dd>
+                        </dl>
+                    </w:tab>
+                </w:tabView>
+            </div>
+            <!-- <div class="awa-post-buttons">
+                <ul class='awa-buttons'>
+                    <li>
+                        <h:commandButton id='save-bottom' value='#{blogMsg.blog_post_save_button}'
+                                         styleClass="ui-button ui-state-default ui-corner-all"
+                                         action="#{post.save}" title="#{blogMsg.blog_post_save_title}"/>
+                    </li>
+                </ul>
+            </div> -->
+        </h:form>
+    </div>
+    <util:script>
+        contextPath = "#{contextPath}";
+        $(function(){
+            $("#awa-post-editor").blog_post_editor({
+                'syntax': "#{post.format}",
+            });
+
+            $("#publish-date").datetimepicker({
+                format: 'Y-m-d H:i',
+                dayOfWeekStart: 1,
+                timepicker: true,
+                datepicker: true,
+                onSelect: function(date, picker) {
+                    /* alert(date); */
+                }
+        });
+        $("#form-tab").on("tabsactivate", function(event, ui) {
+        
+        });
+        });
+    </util:script>
+
+</ui:composition>
+

@@ -1,0 +1,1 @@
+The service context provides additional information to a service operation.

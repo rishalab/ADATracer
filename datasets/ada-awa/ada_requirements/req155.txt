@@ -1,0 +1,1 @@
+Add a tag on the database entity referenced by <tt>Id</tt> in the table identified by <tt>Entity_Type</tt>.

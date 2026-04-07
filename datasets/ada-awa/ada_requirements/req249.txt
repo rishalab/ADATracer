@@ -1,0 +1,1 @@
+The AWA input component overrides the ASF input component to build a compact component that displays a label, the input field and the associated error message if necessary.

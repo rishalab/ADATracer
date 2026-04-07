@@ -1,0 +1,15 @@
+<!-- Report blog access statistics
+  -  Copyright (C) 2016 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<f:view contentType="application/json; charset=UTF-8"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:util="http://code.google.com/p/ada-asf/util"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+    <f:metadata>
+        <f:viewAction action='#{blogStats.load}'/>
+    </f:metadata>
+{"data":[<h:list value="#{blogStats.stats}" var="stat">["#{stat.year}-#{stat.month}-1", #{stat.count}],</h:list>[0,0]]}
+</f:view>

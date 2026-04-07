@@ -1,0 +1,1 @@
+Users can vote by setting a rating value on an item (+1, -1 or any other integer value).

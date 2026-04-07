@@ -1,0 +1,39 @@
+Source: dynamo
+Priority: optional
+Section: devel
+Maintainer: Stephane Carrez <Stephane.Carrez@gmail.com>
+Build-Depends: debhelper (>= 10), autotools-dev,
+ gnat, gnat-9,
+# This line is parsed by debian/rules.
+ gprbuild (>= 2015-2),
+# 2015-2 is compatible with gnat-6
+ libxmlada-sax9-dev,
+ libutilada-sys3-dev,
+ libutilada-xml3-dev,
+ libasf3-dev,
+ libado3-dev,
+ libgnatprj7-dev
+Standards-Version: 4.1.4
+Homepage: https://github.com/stcarrez/dynamo/
+Vcs-Git: https://github.com/stcarrez/dynamo.git -b debian-gnat-9
+Vcs-Browser: https://github.com/stcarrez/dynamo/tree/debian-gnat-9
+
+Package: dynamo
+Section: devel
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Suggests: dynamo-argouml
+Description: Ada Application Generator
+ Dynamo is a command to help developers write an Ada Application
+ using the ASF, ADO, AWA or Gtk libraries.  It provides several commands to
+ setup a new project, generate the Ada code from UML models.
+
+Package: dynamo-argouml
+Section: devel
+Architecture: any
+Depends: ${misc:Depends}, openjdk-11-jre, dynamo
+Description: ArgoUML modeling tool for Ada Applications
+ ArgoUML is a UML modeling tool and Dynamo is a command to help developers
+ write Ada Applications.  It provides UML modeling support that
+ allows Dynamo to generate the Ada Application.
+

@@ -1,0 +1,1 @@
+The images module is an extension of the Storages Module that identifies images and provides thumbnails as well as resizing of the original image.

@@ -1,0 +1,1 @@
+To be able to use the `Blogs` module, you will need to add the following line in your GNAT project file: with "awa_blogs";

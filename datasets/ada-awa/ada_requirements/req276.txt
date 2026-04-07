@@ -1,0 +1,1 @@
+Create the event queue identified by the name `Name`. The queue factory identified by `Kind` is called to create the event queue instance.

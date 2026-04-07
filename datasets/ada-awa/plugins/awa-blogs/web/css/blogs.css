@@ -1,0 +1,373 @@
+/**
+ * blogs.css - Styles for blogs module
+ * Copyright (C) 2011-2023 Stephane Carrez
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ */
+.blog-post div.post-text, div.post-info, div.post-header,
+.awa-post-editor, .awa-post-buttons {
+    float: left;
+    width: 100%;
+}
+.post-article {
+    float: left;
+    width: 100%;
+}
+div.post-info div.asf-list-action {
+    left: -5px;
+    top: 3px;
+}
+.awa-post, .awa-post-more {
+    float: left;
+    padding-left: 1%;
+    padding-right: 1%;
+    width: 98%;
+}
+.awa-post-more {
+    float: right;
+    text-align: right;
+}
+/*
+ * Admin section
+ */
+div.blog-admin {
+    clear: both;
+}
+div.blog-admin div.post-info {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+div.blog-admin div.post-title, div.blog-admin div.post-author, div.blog-admin div.post-ref,
+div.blog-admin div.post-date, div.blog-admin div.post-view, div.blog-admin div.post-comment-count,
+div.blog-admin div.comment-title, div.blog-admin div.comment-author, div.blog-admin div.comment-date,
+div.blog-admin div.comment-gravatar, .blog-admin .post-read-count {
+    float: left;
+    overflow: hidden;
+    line-height: 26px;
+
+}
+div.blog-admin div.post-title,
+div.blog-admin div.comment-title {
+    width: 36%;
+}
+div.blog-admin div.post-date,
+div.blog-admin div.post-author {
+    width: 16%;
+}
+div.blog-admin div.post-ref {
+    width: 40px;
+    padding-left: 30px;
+}
+div.blog-admin div.comment-gravatar {
+    width: 5%;
+}
+div.blog-admin div.post-view, div.blog-admin div.post-comment-count, .blog-admin .post-read-count {
+    width: 8%;
+}
+div.blog-admin div.comment-author, div.blog-admin div.comment-date {
+    width: 20%;
+}
+
+div.post-header {
+    font-weight: bold;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--border-medium);
+    margin-bottom: 5px;
+}
+div.blog-admin div.blog-info, div.blog-info div.blog-ref, div.blog-info div.blog-title, div.blog-info div.blog-date {
+    float: left;
+    line-height: 1.0em;
+    vertical-align: middle;
+}
+div.blog-admin div.blog-info {
+    width: 100%;
+}
+div.blog-info div.blog-title {
+    width: 50%;
+}
+div.blog-info div.blog-date {
+    width: 33%;
+    float: right;
+    font-size: 0.7em;
+}
+
+/**
+ * Comment list and admin.
+ */
+div.comment-status,
+div.post-status, div.post-status-POST_DRAFT, div.post-status-POST_PUBLISHED, div.post-status-POST_SCHEDULED {
+    width: 26px;
+    height: 26px;
+    float: left;
+    margin-left: 24px;
+    margin-right: 2px;
+    background: url(../images/blogs/icon-check-box-orange.png) no-repeat;
+}
+div.comment-COMMENT_PUBLISHED div.comment-status,
+div.post-status-POST_PUBLISHED {
+    background: url(../images/blogs/icon-check-box-green.png) no-repeat;
+}
+.post-header .comment-status, div.post-status {
+    background: none;
+}
+div.comment-status {
+    margin-left: 50px;
+    cursor: pointer;
+}
+div.comment-COMMENT_SPAM div.comment-status, div.comment-COMMENT_ARCHIVED div.comment-status {
+    background: url(../images/blogs/icon-spam-red.png) no-repeat;
+}
+a.spam-icon {
+    background: url(../images/blogs/icon-spam-grey.png) no-repeat;
+}
+/*
+ * Blog post
+ */
+.blog-post {
+    float: left;
+    width: 100%;
+    padding-left: 2%;
+    padding-right: 2%;
+}
+.blog-post .post-title {
+    float: left;
+    margin-top: 15px;
+    width: 100%;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 2px;
+    background: url(../images/blogs/ico_entry.gif) no-repeat;
+    padding-left: 30px;
+}
+.blog-post .post-title h2 {
+    margin: 0;
+    line-height: 1.33em;
+}
+.blog-post .post-title h2 a {
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.33em;
+}
+div.post-text {
+    line-height: 1.2em;
+}
+div.post-text p {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+div.post-text pre {
+    line-height: 1.1em;
+    margin-bottom: 1em;
+    overflow: auto;
+    padding: 4px;
+    font-size: 1.1em;
+}
+div.post-text h2, div.post-text h3, div.post-text h4, div.post-text h5, div.post-text h6 {
+    font-weight: bold;
+    margin-top: 1em;
+}
+div.post-text h2 {
+    font-size: 1.33em;
+}
+div.post-text h3 {
+    font-size: 1.1em;
+}
+div.post-text h4 {
+    font-size: 1.0em;
+}
+div.post-text a, ul.tag-cloud a {
+    font-weight: bold;
+}
+div.post-text ul {
+    padding-left: 30px;
+}
+div.post-text ol {
+    list-style-type: decimal;
+    padding-left: 30px;
+}
+div.post-text li {
+    display: list-item;
+}
+div.post-text img {
+    display: block;
+    height: auto;
+    max-width: 100%;
+}
+ul.blog-syntax {
+    padding-top: 5px;
+    list-style-type: none;
+}
+ul.blog-syntax li {
+    float: left;
+    clear: both;
+}
+ul.blog-syntax li.spare {
+    padding-top: 15px;
+}
+.blog-post ul.tagedit-list {
+    float: right;
+    list-style-type: none;
+}
+.blog-post-tag-info {
+    margin-bottom: 1em;
+}
+.blog-post-tag-info h2 {
+    padding: 2px 8px;
+    font-size: 1.15em;
+}
+div.blog-post-info h2 {
+    font-size: 1.15em;
+}
+.awa-comment-list h3 {
+    font-weight: normal;
+    font-size: 1.3em;
+}
+.awa-blog-admin .awa-comment-actions {
+    display: block;
+}
+.blog-post-comment {
+    float: left;
+    width: 100%;
+    padding-top: 5px;
+    margin: 1em 0;
+}
+.blog-post-comment-count {
+    float: left;
+    background: url(../images/blogs/ico_comm.gif) no-repeat left center;
+}
+.post-title .post-comment-count {
+    background: url(../images/blogs/ico_comm.gif) no-repeat left center;
+    padding-left: 16px;
+    margin-left: 1em;
+    text-decoration: none;
+}
+.post-date {
+    margin-left: 1em;
+}
+div.blog-post-comment-count a {
+    padding-left: 20px;
+    text-decoration: none;
+}
+.blog-post-add-comment {
+    float: left;
+    padding-left: 1em;
+    padding-top: 0.2em;
+    font-size: 0.8em;
+}
+.blog-post-graph {
+    display: block;
+    float: left;
+    width: 100%;
+    height: 100px;
+}
+#post-stats, #blog-stats {
+    height: 100px;
+}
+#blog-post-edit, #blog-post-preview {
+    margin-top: 0.5em;
+}
+#blog-post-preview {
+    padding-left: 1em;
+    padding-right: 1em;
+    width: 100%;
+}
+#blog-graph-tooltip {
+    position: absolute;
+    display: none;
+    padding: 2px;
+    opacity: 0.8;
+    border-radius: 6px;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+}
+.awa-form .ui-tabs .ui-tabs-panel {
+    overflow: hidden;
+    padding: 0;
+}
+.awa-post-buttons {
+    padding-bottom: 0.5em;
+}
+.awa-post-buttons .awa-buttons {
+    float: right;
+    width: 50%;
+    margin: 0;
+}
+.awa-post-buttons .awa-buttons li {
+    float: right;
+}
+.awa-post-buttons h2 {
+    float: left;
+    padding: .4em 0;
+    width: 50%;
+}
+.awa-post-buttons .awa-buttons li:first-child {
+    padding-right: 0;
+}
+/*
+ * Color and theme
+ */
+div.comment-COMMENT_PUBLISHED {
+    color: #111;
+}
+.blog-post .post-title h2 a {
+    color: var(--text-title);
+}
+div.post-text pre {
+    background: var(--bg-highlight);
+    border: 1px solid var(--border-medium);
+}
+div.post-text h2, div.post-text h3, div.post-text h4,
+div.post-text h5, div.post-text h6 {
+    color: var(--color-info);
+}
+div.post-text a, ul.tag-cloud a {
+    color: var(--text-link);
+}
+div.blog-post-tag-info {
+    border: 1px solid var(--accent-orange);
+}
+div.blog-post-tag-info h2 {
+    background: var(--accent-orange);
+    color: var(--text-light);
+}
+div.blog-post-info h2 {
+    background: #d8e7fa;
+    color: var(--color-info);
+}
+.blog-post-comment {
+    border-top: 2px solid var(--border-light);
+}
+.post-title .post-comment-count,
+div.blog-post-comment-count a {
+    color: var(--text-medium);
+}
+#blog-graph-tooltip {
+    border: 1px solid var(--border-accent);
+    background-color: #fee;
+}
+.blog-post-format {
+    margin-top: 0.3em;
+    width: auto;
+    background-color: transparent;
+}
+dl.awa-required .blog-post-format input {
+    float: left;
+    width: auto;
+    padding-right: 2em;
+    margin-top: 3px;
+}
+dl.awa-required .blog-post-format label {
+    float: left;
+    clear: none;
+    padding: 0.5em;
+    margin-right: 1.5em;
+}
+.blog-post-format input[type="radio"] {
+    visibility: hidden;
+}
+.blog-post-format input:checked + label {
+    background-color: #d8e7fa;
+    border-radius: 0.5em;
+}
+.blog-post-format label {
+    cursor: pointer;
+}

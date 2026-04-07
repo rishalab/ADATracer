@@ -1,0 +1,1 @@
+The package AWA.Index_Arrays shall be instantiated for each definition, allocating a unique Index_Type value for each definition.

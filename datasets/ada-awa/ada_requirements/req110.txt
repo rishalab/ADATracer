@@ -1,0 +1,1 @@
+If the user does not have a setting identified by the given name, return the default value.

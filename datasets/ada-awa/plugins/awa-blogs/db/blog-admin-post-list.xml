@@ -1,0 +1,81 @@
+<query-mapping package='AWA.Blogs.Models'>
+    <description>
+      The list of posts for the blog administrator.
+    </description>
+
+    <class name="AWA.Blogs.Models.Admin_Post_Info" bean="yes">
+        <comment>The Admin_Post_Info describes a post in the administration interface.</comment>
+        <property type='Identifier' name="id">
+            <comment>the post identifier.</comment>
+        </property>
+        <property type='String' name="title">
+            <comment>the post title.</comment>
+        </property>
+        <property type='String' name="uri">
+            <comment>the post uri.</comment>
+        </property>
+        <property type='Date' name="date">
+            <comment>the post publish date.</comment>
+        </property>
+        <property type='AWA.Blogs.Models.Post_Status_Type' name="status">
+            <comment>the post status.</comment>
+        </property>
+        <property type='Natural' name="read_count">
+            <comment>the number of times the post was read.</comment>
+        </property>
+        <property type='String' name="username">
+            <comment>the user name.</comment>
+        </property>
+        <property type='Natural' name="comment_count">
+            <comment>the number of comments for this post.</comment>
+        </property>
+    </class>
+
+    <query name='blog-admin-post-list'>
+       <comment>Get the list of blog posts</comment>
+       <sql>
+    SELECT
+      post.id,
+      post.title,
+      post.uri,
+      post.create_date,
+      post.status,
+      post.read_count,
+      u.name,
+      count(cmt.id)
+    FROM awa_blog as blog
+    INNER JOIN awa_acl AS acl ON acl.entity_id = blog.id AND acl.entity_type = :table AND acl.user_id = :user_id AND acl.permission = $permission[blog-update-post]
+    INNER JOIN awa_post AS post ON blog.id = post.blog_id
+    INNER JOIN awa_user AS u ON post.author_id = u.id
+    LEFT JOIN awa_comment AS cmt ON cmt.entity_id = post.id AND cmt.entity_type = :entity_type
+    WHERE blog.id = :blog_id
+    GROUP BY post.id, u.id
+    ORDER BY post.create_date DESC
+       </sql>
+    </query>
+
+    <query name='blog-admin-post-list-date'>
+       <comment>Get the list of blog posts</comment>
+       <sql>
+    SELECT
+      post.id,
+      post.title,
+      post.uri,
+      post.create_date,
+      post.status,
+      post.read_count,
+      u.name,
+      count(cmt.id)
+    FROM awa_blog as blog
+    INNER JOIN awa_acl AS acl ON acl.entity_id = blog.id AND acl.entity_type = :table AND acl.user_id = :user_id AND acl.permission = $permission[blog-update-post]
+    INNER JOIN awa_post AS post ON blog.id = post.blog_id
+    INNER JOIN awa_user AS user ON post.author_id = user.id
+    LEFT JOIN awa_comment AS cmt ON cmt.entity_id = post.id AND cmt.entity_type = :entity_type
+    WHERE blog.id = :blog_id
+      AND post.publish_date &gt;= :first_date AND post.publish_date &lt;= :last_date
+    GROUP BY post.id, u.id
+    ORDER BY post.id DESC
+       </sql>
+    </query>
+
+</query-mapping>

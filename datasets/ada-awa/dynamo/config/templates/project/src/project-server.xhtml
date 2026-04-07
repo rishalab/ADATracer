@@ -1,0 +1,79 @@
+<f:view xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+        xmlns:g="http://code.google.com/p/ada-ado/generator"
+        xmlns:f="http://java.sun.com/jsf/core"
+        file="#{projectName}-server.adb">-----------------------------------------------------------------------
+--  #{fn:capitalize(projectName)}-server -- Application server
+<ui:include src="../../licenses/license-ada.xhtml"/>
+-----------------------------------------------------------------------
+with Util.Log.Loggers;
+with Util.Commands;
+#{''}
+with Servlet.Server.Web;
+#{''}
+with AWA.Commands.Drivers;
+with AWA.Commands.Start;
+with AWA.Commands.Setup;
+with AWA.Commands.Stop;
+with AWA.Commands.List;
+with AWA.Commands.Info;
+with AWA.Commands.Migrate;
+#{''}
+with ADO.Drivers;
+--  with ADO.Sqlite;
+--  with ADO.Mysql;
+--  with ADO.Postgresql;
+#{''}
+with #{fn:capitalize(projectName)}.Applications;
+procedure #{fn:capitalize(projectName)}.Server is
+#{''}
+   package Server_Commands is
+     new AWA.Commands.Drivers (Driver_Name => "#{projectName}",
+                               Container_Type => Servlet.Server.Web.AWS_Container);
+#{''}
+   package List_Command is
+     new AWA.Commands.List (Server_Commands);
+
+   package Info_Command is
+     new AWA.Commands.Info (Server_Commands);
+
+   package Start_Command is
+     new AWA.Commands.Start (Server_Commands);
+
+   package Stop_Command is
+     new AWA.Commands.Stop (Server_Commands);
+
+   package Setup_Command is
+     new AWA.Commands.Setup (Start_Command);
+
+   package Migrate_Command is
+     new AWA.Commands.Migrate (Server_Commands);
+#{''}
+   pragma Unreferenced (Setup_Command, List_Command, Info_Command, Start_Command,
+                        Stop_Command, Migrate_Command);
+   Log       : constant Util.Log.Loggers.Logger := Util.Log.Loggers.Create ("#{fn:capitalize(projectName)}.Server");
+
+   App       : constant #{fn:capitalize(projectName)}.Applications.Application_Access := new #{fn:capitalize(projectName)}.Applications.Application;
+   WS        : Servlet.Server.Web.AWS_Container renames Server_Commands.WS;
+   Context   : AWA.Commands.Context_Type;
+   Arguments : Util.Commands.Dynamic_Argument_List;
+begin
+   --  Initialize the database drivers (all of them or specific ones).
+   ADO.Drivers.Initialize;
+   --  ADO.Sqlite.Initialize;
+   --  ADO.Mysql.Initialize;
+   --  ADO.Postgresql.Initialize;
+   Log.Info ("Connect you browser to: http://localhost:8080{0}/index.html",
+             #{fn:capitalize(projectName)}.Applications.CONTEXT_PATH);
+   WS.Register_Application (#{fn:capitalize(projectName)}.Applications.CONTEXT_PATH, App.all'Access);
+#{''}
+
+   Server_Commands.Run (Context, Arguments);
+#{''}
+
+exception
+   when E : others =>
+      AWA.Commands.Print (Context, E);
+end #{fn:capitalize(projectName)}.Server;
+</f:view>

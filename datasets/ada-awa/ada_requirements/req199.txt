@@ -1,0 +1,1 @@
+The job factory should return the correct length of registered jobs.

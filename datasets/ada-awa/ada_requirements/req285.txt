@@ -1,0 +1,1 @@
+The value as an identifier should be returned, or NO_IDENTIFIER if the value is invalid.

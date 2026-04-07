@@ -1,0 +1,35 @@
+with "asf_config";
+with "utilada_sys";
+with "elada";
+with "security";
+with "servletada";
+
+library project Asf is
+
+   Version := "1.6.1";
+   Library_Dir := "lib";
+   Library_Type : Asf_Config.Library_Type_Type := external ("ASF_LIBRARY_TYPE", "static");
+
+   for Source_Dirs use ("src");
+
+   for Library_Name use "asf";
+   for Library_Kind use Library_Type;
+   for Library_Version use "lib" & Project'Library_Name & ".so." & Version;
+
+   for Library_Dir use "lib/asf/" & Project'Library_Kind;
+   for Object_Dir use "obj/asf/" & Project'Library_Kind;
+
+   package Binder   renames Asf_Config.Binder;
+   package Builder  renames Asf_Config.Builder;
+   package Compiler renames Asf_Config.Compiler;
+   package Ide      renames Asf_Config.Ide;
+
+   package Install is
+      for Artifacts ("share/dynamo/asf") use ("dynamo.xml", "NOTICE.txt", "LICENSE.txt");
+      for Artifacts ("share/dynamo/asf/bundles") use ("bundles/*");
+      for Artifacts ("share/dynamo/asf/web/css") use ("web/css/*");
+      for Artifacts ("share/dynamo/asf/web/js") use ("web/js/*");
+      for Artifacts ("share/dynamo/asf/web/images") use ("web/images/*");
+   end Install;
+
+end Asf;

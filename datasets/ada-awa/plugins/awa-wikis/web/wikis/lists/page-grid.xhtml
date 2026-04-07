@@ -1,0 +1,27 @@
+<!-- List of wiki pages displayed as preview (grid).
+  -  Copyright (C) 2015, 2016, 2023 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<ui:composition
+        xmlns:awa="http://code.google.com/p/ada-awa/jsf"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:c="http://java.sun.com/jstl/core"
+	    xmlns:u="http://code.google.com/p/ada-asf/util"
+        xmlns:h="http://java.sun.com/jsf/html">
+    <h:panelGroup rendered="#{wikiList.count == 0}">
+        <div class='awa-list-empty'>#{wikiMsg.wiki_admin_list_pages_empty_message}</div>
+    </h:panelGroup>
+    <h:list var="page" value="#{wikiList.pages}">
+        <div class='wiki-page-grid' id="p_#{page.id}">
+            <div class='wiki-page-grid-info'>
+                <a href="#{contextPath}/wikis/view/#{wikiList.wiki_id}/#{page.name}" title="#{page.name}">
+                    <img src="#{contextPath}/preview/#{wikiList.wiki_id}/#{page.id}.png" width="256" height="128"
+                         alt="#{page.title}"/>
+                    <span class="wiki-page-title">#{page.title}</span>
+                </a>
+            </div>
+        </div>
+    </h:list>
+</ui:composition>

@@ -1,0 +1,1 @@
+When the registration is disabled, the user cannot create a new user account.

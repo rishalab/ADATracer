@@ -1,0 +1,1 @@
+The audit key for a given audit ID is computed by setting the value of an object key with the given ID.

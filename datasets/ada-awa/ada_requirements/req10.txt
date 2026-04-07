@@ -1,0 +1,1 @@
+The component that will handle an HTTP request received by the server will load the data content that corresponds to the GET request and get the name as well as mime-type and date.

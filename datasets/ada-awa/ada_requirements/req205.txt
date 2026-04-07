@@ -1,0 +1,1 @@
+Create an email message with the given template and verify its content.

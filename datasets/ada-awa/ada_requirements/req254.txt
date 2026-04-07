@@ -1,0 +1,1 @@
+No high-level natural language requirement can be extracted from this Ada source code.

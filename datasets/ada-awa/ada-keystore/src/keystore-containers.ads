@@ -1,0 +1,148 @@
+-----------------------------------------------------------------------
+--  keystore-containers -- Container protected keystore
+--  Copyright (C) 2019, 2020 Stephane Carrez
+--  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+--  SPDX-License-Identifier: Apache-2.0
+-----------------------------------------------------------------------
+with Util.Streams;
+with Ada.Streams;
+with Keystore.IO.Refs;
+with Keystore.Passwords.Keys;
+with Keystore.Repository;
+with Keystore.Keys;
+
+private package Keystore.Containers is
+
+   type Wallet_Container;
+
+   --  The `Wallet_Container` protects concurrent accesses to the repository.
+   protected type Wallet_Container is
+
+      procedure Initialize;
+
+      procedure Open (Config        : in Wallet_Config;
+                      Ident         : in Wallet_Identifier;
+                      Block         : in Keystore.IO.Storage_Block;
+                      Wallet_Stream : in out Keystore.IO.Refs.Stream_Ref);
+
+      procedure Open (Name             : in String;
+                      Password         : in out Keystore.Passwords.Provider'Class;
+                      From_Repo        : in out Keystore.Repository.Wallet_Repository;
+                      From_Stream      : in out IO.Refs.Stream_Ref);
+
+      procedure Create (Password      : in out Keystore.Passwords.Provider'Class;
+                        Config        : in Wallet_Config;
+                        Block         : in IO.Storage_Block;
+                        Ident         : in Wallet_Identifier;
+                        Wallet_Stream : in out IO.Refs.Stream_Ref);
+
+      procedure Set_Master_Key (Password  : in out Keystore.Passwords.Keys.Key_Provider'Class);
+
+      function Get_State return State_Type;
+
+      procedure Set_Header_Data (Index     : in Header_Slot_Index_Type;
+                                 Kind      : in Header_Slot_Type;
+                                 Data      : in Ada.Streams.Stream_Element_Array);
+
+      procedure Get_Header_Data (Index     : in Header_Slot_Index_Type;
+                                 Kind      : out Header_Slot_Type;
+                                 Data      : out Ada.Streams.Stream_Element_Array;
+                                 Last      : out Ada.Streams.Stream_Element_Offset);
+
+      procedure Unlock (Password  : in out Keystore.Passwords.Provider'Class;
+                        Slot      : out Key_Slot);
+
+      procedure Set_Key (Password     : in out Keystore.Passwords.Provider'Class;
+                         New_Password : in out Keystore.Passwords.Provider'Class;
+                         Config       : in Wallet_Config;
+                         Mode         : in Mode_Type);
+
+      procedure Remove_Key (Password : in out Keystore.Passwords.Provider'Class;
+                            Slot     : in Key_Slot;
+                            Force    : in Boolean);
+
+      function Contains (Name   : in String) return Boolean;
+
+      procedure Add (Name    : in String;
+                     Kind    : in Entry_Type;
+                     Content : in Ada.Streams.Stream_Element_Array);
+
+      procedure Add (Name    : in String;
+                     Kind    : in Entry_Type;
+                     Input   : in out Util.Streams.Input_Stream'Class);
+
+      procedure Create (Name        : in String;
+                        Password    : in out Keystore.Passwords.Provider'Class;
+                        From_Repo   : in out Keystore.Repository.Wallet_Repository;
+                        From_Stream : in out IO.Refs.Stream_Ref);
+
+      procedure Set (Name    : in String;
+                     Kind    : in Entry_Type;
+                     Content : in Ada.Streams.Stream_Element_Array);
+
+      procedure Set (Name    : in String;
+                     Kind    : in Entry_Type;
+                     Input   : in out Util.Streams.Input_Stream'Class);
+
+      procedure Update (Name    : in String;
+                        Kind    : in Entry_Type;
+                        Content : in Ada.Streams.Stream_Element_Array);
+
+      procedure Find (Name    : in String;
+                      Result  : out Entry_Info);
+
+      procedure Get_Data (Name       : in String;
+                          Result     : out Entry_Info;
+                          Output     : out Ada.Streams.Stream_Element_Array);
+
+      procedure Get_Data (Name      : in String;
+                          Output    : in out Util.Streams.Output_Stream'Class);
+
+      procedure Read (Name      : in String;
+                      Offset    : in Ada.Streams.Stream_Element_Offset;
+                      Content   : out Ada.Streams.Stream_Element_Array;
+                      Last      : out Ada.Streams.Stream_Element_Offset);
+
+      procedure Write (Name      : in String;
+                       Offset    : in Ada.Streams.Stream_Element_Offset;
+                       Content   : in Ada.Streams.Stream_Element_Array);
+
+      procedure Delete (Name     : in String);
+
+      procedure List (Filter  : in Filter_Type;
+                      Content : out Entry_Map);
+
+      procedure List (Pattern : in GNAT.Regpat.Pattern_Matcher;
+                      Filter  : in Filter_Type;
+                      Content : out Entry_Map);
+
+      procedure Get_Stats (Stats : out Wallet_Stats);
+
+      procedure Close;
+
+      procedure Set_Work_Manager (Workers   : in Keystore.Task_Manager_Access);
+
+      procedure Do_Repository (Process : not null access
+                                 procedure (Repo         : in out Repository.Wallet_Repository;
+                                            Stream       : in out IO.Refs.Stream_Ref));
+
+   private
+      Stream       : Keystore.IO.Refs.Stream_Ref;
+      Master       : Keystore.Keys.Key_Manager;
+      Repository   : Keystore.Repository.Wallet_Repository;
+      State        : State_Type := S_INVALID;
+      Master_Block : Keystore.IO.Storage_Block;
+      Master_Ident : Wallet_Identifier := Wallet_Identifier'First;
+   end Wallet_Container;
+
+   procedure Open_Wallet (Container : in out Wallet_Container;
+                          Name      : in String;
+                          Password  : in out Keystore.Passwords.Provider'Class;
+                          Wallet    : in out Wallet_Container);
+
+   procedure Add_Wallet (Container : in out Wallet_Container;
+                         Name      : in String;
+                         Password  : in out Keystore.Passwords.Provider'Class;
+                         Wallet    : in out Wallet_Container);
+
+end Keystore.Containers;

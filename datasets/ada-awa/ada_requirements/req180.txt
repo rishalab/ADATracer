@@ -1,0 +1,1 @@
+The component that will handle an HTTP request received by the server represents the component that serves files saved in the storage service.

@@ -1,0 +1,136 @@
+<ui:composition xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+		xmlns:g="http://code.google.com/p/ada-ado/generator"
+                xmlns:u="http://code.google.com/p/ada-asf/util"
+		xmlns:f="http://java.sun.com/jsf/core">
+   <h:list value="#{bean.operations}" var="operation">
+   <h:panelGroup rendered="#{operation.type == 'ASF_ACTION'}">
+   procedure Op_#{fn:capitalize(operation.name)} (Bean    : in out #{bean.type};
+                #{g:indent(operation.name)}  Outcome : in out Ada.Strings.Unbounded.Unbounded_String);
+
+   procedure Op_#{fn:capitalize(operation.name)} (Bean    : in out #{bean.type};
+                #{g:indent(operation.name)}  Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+   begin
+      #{bean.type}'Class (Bean).#{fn:capitalize(operation.name)} (Outcome);
+   end Op_#{fn:capitalize(operation.name)};
+
+   package Binding_#{fn:capitalize(bean.type)}_#{operation.rowIndex} is
+     new ASF.Events.Faces.Actions.Action_Method.Bind (Bean   => #{bean.type},
+                                                      Method => Op_#{fn:capitalize(operation.name)},
+                                                      Name   => "#{operation.name}");
+   </h:panelGroup>
+   <h:panelGroup rendered="#{operation.type == 'ASF_UPLOAD'}">
+   procedure Op_#{fn:capitalize(operation.name)} (Bean    : in out #{bean.type};
+                #{g:indent(operation.name)}  Part : in ASF.Parts.Part'Class);
+
+   procedure Op_#{fn:capitalize(operation.name)} (Bean    : in out #{bean.type};
+                 #{g:indent(operation.name)}  Part : in ASF.Parts.Part'Class) is
+   begin
+      #{bean.type}'Class (Bean).#{fn:capitalize(operation.name)} (Part);
+   end Op_#{fn:capitalize(operation.name)};
+
+   package Binding_#{fn:capitalize(bean.type)}_#{operation.rowIndex} is
+     new ASF.Parts.Upload_Method.Bind (Bean   => #{bean.type},
+                                       Method => Op_#{fn:capitalize(operation.name)},
+                                       Name   => "#{operation.name}");
+   </h:panelGroup>
+   <h:panelGroup rendered="#{operation.type == 'AWA_EVENT'}">
+   procedure Op_#{fn:capitalize(operation.name)} (Bean  : in out #{bean.type};
+                #{g:indent(operation.name)}  Event : in AWA.Events.Module_Event'Class);
+
+   procedure Op_#{fn:capitalize(operation.name)} (Bean  : in out #{bean.type};
+                #{g:indent(operation.name)}  Event : in AWA.Events.Module_Event'Class) is
+   begin
+      #{bean.type}'Class (Bean).#{fn:capitalize(operation.name)} (Event);
+   end Op_#{fn:capitalize(operation.name)};
+
+   package Binding_#{fn:capitalize(bean.type)}_#{operation.rowIndex} is
+     new AWA.Events.Action_Method.Bind (Bean   => #{bean.type},
+                                        Method => Op_#{fn:capitalize(operation.name)},
+                                        Name   => "#{operation.name}");
+   </h:panelGroup>
+   </h:list>
+#{''}
+<h:panelGroup rendered="#{not empty bean.operations}">
+   Binding_#{bean.type}_Array : aliased constant Util.Beans.Methods.Method_Binding_Array
+     := (<h:list value="#{bean.operations}" var="operation">#{operation.rowIndex ne 1 ? '         ' : ''}#{operation.rowIndex} =&gt; Binding_#{fn:capitalize(bean.type)}_#{operation.rowIndex}.Proxy'Access#{operation.rowIndex ne bean.operations.size ? ',' : ''}
+</h:list>     );
+</h:panelGroup>
+
+<h:panelGroup rendered="#{not empty bean.operations}">
+#{''}
+   --  ------------------------------
+   --  This bean provides some methods that can be used in a Method_Expression.
+   --  ------------------------------
+   overriding
+   function Get_Method_Bindings (From : in #{bean.type})
+                                 return Util.Beans.Methods.Method_Binding_Array_Access is
+      pragma Unreferenced (From);
+   begin
+<h:panelGroup rendered="#{not empty bean.operations}">
+      return Binding_#{bean.type}_Array'Access;
+</h:panelGroup>
+<h:panelGroup rendered="#{empty bean.operations}">
+      return null;
+</h:panelGroup>
+   end Get_Method_Bindings;
+</h:panelGroup>
+
+<h:panelGroup rendered="#{empty bean.parent or bean.members.size gt 0}">
+  <ui:include src="package-bean-get_impl.xhtml">
+    <ui:param name="impl" value="#{bean.isBean ? 'From' : 'Impl'}"/>
+  </ui:include>
+</h:panelGroup>
+
+#{''}
+<h:panelGroup rendered="#{bean.isBean}">
+   --  ------------------------------
+   --  Set the value identified by the name
+   --  ------------------------------
+   overriding
+   procedure Set_Value (Item  : in out #{fn:capitalize(bean.type)}#{bean.isBean ? '' : '_Ref'};
+                        Name  : in String;
+                        Value : in Util.Beans.Objects.Object) is
+   begin
+<u:set var="counter" value="0"/>
+<ui:include src="package-bean-operations-set-member.xhtml">
+  <ui:param name="list" value="#{bean}"/>
+  <ui:param name="is_attribute" value="#{bean.isBean}"/>
+</ui:include>
+<h:panelGroup rendered="#{not empty bean.parent}">
+  <ui:include src="package-bean-operations-set-member.xhtml">
+    <ui:param name="list" value="#{bean.parent}"/>
+    <ui:param name="is_attribute" value="#{0}"/>
+  </ui:include>
+</h:panelGroup>
+      #{counter ge 1 ? 'end if;' : 'null;'}
+   end Set_Value;
+</h:panelGroup>
+
+<h:panelGroup rendered="#{bean.isSerializable}">
+#{''}
+   --  ------------------------------
+   --  Serialize the record member to a JSON/XML stream.
+   --  ------------------------------
+   procedure Write (Stream : in out Util.Serialize.IO.Output_Stream'Class;
+                    Name   : in String;
+                    Item   : in #{fn:capitalize(bean.type)}#{bean.isBean ? '' : '_Ref'}'Class) is
+   begin
+      Stream.Start_Entity (Name);
+<ui:include src="package-bean-serialize.xhtml">
+  <ui:param name="list" value="#{bean}"/>
+  <ui:param name="is_attribute" value="#{bean.isBean}"/>
+</ui:include>
+<h:panelGroup rendered="#{not empty bean.parent}">
+  <ui:include src="package-bean-serialize.xhtml">
+    <ui:param name="list" value="#{bean.parent}"/>
+    <ui:param name="is_attribute" value="#{0}"/>
+  </ui:include>
+</h:panelGroup>
+      Stream.End_Entity (Name);
+   end Write;
+#{''}
+</h:panelGroup>
+
+</ui:composition>

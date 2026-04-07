@@ -1,0 +1,1 @@
+Event configuration shall be stored in a record with fields for name, queue, queue type, property name, parameters, priority, count, manager, action, properties, context, session, and match.

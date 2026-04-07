@@ -1,0 +1,1 @@
+The mail module should be able to send a formatted email in response to an event.

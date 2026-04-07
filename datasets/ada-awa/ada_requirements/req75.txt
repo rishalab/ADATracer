@@ -1,0 +1,1 @@
+Render the mail subject and initializes the message with its content.

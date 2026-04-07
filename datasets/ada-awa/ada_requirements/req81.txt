@@ -1,0 +1,1 @@
+Render the children components to obtain an email address and set the TO/CC/BCC address of the message with the result.

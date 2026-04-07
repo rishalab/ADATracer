@@ -1,0 +1,1 @@
+Create a UI component factory for mail UI components.

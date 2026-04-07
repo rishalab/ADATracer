@@ -1,0 +1,27 @@
+<f:view xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+        xmlns:g="http://code.google.com/p/ada-ado/generator"
+        xmlns:f="http://java.sun.com/jsf/core"
+        file="#{projectName}.properties">
+# Configuration for #{projectName}
+#{projectName}.rootCategory=DEBUG,console,result
+
+#{projectName}.appender.console=Console
+#{projectName}.appender.console.level=DEBUG
+#{projectName}.appender.console.layout=level-message
+
+#{projectName}.appender.result=File
+#{projectName}.appender.result.File=#{projectName}.log
+
+# Logger configuration
+#{projectName}.logger.log=WARN
+
+#{projectName}.logger.Util.Properties=DEBUG
+#{projectName}.logger.Util.Log=WARN
+#{projectName}.logger.Util=DEBUG
+#{projectName}.logger.Util.Serialize.Mappers=WARN
+#{projectName}.logger.Util.Serialize.IO=INFO
+#{''}
+
+</f:view>

@@ -1,0 +1,31 @@
+<!-- Accept invitation page
+  -  Copyright (C) 2017 - 2022 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<ui:composition template="/WEB-INF/layouts/anonymous.xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+    <ui:param name="title" value="#{workspaceMsg.workspace_invite_page_title}"/>
+    <ui:param name="top_nav" value="auth"/>
+
+    <ui:define name="pageHeader">
+        <f:metadata>
+            <f:viewParam id='key' value='#{inviteUser.key}' required="false"/>
+            <f:viewParam value='#{login.key}' from='#{inviteUser.key}' required='false'/>
+            <f:viewAction action='#{login.load}'/>
+            <f:viewAction action='#{inviteUser.load}'/>
+        </f:metadata>
+    </ui:define>
+
+    <!-- Main page body -->
+    <ui:define name="pageBody">
+      <ui:include src="views/welcome-login.xhtml"/>
+      <div class='awa-side1'>
+        <ui:include src="forms/accept-form.xhtml"/>
+      </div>
+      <div class='awa-side2'>
+      </div>
+    </ui:define>
+</ui:composition>
+

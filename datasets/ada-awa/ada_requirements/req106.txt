@@ -1,0 +1,1 @@
+The user setting should be retrieved with the correct value when the setting name is provided.

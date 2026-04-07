@@ -1,0 +1,1 @@
+The sysadmin user shall be authenticated.

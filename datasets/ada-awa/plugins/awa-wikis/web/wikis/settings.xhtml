@@ -1,0 +1,45 @@
+<!-- Edit the wiki configuration
+  -  Copyright (C) 2015 - 2026 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<ui:composition template="/WEB-INF/layouts/layout.xhtml"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:f="http://java.sun.com/jsf/core">
+    <ui:param name="title" value="#{wikiMsg.wiki_admin_settings_page_title}"/>
+    <ui:param name="pageStyle" value="page-wiki"/>
+
+    <ui:define name="pageHeader">
+        <link media="screen" type="text/css" rel="stylesheet" href="#{contextPath}/css/easymde.min.css"/>
+        <link media="screen" type="text/css" rel="stylesheet" href="#{contextPath}/css/fontawesome.min.css"/>
+    </ui:define>
+
+    <!-- Main page body -->
+    <ui:define name="pageBody">
+        <f:metadata>
+            <f:viewAction action='#{adminWikiSpace.load}'/>
+        </f:metadata>
+        <!-- <ui:include src="views/wiki-nav.xhtml">
+          <ui:param name="wikiSpaceId" value="#{adminWikiSpace.id}"/>
+          <ui:param name="page_link" value="/grid"/>
+        </ui:include> -->
+        <div class='awa-container wiki-settings'>
+          <ui:include src="forms/settings-form.xhtml">
+            <ui:param name="title" value="#{wikiMsg.wiki_edit_page_title}"/>
+          </ui:include>
+        </div>
+    </ui:define>
+
+    <ui:define name="pageScript">
+        <script src="#{contextPath}/js/markedit/showdown.js"></script>
+        <script src="#{contextPath}/js/markedit/jquery.markedit.js"></script>
+        <script src="#{contextPath}/js/trumbowyg/trumbowyg.js"></script>
+        <script src="#{contextPath}/js/trumbowyg/plugins/fontfamily/trumbowyg.fontfamily.js"></script>
+        <script src="#{contextPath}/js/trumbowyg/plugins/preformatted/trumbowyg.preformatted.js"></script>
+        <script src="#{jquery.chosenPath}"></script>
+        <script src="#{contextPath}/js/easymde/easymde.min.js"></script>
+        <script src="#{contextPath}/js/awa-images.js"></script>
+        <script src="#{contextPath}/js/awa-wikis.js"></script>
+    </ui:define>
+</ui:composition>
+

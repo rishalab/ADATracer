@@ -1,0 +1,75 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Sample debian/rules that uses debhelper.
+# This file was originally written by Joey Hess and Craig Small.
+# As a special exception, when this file is copied by dh-make into a
+# dh-make output file, you may use that output file without restriction.
+# This special exception was added by Craig Small in version 0.37 of dh-make.
+
+$(foreach line,$(shell sed -n '\
+  s/^ gnat, gnat-\([0-9.]\+\),$$/ \
+    GNAT_VERSION:=\1 \
+  /p;\
+  s/^Package: libswagger\([0-9.]\+\)$$/ \
+    soname:=libswagger.so.\1 \
+  /p;\
+  ' debian/control),$(eval $(line)))
+
+DH_VERBOSE=1
+export DH_OPTIONS=-v
+
+DEB_BUILD_MAINT_OPTIONS := hardening=+all
+include /usr/share/dpkg/buildflags.mk
+include /usr/share/ada/debian_packaging-$(GNAT_VERSION).mk
+ADAFLAGS += -gnatafno -gnatVa -gnatwa
+
+%:
+	dh $@ --with ada-library
+
+override_dh_auto_configure:
+	dh_auto_configure -- --enable-shared --enable-default-shared
+
+override_dh_auto_build-arch:
+	make GPRFLAGS="-R -m -q"
+
+override_dh_auto_test::
+
+override_dh_auto_install::
+
+version=0.6.0
+aliversion=3
+
+openapi_LIB_PKG = libopenapi${version}
+openapi_DEV_PKG = libopenapi${aliversion}-dev
+
+openapi_generator_DEV_PKG = libopenapi-generator${aliversion}-dev
+
+openapi_server_LIB_PKG = libopenapi-server${soversion}
+openapi_server_DEV_PKG = libopenapi-server${aliversion}-dev
+
+override_dh_install::
+	# Files installed in the web/ directory are part of the binary
+	# server package.
+	$(MAKE) prefix=$(CURDIR)/debian/tmp/usr install
+	dh_installdirs --package=$(openapi_generator_DEV_PKG) \
+	   usr/share/openapi-ada
+	dh_install --package=$(openapi_generator_DEV_PKG) \
+	   usr/share/openapi-ada/openapi-generator-cli.jar usr/share/openapi-ada/
+	dh_install --package=$(openapi_generator_DEV_PKG) \
+	   usr/bin/openapi-generator usr/bin
+	dh_installdirs --package=$(openapi_server_DEV_PKG) \
+	   usr/share/openapi-ada/web
+	dh_installdirs --package=$(openapi_server_DEV_PKG) \
+	   usr/share/openapi-ada/web/ui
+	dh_installdirs --package=$(openapi_DEV_PKG) \
+	   usr/share/openapi-ada
+	files=`cd $(CURDIR)/web && find . -type f`; \
+	for i in $$files; do \
+		dir=`dirname $$i`; \
+		dh_install --package=$(openapi_server_DEV_PKG) \
+		   usr/share/openapi-ada/web/$$i usr/share/openapi-ada/web/$$dir ; \
+	done
+	rm -rf $(CURDIR)/debian/tmp
+
+override_dh_strip_nondeterminism:
+	true

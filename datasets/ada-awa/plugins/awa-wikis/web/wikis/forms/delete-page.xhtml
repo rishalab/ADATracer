@@ -1,0 +1,32 @@
+<!-- Dialog box to confirm the deletion of a wiki page.
+  -  Copyright (C) 2015 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<f:view contentType="text/html; charset=UTF-8"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:h="http://java.sun.com/jsf/html">
+    <f:metadata>
+        <f:viewParam id='id' value='#{wikiPage.id}'/>
+    </f:metadata>
+    <h2>
+        <h:outputFormat value="#{wikiMsg.wiki_delete_title}">
+            <f:param value="#{wikiPage.name}"/>
+        </h:outputFormat>
+    </h2>
+    <h:form id='wiki-page-delete'>
+        <h:inputHidden id='wiki-page-delete-id' value='#{wikiPage.id}'/>
+        <p>
+            <h:outputFormat value="#{wikiMsg.wiki_confirm_delete_message}">
+                <f:param value="#{wikiPage.title}"/>
+            </h:outputFormat>
+        </p>
+        <ul class='awa-buttons'>
+            <li>
+                <h:commandButton id='wiki-page-delete-button' value='#{wikiMsg.wiki_delete_button}'
+                                 styleClass="ui-button ui-state-default ui-corner-all"
+                                 action="#{wikiPage.delete}" title="#{wikiMsg.wiki_delete_tooltip}"/>
+            </li>
+        </ul>
+    </h:form>
+</f:view>

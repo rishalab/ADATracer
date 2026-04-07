@@ -1,0 +1,1 @@
+Load the list of images associated with the current folder.

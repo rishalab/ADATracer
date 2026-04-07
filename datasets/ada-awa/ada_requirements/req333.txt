@@ -1,0 +1,1 @@
+The message type has a unique identifier and a name.

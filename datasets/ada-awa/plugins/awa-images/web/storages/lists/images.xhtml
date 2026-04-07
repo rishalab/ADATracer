@@ -1,0 +1,15 @@
+<!-- List of images
+  -  Copyright (C) 2016 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<f:view contentType="text/html; charset=UTF-8"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:h="http://java.sun.com/jsf/html">
+    <f:metadata>
+        <f:viewParam id='folderId' value='#{imageList.folderId}'/>
+        <f:viewAction action='#{imageList.load}'/>
+    </f:metadata>
+    <ui:include src="image-list.xhtml"/>
+</f:view>

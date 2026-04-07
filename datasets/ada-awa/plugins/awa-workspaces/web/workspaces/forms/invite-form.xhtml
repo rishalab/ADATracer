@@ -1,0 +1,41 @@
+<!-- Form to send an invitation to someone
+  -  Copyright (C) 2017, 2018 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<div class='ui-widget ui-widget-content ui-corner-all awa-form'
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:w="http://code.google.com/p/ada-asf/widget"
+     xmlns:util="http://code.google.com/p/ada-asf/util"
+     xmlns:h="http://java.sun.com/jsf/html">
+    <h2>#{workspaceMsg.workspace_invite_title}</h2>
+    <h:form id='invite'>
+        <h:inputHidden id='invite-id' value='#{inviteUser.id}' required='false'/>
+            <h:messages styleClass='awa-error'/>
+            <w:inputText styleClass="awa-required ui-corner-all"
+                         id='email' size='50' required='true' value='#{inviteUser.email}'
+                         placeholder="#{workspaceMsg.workspace_invite_email_placeholder}"
+                         title='#{workspaceMsg.workspace_invite_email_label}'/>
+            <dl class="awa-required#{util:hasMessage('title') ? ' awa-error' : ''}">
+                <dt>
+                    <label for='message'>#{workspaceMsg.workspace_invite_text_label}</label>
+                </dt>
+                <dd>
+                    <h:inputTextarea id='message' rows='20' required='false'
+                                     styleClass="awa-required ui-corner-all"
+                                     placeholder="#{workspaceMsg.workspace_invite_message_placeholder}"
+                                     value='#{inviteUser.message}'/>
+                </dd>
+            </dl>
+            <ul class='awa-buttons'>
+                <li>
+                    <h:commandButton id='send'
+                                     title="#{workspaceMsg.workspace_invite_user_tooltip}"
+                                     value='#{workspaceMsg.workspace_invite_user_button}'
+                                     styleClass="ui-button ui-state-default ui-corner-all"
+                                     action="#{inviteUser.send}"/>
+                </li>
+            </ul>
+    </h:form>
+</div>
+

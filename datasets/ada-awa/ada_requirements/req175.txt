@@ -1,0 +1,1 @@
+The wikis module is initialized.

@@ -1,0 +1,59 @@
+<!-- Layout for the sysadmin page
+  -  Copyright (C) 2011 - 2026 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<f:view contentType="text/html; charset=UTF-8"
+        xmlns:c="http://java.sun.com/jstl/core"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:awa="http://code.google.com/p/ada-awa/jsf"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core">
+    <h:doctype rootElement="html"/>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <link media="screen" type="text/css" rel="stylesheet" href="#{contextPath}/css/grids/reset.css"/>
+    <link media="screen" type="text/css" rel="stylesheet" href="#{contextPath}/css/asf.css"/>
+    <link media="screen" type="text/css" rel="stylesheet" href="#{contextPath}/css/awa.css"/>
+    <link media="screen" type="text/css" rel="stylesheet" href="#{jquery.uiCssPath}/jquery-ui.structure.css"/>
+    <link media="screen" type="text/css" rel="stylesheet" href="#{jquery.uiCssPath}/jquery-ui.theme.css"/>
+    <link media="screen" type="text/css" rel="stylesheet" href="#{jquery.chosenCssPath}"/>
+    <link media="screen" type="text/css" rel="stylesheet" href="#{contextPath}/css/users.css"/>
+    <link media="screen" type="text/css" rel="stylesheet" href="#{contextPath}/css/jquery.tagedit.css"/>
+    <link media="screen" type="text/css" rel="stylesheet" href="#{contextPath}/css/setup.css"/>
+    <ui:insert name="pageHeader"/>
+    <title>#{title}</title>
+</head>
+<body class="#{not empty pageStyle ? pageStyle : ''}">
+
+<main id='awa-page'>
+    <ui:insert name="pageBody"/>
+    <div id="awa-clfooter"></div>
+</main>
+
+<ui:include src="sysadmin-footer.xhtml"/>
+<!--dynamo-merge link="/js/all.js" prefix="#{contextPath}" -->
+<script src="#{jquery.path}"></script>
+<script src="#{jquery.uiPath}core.js"></script>
+<script src="#{jquery.uiPath}widget.js"></script>
+<script src="#{jquery.uiPath}position.js"></script>
+<script src="#{jquery.uiPath}mouse.js"></script>
+<script src="#{jquery.uiPath}draggable.js"></script>
+<script src="#{jquery.uiPath}resizable.js"></script>
+<script src="#{jquery.uiPath}sortable.js"></script>
+<script src="#{jquery.uiPath}dialog.js"></script>
+<script src="#{jquery.uiPath}tabs.js"></script>
+<script src="#{contextPath}/js/asf-message.js"></script>
+<script src="#{contextPath}/js/asf.js"></script>
+<script src="#{jquery.chosenPath}"></script>
+<!--dynamo-end-->
+<ui:insert name="pageScript"/>
+
+<!--DEV_START-->
+<ui:debug/>
+<!--DEV_END-->
+</body>
+</html>
+</f:view>

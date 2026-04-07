@@ -1,0 +1,37 @@
+<!-- Create first folder form
+  -  Copyright (C) 2013, 2018, 2019 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<f:view xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:util="http://code.google.com/p/ada-asf/util"
+        contentType="text/html; charset=UTF-8">
+    <h:form>
+        <div class='awa-messages'>
+            <h:message styleClass='awa-error'/>
+        </div>
+        <dl class="awa-required#{util:hasMessage('foldername') ? ' awa-error' : ''}">
+            <dt>
+                <label for='foldername'>#{storageMsg.message_create_folder}</label>
+                <h:message for='foldername'/>
+            </dt>
+            <dd>
+                <h:inputText id='foldername' size='30' maxlength="50" required="true"
+                             styleClass="ui-corner-all"
+                             validatorMessage='storages.storage_folder_name_required'
+                             requiredMessage='storages.storage_folder_name_required'
+                             value='#{storageFolder.name}'>
+                    <f:validateLength minimum='1' maximum='50'/>
+                </h:inputText>
+            </dd>
+        </dl>
+        <ul class='awa-buttons'>
+            <li>
+                <h:commandButton id='storage-folder-create-button' value='#{storageMsg.button_create_folder_label}'
+                                 styleClass="ui-button ui-state-default ui-corner-all"
+                                 action="#{storageFolder.save}" title="#{storageMsg.button_create_folder_tooltip}"/>
+            </li>
+        </ul>
+    </h:form>
+</f:view>

@@ -1,0 +1,1 @@
+The Countries module defines a database model to represent countries and regions.

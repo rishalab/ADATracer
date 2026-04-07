@@ -1,0 +1,35 @@
+<!-- List of images (grid preview).
+  -  Copyright (C) 2016, 2018, 2018 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<ui:composition
+        xmlns:awa="http://code.google.com/p/ada-awa/jsf"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:c="http://java.sun.com/jstl/core"
+	    xmlns:u="http://code.google.com/p/ada-asf/util"
+        xmlns:h="http://java.sun.com/jsf/html">
+    <h:panelGroup rendered="#{imageList.images.count == 0}">
+        <div class="awa-empty-message">#{wikiMsg.wiki_page_info_no_image}</div>
+    </h:panelGroup>
+    <h:list var="image" value="#{imageList.images}">
+        <div class='wiki-image-grid' id="i_#{image.id}">
+            <div class='wiki-image-grid-info'>
+                <a href="#{contextPath}/storages/image-info/#{image.id}">
+                <h:panelGroup rendered="#{image.thumbnail_id ge 0}">
+                  <img src="#{contextPath}/storages/images/#{image.thumbnail_id}/view/#{image.name}"
+                       width="64" height="64"
+                       alt="#{image.name}"/>
+                </h:panelGroup>
+                <h:panelGroup rendered="#{image.thumbnail_id lt 0}">
+                  <img src="#{contextPath}/images/storages/icon-gallery-64.png"
+                       width="64" height="64"
+                       alt="#{image.name}"/>
+                </h:panelGroup>
+                <span class="wiki-image-name">#{image.name}</span>
+                </a>
+            </div>
+        </div>
+    </h:list>
+</ui:composition>

@@ -1,0 +1,1 @@
+< ¢©>&  Alpha: Α Beta: Β Gamma: Γ Delta: Δ Epsilon: Ε Zeta: Ζ Eta: Η Theta: Θ Iota: Ι Kappa: Κ Lambda: Λ Mu: Μ Nu: Ν Xi: Ξ Omicron: Ο Pi: Π Rho: Ρ Sigma: Σ Tau: Τ Upsilon: Υ Phi: Φ Chi: Χ Psi: Ψ Omega: Ω   First symbol: Æ Last symbol: ‌  (zero width non-joiner)

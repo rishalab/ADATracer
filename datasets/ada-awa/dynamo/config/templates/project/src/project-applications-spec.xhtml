@@ -1,0 +1,103 @@
+<f:view xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+        xmlns:g="http://code.google.com/p/ada-ado/generator"
+        xmlns:f="http://java.sun.com/jsf/core"
+        file="#{projectName}-applications.ads">-----------------------------------------------------------------------
+--  #{projectName} -- #{projectName} applications
+<ui:include src="../../licenses/license-ada.xhtml"/>
+-----------------------------------------------------------------------
+
+with Servlet.Filters.Dump;
+with Servlet.Filters.Cache_Control;
+with Servlet.Core.Files;
+with Servlet.Core.Measures;
+with Servlet.Security.Servlets;
+#{''}
+with ASF.Servlets.Faces;
+with ASF.Servlets.Ajax;
+with ASF.Converters.Sizes;
+#{''}
+with AWA.Users.Servlets;
+with AWA.Users.Modules;
+with AWA.Mail.Modules;
+with AWA.Comments.Modules;
+with AWA.Blogs.Modules;
+with AWA.Tags.Modules;
+with AWA.Storages.Modules;
+with AWA.Applications;
+with AWA.Workspaces.Modules;
+with AWA.Services.Filters;
+with AWA.Wikis.Modules;
+with AWA.Wikis.Previews;
+with AWA.Images.Modules;
+with AWA.Jobs.Modules;
+with AWA.Counters.Modules;
+with AWA.Converters.Dates;
+package #{fn:capitalize(projectName)}.Applications is
+#{''}
+   CONFIG_PATH  : constant String := "#{fn:toLowerCase(projectName)}";
+   CONTEXT_PATH : constant String := "/#{projectName}";
+#{''}
+   type Application is new AWA.Applications.Application with private;
+   type Application_Access is access all Application'Class;
+#{''}
+   --  Initialize the servlets provided by the application.
+   --  This procedure is called by <b>Initialize</b>.
+   --  It should register the application servlets.
+   overriding
+   procedure Initialize_Servlets (App : in out Application);
+#{''}
+   --  Initialize the filters provided by the application.
+   --  This procedure is called by <b>Initialize</b>.
+   --  It should register the application filters.
+   overriding
+   procedure Initialize_Filters (App : in out Application);
+#{''}
+   --  Initialize the AWA modules provided by the application.
+   --  This procedure is called by <b>Initialize</b>.
+   --  It should register the modules used by the application.
+   overriding
+   procedure Initialize_Modules (App : in out Application);
+#{''}
+private
+#{''}
+   type Application is new AWA.Applications.Application with record
+      Self               : Application_Access;
+#{''}
+      --  Application servlets and filters (add new servlet and filter instances here).
+      Faces              : aliased ASF.Servlets.Faces.Faces_Servlet;
+      Ajax               : aliased ASF.Servlets.Ajax.Ajax_Servlet;
+      Files              : aliased Servlet.Core.Files.File_Servlet;
+      Dump               : aliased Servlet.Filters.Dump.Dump_Filter;
+      Service_Filter     : aliased AWA.Services.Filters.Service_Filter;
+      Measures           : aliased Servlet.Core.Measures.Measure_Servlet;
+      No_Cache           : aliased Servlet.Filters.Cache_Control.Cache_Control_Filter;
+#{''}
+      --  Authentication servlet and filter.
+      Auth               : aliased Servlet.Security.Servlets.Request_Auth_Servlet;
+      Verify_Auth        : aliased AWA.Users.Servlets.Verify_Auth_Servlet;
+#{''}
+      --  Converters shared by web requests.
+      Rel_Date_Converter : aliased AWA.Converters.Dates.Relative_Date_Converter;
+      Size_Converter     : aliased ASF.Converters.Sizes.Size_Converter;
+#{''}
+      --  The application modules.
+      User_Module        : aliased AWA.Users.Modules.User_Module;
+      Workspace_Module   : aliased AWA.Workspaces.Modules.Workspace_Module;
+      Blog_Module        : aliased AWA.Blogs.Modules.Blog_Module;
+      Mail_Module        : aliased AWA.Mail.Modules.Mail_Module;
+      Comment_Module     : aliased AWA.Comments.Modules.Comment_Module;
+      Storage_Module     : aliased AWA.Storages.Modules.Storage_Module;
+      Tag_Module         : aliased AWA.Tags.Modules.Tag_Module;
+      Job_Module         : aliased AWA.Jobs.Modules.Job_Module;
+      Image_Module       : aliased AWA.Images.Modules.Image_Module;
+      Wiki_Module        : aliased AWA.Wikis.Modules.Wiki_Module;
+      Preview_Module     : aliased AWA.Wikis.Previews.Preview_Module;
+      Counter_Module     : aliased AWA.Counters.Modules.Counter_Module;
+#{''}
+      --  Add your modules here.
+   end record;
+#{''}
+end #{fn:capitalize(projectName)}.Applications;
+</f:view>

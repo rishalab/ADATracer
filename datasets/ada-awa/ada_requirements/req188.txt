@@ -1,0 +1,1 @@
+Create and register workspace beans for the workspaces module.

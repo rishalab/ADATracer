@@ -1,0 +1,469 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<module version="1.0">
+  <!-- Application override
+   app_url_base
+   app_facebook_client_id
+   app_facebook_secret
+   app_google_plus_client_id
+   app_google_plus_secret
+   app_logout_url
+  -->
+  <managed-bean>
+    <description>This bean is used by the login form</description>
+    <managed-bean-name>login</managed-bean-name>
+    <managed-bean-class>AWA.Users.Beans.Authenticate_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>
+
+  <managed-bean>
+    <description>This bean is used by the registration form</description>
+    <managed-bean-name>register</managed-bean-name>
+    <managed-bean-class>AWA.Users.Beans.Authenticate_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>
+
+  <managed-bean>
+    <description>This bean is used by the reset password form</description>
+    <managed-bean-name>resetPassword</managed-bean-name>
+    <managed-bean-class>AWA.Users.Beans.Authenticate_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>
+
+  <managed-bean>
+    <description>This bean is used by the lost password form</description>
+    <managed-bean-name>lostPassword</managed-bean-name>
+    <managed-bean-class>AWA.Users.Beans.Authenticate_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>
+
+  <managed-bean>
+    <description>This bean is used by the logout process</description>
+    <managed-bean-name>logout</managed-bean-name>
+    <managed-bean-class>AWA.Users.Beans.Authenticate_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>
+
+  <managed-bean>
+    <description>This bean allows to provide information about the current logged user.</description>
+    <managed-bean-name>user</managed-bean-name>
+    <managed-bean-class>AWA.Users.Beans.Current_User_Bean</managed-bean-class>
+    <managed-bean-scope>application</managed-bean-scope>
+  </managed-bean>
+
+  <navigation-rule>
+    <from-view-id>/auth/login.xhtml</from-view-id>
+    <navigation-case>
+      <from-outcome>success</from-outcome>
+      <to-view-id>/workspaces/main.xhtml</to-view-id>
+      <redirect/>
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>login</from-outcome>
+      <to-view-id>/auth/login.xhtml</to-view-id>
+    </navigation-case>
+  </navigation-rule>
+
+  <navigation-rule>
+    <from-view-id>/auth/register.xhtml</from-view-id>
+    <navigation-case>
+      <from-outcome>success</from-outcome>
+      <to-view-id>/auth/login.xhtml</to-view-id>
+      <redirect/>
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>disabled</from-outcome>
+      <to-view-id>/auth/login.xhtml</to-view-id>
+      <redirect/>
+    </navigation-case>
+  </navigation-rule>
+
+  <navigation-rule>
+    <from-view-id>/auth/lost-password.xhtml</from-view-id>
+    <navigation-case>
+      <from-outcome>success</from-outcome>
+      <to-view-id>/auth/login.xhtml</to-view-id>
+      <redirect/>
+    </navigation-case>
+  </navigation-rule>
+
+  <navigation-rule>
+    <from-view-id>/auth/change-password.xhtml</from-view-id>
+    <navigation-case>
+      <from-outcome>success</from-outcome>
+      <to-view-id>/workspaces/main.xhtml</to-view-id>
+      <redirect/>
+    </navigation-case>
+  </navigation-rule>
+
+  <navigation-rule>
+    <from-view-id>/ajax/logout/logout</from-view-id>
+    <navigation-case>
+      <from-outcome>success</from-outcome>
+      <to-view-id>/auth/thank-you.xhtml</to-view-id>
+      <redirect/>
+    </navigation-case>
+  </navigation-rule>
+
+  <context-param>
+    <param-name>users.server_id</param-name>
+    <param-value>1</param-value>
+    <description>
+       The server id when several instances are used.
+    </description>
+  </context-param>
+
+  <context-param>
+    <param-name>users.auth_key</param-name>
+    <param-value>8ef60aad66977c68b12f4f8acab5a4e00a77f6e8</param-value>
+    <description>
+       An authentication key used to sign the authentication cookies.
+    </description>
+  </context-param>
+
+  <context-param>
+    <param-name>users.allow_register</param-name>
+    <param-value>#{not empty app_login_register ? app_login_register : true}</param-value>
+    <description>
+      Allow users to register themselves on the server.
+      When disabled, users can be created by the AWA 'user' command.
+    </description>
+  </context-param>
+
+  <context-param>
+    <param-name>openid.realm</param-name>
+    <param-value>#{app_url_base}/auth</param-value>
+    <description>
+       The REALM URL used by OpenID providers to verify the validity of the verification callback.
+    </description>
+  </context-param>
+
+  <context-param>
+    <param-name>openid.callback_url</param-name>
+    <param-value>#{app_url_base}/auth/verify</param-value>
+    <description>
+       The verification callback URI used by the OpenID provider to redirect the user
+       after authentication.
+    </description>
+  </context-param>
+
+  <context-param>
+    <param-name>openid.success_url</param-name>
+    <param-value>#{contextPath}/workspaces/main.html</param-value>
+    <description>
+       The URI where the user is redirected after a successful authentication.
+    </description>
+  </context-param>
+
+  <context-param>
+    <param-name>openid.error_url</param-name>
+    <param-value>#{contextPath}/auth/login.html</param-value>
+    <description>
+       The URI where the user is redirected when some authenticate error occurred.
+    </description>
+  </context-param>
+
+  <!--  OpenID Orange -->
+  <context-param>
+    <param-name>auth.url.orange</param-name>
+    <param-value>https://openid.orange.fr</param-value>
+    <description>Orange OpenID access point</description>
+  </context-param>
+
+  <context-param>
+    <param-name>auth.provider.orange</param-name>
+    <param-value>openid</param-value>
+    <description>Auth provider to use for Orange</description>
+  </context-param>
+
+  <!--  OpenID Yahoo! -->
+  <context-param>
+    <param-name>auth.url.yahoo</param-name>
+    <param-value>https://api.login.yahoo.com/oauth2/request_auth</param-value>
+    <description>Yahoo! OpenID access point</description>
+  </context-param>
+
+  <context-param>
+    <param-name>auth.provider.yahoo</param-name>
+    <param-value>yahoo</param-value>
+    <description>Auth provider to use for Yahoo!</description>
+  </context-param>
+
+  <!--  OpenID Google -->
+  <context-param>
+    <param-name>auth.url.google</param-name>
+    <param-value>https://www.google.com/accounts/o8/id</param-value>
+    <description>Google OpenID access point</description>
+  </context-param>
+
+  <context-param>
+    <param-name>auth.provider.google</param-name>
+    <param-value>openid</param-value>
+    <description>Auth provider to use for Google</description>
+  </context-param>
+
+  <!--  OpenID Github -->
+  <context-param>
+    <param-name>auth.url.github</param-name>
+    <param-value>https://github.com/login/oauth/authorize</param-value>
+    <description>GitHub OAuth2 Connect access point</description>
+  </context-param>
+
+  <context-param>
+    <param-name>auth.provider.github</param-name>
+    <param-value>github</param-value>
+    <description>Auth provider to use for GitHub</description>
+  </context-param>
+
+  <context-param>
+    <param-name>github.request_url</param-name>
+    <param-value>https://github.com/login/oauth/access_token</param-value>
+    <description>GitHub OAuth token access point</description>
+  </context-param>
+
+  <context-param>
+    <param-name>github.scope</param-name>
+    <param-value>read:user, read:email</param-value>
+    <description>GitHub OAuth scope</description>
+  </context-param>
+
+  <context-param>
+    <param-name>github.callback_url</param-name>
+    <param-value>#{app_oauth_url_base}#{contextPath}/auth/verify</param-value>
+    <description>GitHub verify callback</description>
+  </context-param>
+
+  <context-param>
+    <param-name>github.issuer</param-name>
+    <param-value>https://github.com</param-value>
+    <description>GitHub issuer identification</description>
+  </context-param>
+
+  <!--  OpenID Gitlab -->
+  <context-param>
+    <param-name>auth.url.gitlab</param-name>
+    <param-value>https://gitlab.com/oauth/authorize</param-value>
+    <description>GitLab OAuth2 Connect access point</description>
+  </context-param>
+
+  <context-param>
+    <param-name>auth.provider.gitlab</param-name>
+    <param-value>yahoo</param-value>
+    <description>Auth provider to use for GitLab</description>
+  </context-param>
+
+  <context-param>
+    <param-name>gitlab.request_url</param-name>
+    <param-value>https://gitlab.com/oauth/token</param-value>
+    <description>Gitlab OAuth token access point</description>
+  </context-param>
+
+  <context-param>
+    <param-name>gitlab.scope</param-name>
+    <param-value>openid email</param-value>
+    <description>Gitlab OAuth scope</description>
+  </context-param>
+
+  <context-param>
+    <param-name>gitlab.callback_url</param-name>
+    <param-value>#{app_oauth_url_base}#{contextPath}/auth/verify</param-value>
+    <description>Gitlab verify callback</description>
+  </context-param>
+
+  <context-param>
+    <param-name>gitlab.issuer</param-name>
+    <param-value>https://gitlab.com</param-value>
+    <description>Gitlab issuer identification</description>
+  </context-param>
+
+  <!--  OpenID Twitter -->
+  <context-param>
+    <param-name>auth.url.twitter</param-name>
+    <param-value>https://api.twitter.com/oauth/authenticate</param-value>
+    <description>Twitter OAuth2 Connect access point</description>
+  </context-param>
+
+  <context-param>
+    <param-name>auth.provider.twitter</param-name>
+    <param-value>yahoo</param-value>
+    <description>Auth provider to use for Twitter</description>
+  </context-param>
+
+  <!--  Facebook Login -->
+  <context-param>
+    <param-name>auth.url.facebook</param-name>
+    <param-value>https://www.facebook.com/dialog/oauth</param-value>
+    <description>Facebook OAuth access point</description>
+  </context-param>
+
+  <context-param>
+    <param-name>auth.provider.facebook</param-name>
+    <param-value>facebook</param-value>
+    <description>Auth provider to use for Facebook</description>
+  </context-param>
+
+  <context-param>
+    <param-name>facebook.callback_url</param-name>
+    <param-value>#{app_oauth_url_base}#{contextPath}/auth/verify</param-value>
+    <description>Facebook verify callback</description>
+  </context-param>
+
+  <context-param>
+    <param-name>facebook.request_url</param-name>
+    <param-value>https://graph.facebook.com/oauth/access_token</param-value>
+    <description>Facebook request OAuth token access point</description>
+  </context-param>
+
+  <context-param>
+    <param-name>facebook.scope</param-name>
+    <param-value>public_profile,email</param-value>
+    <description>Facebook permission scope</description>
+  </context-param>
+
+  <context-param>
+    <param-name>facebook.client_id</param-name>
+    <param-value>#{app_facebook_client_id}</param-value>
+    <description>Facebook API client ID</description>
+  </context-param>
+
+  <context-param>
+    <param-name>facebook.secret</param-name>
+    <param-value>#{app_facebook_secret}</param-value>
+    <description>Facebook API secret</description>
+  </context-param>
+
+  <!-- Google+ Login -->
+  <context-param>
+    <param-name>auth.url.google-plus</param-name>
+    <param-value>https://accounts.google.com/o/oauth2/auth</param-value>
+    <description>Google+ OAuth access point</description>
+  </context-param>
+
+  <context-param>
+    <param-name>auth.provider.google-plus</param-name>
+    <param-value>google-plus</param-value>
+    <description>Auth provider to use for Google+</description>
+  </context-param>
+
+  <context-param>
+    <param-name>google-plus.issuer</param-name>
+    <param-value>accounts.google.com</param-value>
+    <description>Google+ issuer identification</description>
+  </context-param>
+
+  <context-param>
+    <param-name>google-plus.callback_url</param-name>
+    <param-value>#{app_oauth_url_base}#{contextPath}/auth/verify</param-value>
+    <description>Google+ verify callback</description>
+  </context-param>
+
+  <context-param>
+    <param-name>google-plus.request_url</param-name>
+    <param-value>https://accounts.google.com/o/oauth2/token</param-value>
+    <description>Google+ request OAuth token access point</description>
+  </context-param>
+
+  <context-param>
+    <param-name>google-plus.scope</param-name>
+    <param-value>openid profile email</param-value>
+    <description>Google+ permission scope</description>
+  </context-param>
+
+  <context-param>
+    <param-name>google-plus.client_id</param-name>
+    <param-value>#{app_google_plus_client_id}</param-value>
+    <description>Google+ API client ID</description>
+  </context-param>
+
+  <context-param>
+    <param-name>google-plus.secret</param-name>
+    <param-value>#{app_google_plus_secret}</param-value>
+    <description>Google+ API secret</description>
+  </context-param>
+
+  <context-param>
+    <param-name>auth-filter.redirect</param-name>
+    <param-value>#{contextPath}/auth/login.html</param-value>
+    <description>URI to redirect to the login page</description>
+  </context-param>
+
+  <context-param>
+    <param-name>verify-access-key.redirect</param-name>
+    <param-value>#{contextPath}/auth/login.html</param-value>
+    <description>URI to redirect to the login page</description>
+  </context-param>
+
+  <context-param>
+    <param-name>verify-access-key.change-password</param-name>
+    <param-value>#{contextPath}/auth/change-password/</param-value>
+    <description>URI to redirect to the change password page when
+    the access key is verified, the user account is registered but
+    there is no password for authentication</description>
+  </context-param>
+
+  <context-param>
+    <param-name>app_login_register</param-name>
+    <param-value>#{not empty app_login_register ? app_login_register : true}</param-value>
+    <description>Enable or disable user registration through the web interface</description>
+  </context-param>
+
+  <context-param>
+    <param-name>app_login_email</param-name>
+    <param-value>#{not empty app_login_email ? app_login_email : true}</param-value>
+    <description>Enable or disable user login through the email/password form</description>
+  </context-param>
+
+  <context-param>
+    <param-name>app_login_openid</param-name>
+    <param-value>#{not empty app_login_openid ? app_login_openid : true}</param-value>
+    <description>Enable or disable user login through OpenID/OAuth2</description>
+  </context-param>
+
+  <context-param>
+    <param-name>app_login_methods</param-name>
+    <param-value>#{not empty app_login_methods ? app_login_methods : 'email,google,facebook'}</param-value>
+    <description>List of login methods which are enabled for authentication</description>
+  </context-param>
+
+  <servlet-mapping>
+    <servlet-name>openid-auth</servlet-name>
+    <url-pattern>/auth/auth/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>openid-verify</servlet-name>
+    <url-pattern>/auth/verify</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>verify-access-key</servlet-name>
+    <url-pattern>/auth/validate/:key</url-pattern>
+  </servlet-mapping>
+
+  <filter-mapping>
+    <filter-name>service</filter-name>
+    <url-pattern>/auth/*.html</url-pattern>
+    <url-pattern>/auth/verify</url-pattern>
+    <url-pattern>/auth/reset-password.html</url-pattern>
+    <url-pattern>/auth/change-password/#{resetPassword.key}</url-pattern>
+    <url-pattern>/auth/validate/:key</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>auth-filter</filter-name>
+    <url-pattern>/users/*.html</url-pattern>
+  </filter-mapping>
+
+  <url-mapping>
+    <pattern>/auth/change-password/#{resetPassword.key}</pattern>
+    <view-id>/auth/change-password.html</view-id>
+  </url-mapping>
+
+    <url-policy>
+        <description>
+           Give access to login pages to anybody.
+        </description>
+        <permission>anonymous</permission>
+        <url-pattern>/auth/.*</url-pattern>
+    </url-policy>
+
+</module>

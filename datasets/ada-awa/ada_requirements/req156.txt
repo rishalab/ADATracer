@@ -1,0 +1,1 @@
+The tag module manages the tags associated with entities.

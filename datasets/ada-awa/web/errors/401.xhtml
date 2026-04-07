@@ -1,0 +1,30 @@
+<!-- Authentication required error page
+  -  Copyright (C) 2013 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<c:choose xmlns="http://www.w3.org/1999/xhtml"
+          xmlns:f="http://java.sun.com/jsf/core"
+          xmlns:util="http://code.google.com/p/ada-asf/util"
+          xmlns:awa="http://code.google.com/p/ada-awa/jsf"
+          xmlns:c="http://java.sun.com/jstl/core">
+    <c:when test="#{not empty header['X-Requested-With']}">
+        <f:view contentType="application/json">
+[
+    { "action": "message", "data": "<util:escape>
+    <div class='awa-message'>
+        <p>
+            #{layoutMsg.layout_error_must_be_logged}
+        </p>
+        <a href="#{contextPath}/auth/login.html">#{layoutMsg.layout_please_login}</a>
+    </div>
+    </util:escape>" }
+]
+        </f:view>
+    </c:when>
+    <c:otherwise>
+        <f:view>
+            <awa:redirect link="#{contextPath}/auth/login.html"/>
+        </f:view>
+    </c:otherwise>
+</c:choose>

@@ -1,0 +1,60 @@
+<query-mapping package='AWA.Questions.Models'>
+    <description>
+      The list of answers associated with a question.
+    </description>
+
+    <class name="AWA.Questions.Models.Answer_Info" bean="yes">
+        <comment>The list of answers.</comment>
+        <property type='Identifier' name="id">
+            <comment>the answer identifier.</comment>
+        </property>
+        <property type='Date' name="create_date">
+            <comment>the answer creation date.</comment>
+        </property>
+        <property type='Nullable_Date' name="edit_date" not-null="no">
+            <comment>the answer edit date.</comment>
+        </property>
+        <property type='String' name="answer">
+            <comment>the answer description.</comment>
+        </property>
+        <property type='Integer' name="rank">
+            <comment>the answer rank.</comment>
+        </property>
+        <property type='Integer' name="user_rating">
+            <comment>the question rating as voted by the current user.</comment>
+        </property>
+        <property type='Identifier' name="author_id">
+            <comment>the author's identifier.</comment>
+        </property>
+        <property type='String' name="author_name">
+            <comment>the author's name.</comment>
+        </property>
+        <property type='String' name="author_email">
+            <comment>the author's email.</comment>
+        </property>
+    </class>
+
+    <query name='answer-list'>
+       <comment>Get a list of answers.</comment>
+       <sql>
+    SELECT
+      a.id,
+      a.create_date,
+      a.edit_date,
+      a.answer,
+      coalesce(r.rating,0) as rank,
+      coalesce(v.rating,0),
+      a.author_id,
+      u.name,
+      email.email
+    FROM awa_answer AS a
+    INNER JOIN awa_user AS u ON a.author_id = u.id
+    INNER JOIN awa_email AS email ON a.author_id = email.user_id
+    LEFT JOIN awa_rating AS r ON r.for_entity_id = a.id AND r.for_entity_type = $entity_type[awa_answer]
+    LEFT JOIN awa_vote AS v ON v.entity_id = r.id AND v.user_id = :user_id
+    WHERE a.question_id = :question_id
+    ORDER BY rank DESC, a.create_date DESC
+       </sql>
+    </query>
+
+</query-mapping>

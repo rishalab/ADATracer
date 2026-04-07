@@ -1,0 +1,45 @@
+<!-- Application Installation Page
+  -  Copyright (C) 2016 - 2022 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<ui:composition template="/WEB-INF/layouts/setup.xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:awa="http://code.google.com/p/ada-awa/jsf"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jstl/core"
+                xmlns:ajax="http://code.google.com/p/ada-asf/ajax"
+                xmlns:u="http://code.google.com/p/ada-asf/util"
+                xmlns:h="http://java.sun.com/jsf/html">
+    <ui:param name="title" value="#{setupMsg.setup_install_title}"/>
+
+    <ui:define name="pageHeader">
+    </ui:define>
+
+    <!-- Main page body -->
+    <ui:define name="pageBody">
+      <div class='setup-container'>
+        <h1>
+          <h:outputFormat value="#{setupMsg.setup_configure_title}">
+            <f:param value="#{setup.app_name}"/>
+          </h:outputFormat>
+        </h1>
+        <ui:include src="/WEB-INF/layouts/setup-steps.xhtml"/>
+        <ajax:include id='step' styleClass="asf-container" async="true"
+                      src="/setup/forms/database.html"/>
+      </div>
+      <script>
+            function previous_step(form) {
+                ASF.Update('#step', '#{contextPath}/setup/forms/' + form + ".html", null);
+                if (form == 'settings') {
+                    $('#setup-steps').removeClass('setup-auth').addClass('setup-settings');
+                } else if (form == 'database') {
+                    $('#setup-steps').removeClass('setup-settings').addClass('setup-database');
+                } else if (form == 'auth') {
+                    $('#setup-steps').removeClass('setup-oauth').addClass('setup-auth');
+                }
+                return false;
+            }
+      </script>
+    </ui:define>
+</ui:composition>

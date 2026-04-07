@@ -1,0 +1,29 @@
+<!-- Dialog box to confirm the deletion of a workspace member.
+  -  Copyright (C) 2017 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<f:view contentType="text/html; charset=UTF-8"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:h="http://java.sun.com/jsf/html">
+    <f:metadata>
+        <f:viewParam id='id' value='#{workspaceMember.id}'/>
+    </f:metadata>
+    <h2>
+        #{workspaceMsg.workspace_member_delete_title}
+    </h2>
+    <h:form id='delete-member-form'>
+        <h:inputHidden id='member-id' value="#{workspaceMember.id}"/>
+        <p>
+            #{workspaceMsg.workspace_member_confirm_delete_message}
+        </p>
+        <ul class='awa-buttons'>
+            <li>
+                <h:commandButton id='delete' value='#{workspaceMsg.workspace_member_delete_button}'
+                                 title="#{workspaceMsg.workspace_member_delete_tooltip}"
+                                 action="#{workspaceMember.delete}"
+                                 styleClass="ui-button ui-state-default ui-corner-all"/>
+            </li>
+        </ul>
+    </h:form>
+</f:view>

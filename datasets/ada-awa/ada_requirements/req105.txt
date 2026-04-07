@@ -1,0 +1,1 @@
+The question table holds a single question asked by a user to the community.

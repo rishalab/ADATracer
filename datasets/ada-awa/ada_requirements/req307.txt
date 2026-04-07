@@ -1,0 +1,1 @@
+Check if the permission with the given name is granted for the current user.

@@ -1,0 +1,44 @@
+<f:view xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+        xmlns:u="http://code.google.com/p/ada-asf/util"
+        xmlns:g="http://code.google.com/p/ada-ado/generator"
+        xmlns:f="http://java.sun.com/jsf/core"
+        file="db/#{model.dirname ne 'src' ? model.dirname : ''}#{model.dirname ne 'src' ? '/' : ''}postgresql/#{projectName}-postgresql.sql">
+/* File generated automatically by dynamo */
+SET client_min_messages = warning;
+<h:list value="#{model.tables}" var="table">
+/* #{table.comment} */
+CREATE TABLE IF NOT EXISTS #{table.table} (
+<h:list value="#{table.members}" var="column">
+  /* #{column.comment} */
+<h:panelGroup rendered="#{column.isPrimaryKey and column.generator eq 'auto'}">
+  "#{fn:toLowerCase(column.sqlName)}" SERIAL,
+</h:panelGroup>
+<h:panelGroup rendered="#{not column.isPrimaryKey or column.generator ne 'auto'}">
+  "#{fn:toLowerCase(column.sqlName)}" #{column.sqlType}#{column.isUnique ? ' UNIQUE' : ''} #{not column.isNull ? 'NOT NULL' : ''},
+</h:panelGroup>
+</h:list><u:set var="counter" value="0"/>
+  PRIMARY KEY (<h:list value="#{table.members}" var="column"><h:panelGroup rendered="#{column.isPrimaryKey}"><h:panelGroup rendered="#{counter ne 0}">, </h:panelGroup><u:set var="counter" value="#{counter + 1}"/>"#{fn:toLowerCase(column.sqlName)}"</h:panelGroup></h:list>)
+);
+</h:list>
+<h:panelGroup rendered="#{not empty model.tables}">
+INSERT INTO ado_entity_type (name) VALUES
+  <h:list value="#{model.tables}" var="table">#{table.rowIndex ge 2 ? ', ' : ''}('#{table.table}')</h:list>
+  ON CONFLICT DO NOTHING;
+</h:panelGroup>
+<h:panelGroup rendered="#{not empty model.tables and project.skip_awa_audit_field ne 'yes'}">
+  <h:list value="#{model.tables}" var="table">
+    <h:list value="#{table.members}" var="column">
+      <h:panelGroup rendered="#{column.isAuditable}">
+INSERT INTO awa_audit_field (entity_type, name)
+  VALUES ((SELECT id FROM ado_entity_type WHERE name = '#{table.table}'), '#{column.name}')
+  ON CONFLICT DO NOTHING;
+      </h:panelGroup>
+    </h:list>
+</h:list>
+</h:panelGroup>
+INSERT INTO ado_version (name, version)
+  VALUES ('#{projectName}', #{project.modelVersion})
+  ON CONFLICT DO NOTHING;
+</f:view>

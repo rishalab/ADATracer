@@ -1,0 +1,1 @@
+A user should be able to create a test user associated with a given email address, and get an open session for that user, without reporting an error if the user already exists.

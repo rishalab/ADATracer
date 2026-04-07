@@ -1,0 +1,1 @@
+An instance of the storage module must be declared and registered when the application is created and initialized.

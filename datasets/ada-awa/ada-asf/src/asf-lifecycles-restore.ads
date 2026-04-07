@@ -1,0 +1,34 @@
+-----------------------------------------------------------------------
+--  asf-lifecycles-restore -- Restore view phase
+--  Copyright (C) 2010, 2018 Stephane Carrez
+--  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+--  SPDX-License-Identifier: Apache-2.0
+-----------------------------------------------------------------------
+
+--  The <b>ASF.Lifecycles.Restore</b> package defines the behavior
+--  of the restore phase.
+with ASF.Applications.Views;
+package ASF.Lifecycles.Restore is
+
+   --  ------------------------------
+   --  Restore view controller
+   --  ------------------------------
+   type Restore_Controller is new Phase_Controller with private;
+
+   --  Initialize the phase controller.
+   overriding
+   procedure Initialize (Controller : in out Restore_Controller;
+                         Views      : ASF.Applications.Views.View_Handler_Access);
+
+   --  Execute the restore view phase.
+   overriding
+   procedure Execute (Controller : in Restore_Controller;
+                      Context    : in out ASF.Contexts.Faces.Faces_Context'Class);
+
+private
+
+   type Restore_Controller is new Phase_Controller with record
+      View_Handler : ASF.Applications.Views.View_Handler_Access;
+   end record;
+
+end ASF.Lifecycles.Restore;

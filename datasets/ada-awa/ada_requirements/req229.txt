@@ -1,0 +1,1 @@
+No requirement can be extracted from this Ada source code as it only contains a package declaration with a pre-elaboration pragma.

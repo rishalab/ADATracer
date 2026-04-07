@@ -1,0 +1,1 @@
+Convert the object value into a string, associated with the specified component, with the option to raise an Invalid_Conversion exception if the string cannot be converted.

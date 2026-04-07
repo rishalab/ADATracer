@@ -1,0 +1,194 @@
+<ui:composition xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+        xmlns:g="http://code.google.com/p/ada-ado/generator"
+        xmlns:f="http://java.sun.com/jsf/core">
+<h:list value="#{package.queries}" var="query">
+  <h:panelGroup rendered="#{not empty query.type}">
+    <h:panelGroup rendered="#{query.bean eq 'yes'}">
+      <ui:include src="../beans/package-body-bean-impl.xhtml">
+        <ui:param name="bean" value="#{query}"/>
+      </ui:include>
+#{''}
+<h:panelGroup rendered="#{empty query}">
+   --  --------------------
+   --  Get the bean attribute identified by the given name.
+   --  --------------------
+   overriding
+   function Get_Value (From : in #{query.type};
+                       Name : in String) return Util.Beans.Objects.Object is
+   begin
+   <h:list value="#{query.columns}" var="column">
+      if Name = "#{column.name}" then
+      <h:panelGroup rendered="#{column.type.isInteger or column.type.isIdentifier}">
+         return Util.Beans.Objects.To_Object (Long_Long_Integer (From.#{fn:capitalize(column.name)}));
+      </h:panelGroup>
+      <h:panelGroup rendered="#{column.type.isDate and not column.isNull}">
+         return Util.Beans.Objects.Time.To_Object (From.#{fn:capitalize(column.name)});
+      </h:panelGroup>
+      <h:panelGroup rendered="#{column.type.isDate and column.isNull}">
+         if From.#{fn:capitalize(column.name)}.Is_Null then
+            return Util.Beans.Objects.Null_Object;
+         else
+            return Util.Beans.Objects.Time.To_Object (From.#{fn:capitalize(column.name)}.Value);
+         end if;
+      </h:panelGroup>
+      <h:panelGroup rendered="#{column.type.isEnum}">
+         return #{g:adaType(column,2)}_Objects.To_Object (From.#{fn:capitalize(column.name)});
+      </h:panelGroup>
+      <h:panelGroup rendered="#{not column.type.isInteger and not column.type.isEnum and not column.type.isIdentifier and not column.type.isDate}">
+         return Util.Beans.Objects.To_Object (From.#{fn:capitalize(column.name)});
+      </h:panelGroup>
+      end if;
+   </h:list>
+      return Util.Beans.Objects.Null_Object;
+   end Get_Value;
+#{''}
+</h:panelGroup>
+</h:panelGroup>
+
+<h:panelGroup rendered="#{not empty query.operations}">
+   --  --------------------
+   --  Read in the object the data from the query result and prepare to read the next row.
+   --  If there is no row, raise the ADO.NOT_FOUND exception.
+   --  --------------------
+   procedure Read (Into : in out #{fn:capitalize(query.type)};
+                   Stmt : in out ADO.Statements.Query_Statement'Class) is
+   begin
+      if not Stmt.Has_Elements then
+         raise ADO.Objects.NOT_FOUND;
+      end if;
+<h:list value="#{query.members}" var="column">
+  <h:panelGroup rendered="#{column.type.isIdentifier}">
+      Into.#{fn:capitalize(column.name)} := Stmt.Get_Identifier (#{column.index});
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.isString and not column.isNull}">
+      Into.#{fn:capitalize(column.name)} := Stmt.Get_Unbounded_String (#{column.index});
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.isString and column.isNull}">
+      Into.#{fn:capitalize(column.name)} := Stmt.Get_Nullable_String (#{column.index});
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.isBoolean and column.isNull}">
+      Into.#{fn:capitalize(column.name)} := Stmt.Get_Nullable_Boolean (#{column.index});
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.isInteger and column.isNull}">
+      Into.#{fn:capitalize(column.name)} := Stmt.Get_Nullable_Integer (#{column.index});
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.isDate and column.isNull}">
+      Into.#{fn:capitalize(column.name)} := Stmt.Get_Nullable_Time (#{column.index});
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.isEnum and column.isNull}">
+      Into.#{fn:capitalize(column.name)}.Is_Null := Stmt.Is_Null (#{column.index});
+      if not Into.#{fn:capitalize(column.name)}.Is_Null then
+         Into.#{fn:capitalize(column.name)}.Value := #{g:adaType(column,2)}'Enum_Val (Stmt.Get_Integer (#{column.index}));
+      end if;
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.isEnum and not column.isNull}">
+      Into.#{fn:capitalize(column.name)} := #{g:adaType(column,2)}'Enum_Val (Stmt.Get_Integer (#{column.index}));
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.isNewDiscrete and not column.isNull}">
+      Into.#{fn:capitalize(column.name)} := #{g:adaType(column,2)} (Stmt.Get_Long_Integer (#{column.index}));
+  </h:panelGroup>
+  <h:panelGroup rendered="#{not column.isNull and not column.type.isIdentifier and not column.type.isString and not column.type.isEnum and not column.type.isNewDiscrete}">
+      Into.#{fn:capitalize(column.name)} := Stmt.Get_#{fn:capitalize(g:adaType(column,2))} (#{column.index});
+  </h:panelGroup>
+</h:list>
+      Stmt.Next;
+   end Read;
+#{''}
+   --  --------------------
+   --  Run the query controlled by &lt;b&gt;Context&lt;/b> and load the result in &lt;b>Object&lt;/b>.
+   --  --------------------
+   procedure Load (Object  : in out #{fn:capitalize(query.type)}'Class;
+                   Session : in out ADO.Sessions.Session'Class;
+                   Context : in out ADO.Queries.Context'Class) is
+      Stmt : ADO.Statements.Query_Statement := Session.Create_Statement (Context);
+   begin
+      Stmt.Execute;
+      Read (Object, Stmt);
+      if Stmt.Has_Elements then
+         raise ADO.Objects.NOT_FOUND;
+      end if;
+   end Load;
+</h:panelGroup>
+<h:panelGroup rendered="#{empty query.operations}">
+  <h:panelGroup rendered="#{query.bean eq 'yes'}">
+   --  --------------------
+   --  Run the query controlled by &lt;b&gt;Context&lt;/b> and append the list in &lt;b>Object&lt;/b>.
+   --  --------------------
+   procedure List (Object  : in out #{fn:capitalize(query.type)}_List_Bean'Class;
+                   Session : in out ADO.Sessions.Session'Class;
+                   Context : in out ADO.Queries.Context'Class) is
+   begin
+      List (Object.List, Session, Context);
+   end List;
+#{''}
+  </h:panelGroup>
+   --  --------------------
+   --  #{query.comment}
+   --  --------------------
+   procedure List (Object  : in out #{fn:capitalize(query.type)}_Vector;
+                   Session : in out ADO.Sessions.Session'Class;
+                   Context : in out ADO.Queries.Context'Class) is
+      procedure Read (Into : in out #{fn:capitalize(query.type)});
+#{''}
+      Stmt : ADO.Statements.Query_Statement
+          := Session.Create_Statement (Context);
+      Pos  : Positive := 1;
+
+      procedure Read (Into : in out #{fn:capitalize(query.type)}) is
+      begin
+<h:list value="#{query.members}" var="column">
+  <h:panelGroup rendered="#{column.type.isIdentifier}">
+         Into.#{fn:capitalize(column.name)} := Stmt.Get_Identifier (#{column.index});
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.isString and not column.isNull}">
+         Into.#{fn:capitalize(column.name)} := Stmt.Get_Unbounded_String (#{column.index});
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.isString and column.isNull}">
+         Into.#{fn:capitalize(column.name)} := Stmt.Get_Nullable_String (#{column.index});
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.isBoolean and column.isNull}">
+         Into.#{fn:capitalize(column.name)} := Stmt.Get_Nullable_Boolean (#{column.index});
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.isInteger and column.isNull}">
+         Into.#{fn:capitalize(column.name)} := Stmt.Get_Nullable_Integer (#{column.index});
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.isDate and column.isNull}">
+         Into.#{fn:capitalize(column.name)} := Stmt.Get_Nullable_Time (#{column.index});
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.isEnum and column.isNull}">
+         Into.#{fn:capitalize(column.name)}.Is_Null := Stmt.Is_Null (#{column.index});
+         if not Into.#{fn:capitalize(column.name)}.Is_Null then
+            Into.#{fn:capitalize(column.name)}.Value := #{g:adaType(column,2)}'Enum_Val (Stmt.Get_Integer (#{column.index}));
+         end if;
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.isEnum and not column.isNull}">
+         Into.#{fn:capitalize(column.name)} := #{g:adaType(column,2)}'Enum_Val (Stmt.Get_Integer (#{column.index}));
+  </h:panelGroup>
+  <h:panelGroup rendered="#{column.type.isNewDiscrete and not column.isNull}">
+         Into.#{fn:capitalize(column.name)} := #{g:adaType(column,1)} (Stmt.Get_Integer (#{column.index}));
+  </h:panelGroup>
+  <h:panelGroup rendered="#{not column.isNull and not column.type.isIdentifier and not column.type.isString and not column.type.isEnum and not column.type.isNewDiscrete}">
+         Into.#{fn:capitalize(column.name)} := Stmt.Get_#{fn:capitalize(g:adaType(column,2))} (#{column.index});
+  </h:panelGroup>
+</h:list>
+      end Read;
+
+   begin
+      Stmt.Execute;
+      #{fn:capitalize(query.type)}_Vectors.Clear (Object);
+      while Stmt.Has_Elements loop
+         Object.Insert_Space (Before => Pos);
+         Object.Update_Element (Index => Pos, Process => Read'Access);
+         Pos := Pos + 1;
+         Stmt.Next;
+      end loop;
+   end List;
+#{''}
+    </h:panelGroup>
+  </h:panelGroup>
+</h:list>
+
+#{''}
+</ui:composition>

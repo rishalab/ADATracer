@@ -1,0 +1,34 @@
+<!-- List of workspace members
+  -  Copyright (C) 2017, 2018 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<ui:composition
+        xmlns:awa="http://code.google.com/p/ada-awa/jsf"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:c="http://java.sun.com/jstl/core"
+        xmlns:u="http://code.google.com/p/ada-asf/util"
+        xmlns:h="http://java.sun.com/jsf/html">
+    <h:panelGroup rendered="#{memberList.members.count == 0}">
+        <div class="awa-empty-message">#{workspaceMsg.workspace_info_no_member}</div>
+    </h:panelGroup>
+    <h:list var="member" value="#{memberList.members}">
+        <div class='awa-list-item ui-list-item' id="m_#{member.id}">
+            <div class='member-status'>
+            </div>
+            <div class='member-title'>
+                #{member.name}
+            </div>
+            <div class='member-email'>
+                #{member.email}
+            </div>
+            <div class='member-role'>
+                #{member.role}
+            </div>
+            <div class='member-date'>
+                <h:outputText rendered="#{not empty member.join_date}" value="#{member.join_date}"/>
+            </div>
+        </div>
+    </h:list>
+</ui:composition>

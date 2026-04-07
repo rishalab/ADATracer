@@ -1,0 +1,1 @@
+When a new user is registered in the application, post the "user-register" event.

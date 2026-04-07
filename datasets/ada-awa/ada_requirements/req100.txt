@@ -1,0 +1,1 @@
+The bean instance of type Question_Bean or Answer_Bean can be created or saved.

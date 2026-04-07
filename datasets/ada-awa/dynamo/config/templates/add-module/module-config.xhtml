@@ -1,0 +1,41 @@
+<f:view xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+        xmlns:g="http://code.google.com/p/ada-ado/generator"
+        xmlns:f="http://java.sun.com/jsf/core"
+        file="config/#{moduleName}.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<module version="1.0">
+#{''}
+  <application>
+    <message-bundle var='#{moduleName}Msg'>#{moduleName}</message-bundle>
+  </application>
+#{''}
+  <managed-bean>
+    <description>An example of a bean (change description and bean name)</description>
+    <managed-bean-name>#{g:singular(moduleName)}</managed-bean-name>
+    <managed-bean-class>#{fn:capitalize(projectAdaName)}.#{fn:capitalize(moduleName)}.Beans.#{fn:capitalize(moduleName)}_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>
+#{''}
+  <filter-mapping>
+    <filter-name>service</filter-name>
+    <url-pattern>/#{moduleName}/*.html</url-pattern>
+  </filter-mapping>
+#{''}
+  <filter-mapping>
+    <filter-name>auth-filter</filter-name>
+    <url-pattern>/#{moduleName}/*.html</url-pattern>
+  </filter-mapping>
+#{''}
+  <url-policy>
+    <permission>anonymous</permission>
+    <url-pattern>/#{moduleName}/.*\.html</url-pattern>
+  </url-policy>
+#{''}
+  <url-policy>
+    <permission>logged-user</permission>
+    <url-pattern>/#{moduleName}/admin/.*</url-pattern>
+  </url-policy>
+#{''}
+</module>
+]]></f:view>

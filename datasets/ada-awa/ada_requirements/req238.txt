@@ -1,0 +1,1 @@
+Start the server and all the application that have been registered.

@@ -1,0 +1,41 @@
+<!-- View an existing wiki page
+  -  Copyright (C) 2015 - 2022 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<ui:composition template="/WEB-INF/layouts/layout.xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:awa="http://code.google.com/p/ada-awa/jsf"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jstl/core"
+                xmlns:util="http://code.google.com/p/ada-asf/util"
+                xmlns:h="http://java.sun.com/jsf/html">
+    <ui:param name="title" value="#{wikiPage.title}"/>
+
+    <ui:define name="pageHeader">
+        <f:metadata>
+            <f:viewParam id='wiki' value='#{wikiPage.wikiId}'/>
+            <f:viewParam id='page' value='#{wikiPage.name}'/>
+            <f:viewAction action='#{wikiPage.load}'/>
+        </f:metadata>
+    </ui:define>
+
+    <!-- Main page body -->
+    <ui:define name="pageBody">
+      <ui:include src="lists/menu-list.xhtml"/>
+      <div id='blog-post-edit' class='awa-container'>
+        <div class='blog-post' id="p_#{wikiPage.id}">
+          <div class='post-title'>
+            <h2>E - #{wikiPage.title}</h2>
+            <a href="#{contextPath}/wikis/edit/#{wikiPage.wikiId}/#{wikiPage.name}">Edit</a>
+            <p><h:outputText id="date" value="#{wikiPage.date}" converter="dateConverter"/></p>
+          </div>
+          <awa:tagList value='#{wikiPage.tags}' id='qtags' styleClass="tagedit-list"
+                       tagLink="#{contextPath}/wikis/tagged.html?tag=#{util:urlEncode(tagName)}"
+                       var="tagName"
+                       tagClass="tagedit-listelement tagedit-listelement-old"/>
+          <awa:wiki styleClass='post-text' value="#{wikiPage.text}" format="dotclear"/>
+        </div>
+      </div>
+    </ui:define>
+</ui:composition>

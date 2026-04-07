@@ -1,0 +1,1 @@
+A workspace area is defined for other plugins to link together all the data objects that an application manages for a given user or group of users.

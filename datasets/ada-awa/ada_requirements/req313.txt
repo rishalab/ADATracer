@@ -1,0 +1,1 @@
+Before passing the control to the next filter, initialize the service context to give access to the current application, current user and manage possible transaction rollbacks.

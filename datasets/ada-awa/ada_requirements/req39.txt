@@ -1,0 +1,1 @@
+Increment the counter identified by <tt>Counter</tt> and associated with the database object <tt>Object</tt>.

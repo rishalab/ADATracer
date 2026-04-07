@@ -1,0 +1,35 @@
+<!-- Finish setup form
+  -  Copyright (C) 2016, 2018 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<f:view contentType="text/html; charset=UTF-8"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:w="http://code.google.com/p/ada-asf/widget"
+        xmlns:h="http://java.sun.com/jsf/html">
+    <h:form id='setup-finish-form'>
+        <h2>
+            #{setupMsg.setup_finish_message}
+        </h2>
+
+        <div id="setup-finish">
+            <p class="setup-description">
+                Congratulations, the #{setup.app_name} application is now configured.
+            </p>
+            <p class="setup-description">
+                You can re-enter the setup by first stopping the server, then removing the file
+                <b>.initialized</b> and starting the server again.
+            </p>
+        </div>
+        <div id="setup-starting" style="display: none;">
+            Starting the #{setup.app_name} application...
+        </div>
+        <ul class='awa-buttons'>
+            <li class="finish">
+                <h:commandButton id='setup-finish-button' value='#{setupMsg.setup_finish_button}'
+                                 styleClass="ui-button ui-state-default ui-corner-all"
+                                 action="#{setup.finish}" title="#{setupMsg.setup_finish_tooltip}"/>
+            </li>
+        </ul>
+    </h:form>
+</f:view>

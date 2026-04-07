@@ -1,0 +1,37 @@
+<f:view xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+        xmlns:g="http://code.google.com/p/ada-ado/generator"
+        xmlns:f="http://java.sun.com/jsf/core"
+        file="#{projectName}.properties">
+ado.queries.load=true
+ado.queries.paths=db
+ado.drivers.load=false
+#{''}
+ado.database=mysql://localhost:3306/#{projectName}?user=#{projectName}
+#{'#'}ado.database=postgresql://localhost:5432/#{projectName}?user=#{projectName}
+#{'#'}ado.database=sqlite:///#{projectName}.db?synchronous=OFF&amp;encoding=UTF-8
+
+#{''}
+# Configuration for #{projectName}
+#{projectName}.rootCategory=DEBUG,console,result
+
+#{projectName}.appender.console=Console
+#{projectName}.appender.console.level=DEBUG
+#{projectName}.appender.console.layout=level-message
+
+#{projectName}.appender.result=File
+#{projectName}.appender.result.File=#{projectName}.log
+#{''}
+
+# Logger configuration
+#{projectName}.logger.log=WARN
+
+#{projectName}.logger.Util=WARN
+
+#{projectName}.logger.ADO=INFO,result
+#{projectName}.logger.ADO.Sessions=WARN
+#{projectName}.logger.ADO.Statements=DEBUG
+#{''}
+
+</f:view>

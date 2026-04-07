@@ -1,0 +1,1 @@
+The `AWA.Storages.Stores.Databases` store uses the database to save a data content.

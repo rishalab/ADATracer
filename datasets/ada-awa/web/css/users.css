@@ -1,0 +1,238 @@
+/**
+ * users.css - Style for users module
+ * Copyright (C) 2011-2022 Stephane Carrez
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ */
+li.message {
+    height: 30px;
+    overflow: hidden;
+}
+
+div.awa-login h2, div.awa-login h3, div.awa-accept-invitation h2, div.awa-accept-invication h3 {
+    float: left;
+    width: 100%;
+    background: white;
+    padding: 2%;
+    -moz-border-radius-topleft: 6px;
+    -moz-border-radius-topright: 6px;
+    -webkit-border-top-right-radius: 6px;
+    -webkit-border-top-left-radius: 6px;
+    padding-top: 0;
+}
+div.awa-login, div.awa-accept-invitation {
+  border: 2px solid #A6C9E2;
+  background: none repeat scroll 0 0 #F9FDFF;
+  display: block;
+  float: left;
+  width: 98%;
+  margin: 5px;
+  margin-left: 1%;
+  margin-right: 1%;
+  box-sizing: border-box;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px 6px;
+  padding-top: 0;
+}
+div.awa-login h2 {
+    padding-top: 10px;
+}
+div.awa-accept-invitation {
+    border: none;
+}
+div.awa-lost-password {
+    width: 50%;
+}
+div.awa-login p, div.awa-accept-invitation p {
+    width: 100%;
+    padding-left: 2%;
+    padding-right: 2%;
+    padding-top: 5px;
+    display: block;
+    float: left;
+}
+.awa-login ul, ul.openid-login, .awa-accept-invitation ul, #awa-message-list {
+    list-style-type: none;
+    margin: 1em 0;
+    float: left;
+    width: 100%;
+    padding-left: 2%;
+    padding-right: 2%;
+}
+
+.awa-login #login-button, .awa-login #lost-password-button, .awa-login #register-button {
+    margin-left: 10%;
+    margin-top: 15px;
+    width: 200px;
+}
+.awa-login #lost-password {
+    clear: both;
+    display: block;
+    margin-top: 10px;
+}
+.awa-login .awa-link-lost-password {
+    display: block;
+    float: right;
+}
+.awa-login .awa-link-lost-password a {
+    margin-top: 15px;
+    display: block;
+}
+.awa-login #signup-link {
+    clear: both;
+    display: block;
+    float: right;
+}
+
+ul.openid-login li {
+    float: left;
+    padding-left: 5px;
+    margin: 25px;
+}
+div.openid-login {
+	float: left;
+	border: 1px solid #ccc;
+	margin-left: 10px;
+	margin-right: 10px;
+    margin: 5px;
+}
+
+ul.openid-login a {
+    display: block;
+    height: 38px;
+    text-align: center;
+    line-height: 38px;
+}
+
+a.openid-github em,
+a.openid-gitlab em,
+a.openid-orange em,
+a.openid-facebook em,
+a.openid-google-plus em,
+a.openid-yahoo em,
+a.openid-twitter em,
+a.openid-google em {
+    display: block;
+    float: left;
+    background: url(../images/open-id-logos-3.png);
+    width: 200px;
+    height: 36px;
+    overflow: hidden;
+    padding: 0;
+}
+a.openid-github em {
+  background-position: 0 0;
+  height: 34px;
+}
+a.openid-yahoo em {
+  margin-top: 3px;
+  background-position: 0 -38px;
+  height: 34px;
+}
+a.openid-orange em {
+  background-position: 0 -152px;
+}
+a.openid-facebook em {
+  margin-top: 2px;
+  background-position: 0 -74px;
+}
+a.openid-twitter em {
+  background-position: 0 -114px;
+  height: 28px;
+}
+a.openid-google-plus em {
+  background-position: 0 -230px; /* 0 - 190 or 231 */
+  height: 40px;
+}
+a.openid-github em {
+}
+a.openid-gitlab em {
+  margin-top: 3px;
+  background-position: 0 -272px;
+  height: 33px;
+}
+a.openid-github {
+    border: 1px solid #ccc;
+    background: #eee;
+}
+a.openid-gitlab {
+    border: 1px solid #ccc;
+    background: #eee;
+}
+div.openid-info {
+    float: left;
+    padding: 20px;
+    border: 1px solid #ccc;
+}
+div.openid-info dt {
+    float: left;
+    width:  100px;
+    clear: left;
+}
+div.openid-info dd {
+    float: left;
+    padding-left: 20px;
+}
+div.openid-retry {
+	float: left;
+	clear: both;
+	padding-top: 30px;
+}
+.openid-separator {
+    float: left;
+    clear: both;
+    padding-top: 1em;
+    width: 100%;
+    padding-top: 10px;
+    padding-left: 2%;
+    padding-right: 2%;
+}
+.openid-sep-left, .openid-sep-right {
+    float: left;
+    width: 40%;
+    height: 2px;
+    border-top: 1px solid #b5b5b5;
+    margin-top: 10px;
+}
+.openid-sep-text {
+    float: left;
+    width: auto;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+/**
+ * Workspace member list
+ */
+.member-status, .member-title, .member-email, .member-role, .member-date {
+    float: left;
+    height: 1.2em;
+    overflow: hidden;
+}
+.member-status {
+    width: 10%;
+}
+.member-title {
+    width: 30%;
+}
+.member-email {
+    width: 30%;
+}
+.member-role {
+    width: 15%;
+}
+.member-date {
+    width: 15%;
+}
+.invite-message p {
+    padding: 4px;
+    background: #e8f0ff;
+    white-space: pre;
+}
+.member-list div.asf-list-action {
+    left: -24px;
+    width: 24px;
+}
+@media screen and (max-width: 768px) {
+    ul.openid-login li {
+	margin: 5px;
+    }
+}

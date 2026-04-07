@@ -1,0 +1,1 @@
+When an event is dispatched through this dispatcher, the Ada bean identified by the method action represented by "Action" is created and initialized by evaluating and setting the parameters defined in "Params", and the action method is then invoked.

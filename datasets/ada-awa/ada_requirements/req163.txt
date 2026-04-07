@@ -1,0 +1,1 @@
+The bean is intended to be used in presentation files (XHTML facelet files) to vote for an item.

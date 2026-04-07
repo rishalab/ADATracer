@@ -1,0 +1,1 @@
+If the component is rendered, activate the redirection to the specified URI.

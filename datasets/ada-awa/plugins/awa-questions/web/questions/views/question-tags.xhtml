@@ -1,0 +1,13 @@
+<!-- Display the blog posts in a list page
+  -  Copyright (C) 2011, 2012, 2013 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:awa="http://code.google.com/p/ada-awa/jsf">
+    <h2>#{blogMsg.blog_tags_title}</h2>
+    <awa:tagCloud
+            value="#{questionTagCloud}" styleClass="tag-cloud"
+            var="tagName" maxWeight="24" minWeight="12"
+            tagLink="#{contextPath}/questions/tagged.html?tag=#{tagName}"/>
+</ui:composition>

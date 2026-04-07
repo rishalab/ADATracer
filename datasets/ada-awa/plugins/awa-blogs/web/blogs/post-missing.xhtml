@@ -1,0 +1,29 @@
+<!-- Post not found page
+  -  Copyright (C) 2014 - 2023 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<ui:composition template="/WEB-INF/layouts/anonymous.xhtml"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:awa="http://code.google.com/p/ada-awa/jsf"
+        xmlns:ajax="http://code.google.com/p/ada-asf/ajax"
+        xmlns:c="http://java.sun.com/jstl/core"
+        xmlns:util="http://code.google.com/p/ada-asf/util"
+        xmlns:h="http://java.sun.com/jsf/html">
+    <ui:param name="title" value="#{blogMsg.blog_post_not_found_title}"/>
+    <ui:param name="pageStyle" value="page-blog"/>
+
+    <!-- Main page body -->
+    <ui:define name="pageBody">
+      <div class='awa-grid-9'>
+        <div class='blog-post-tag-info'>
+          <h2>#{blogMsg.blog_post_not_found_title}</h2>
+        </div>
+        <p>#{blogMsg.blog_post_not_found}</p>
+      </div>
+      <div class='awa-grid-3 blog-post-info'>
+        <ui:include src="lists/post-info.xhtml"/>
+      </div>
+    </ui:define>
+</ui:composition>

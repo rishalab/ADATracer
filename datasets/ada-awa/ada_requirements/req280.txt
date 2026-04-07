@@ -1,0 +1,1 @@
+Modules define the events that they can generate by instantiating the `Definition` package.

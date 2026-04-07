@@ -1,0 +1,1 @@
+The selector list bean provides a way to create and populate a selector list from a static list or from a database SQL query.

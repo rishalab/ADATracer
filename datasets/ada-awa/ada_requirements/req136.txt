@@ -1,0 +1,1 @@
+When a file is being finalized, delete the file if it exists and is stored in the TMP storage.

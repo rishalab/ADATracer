@@ -1,0 +1,36 @@
+<!-- Page not found
+  -  Copyright (C) 2013, 2022 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<c:choose xmlns="http://www.w3.org/1999/xhtml"
+          xmlns:ui="http://java.sun.com/jsf/facelets"
+          xmlns:f="http://java.sun.com/jsf/core"
+          xmlns:util="http://code.google.com/p/ada-asf/util"
+          xmlns:c="http://java.sun.com/jstl/core">
+    <c:when test="#{not empty header['X-Requested-With']}">
+        <f:view contentType="application/json">
+[
+    { "action": "message", "data": "<util:escape>
+    <div class='awa-message'>
+        <p>
+            #{layoutMsg.layout_error_page_not_found}
+        </p>
+    </div>
+    </util:escape>" }
+]
+        </f:view>
+    </c:when>
+    <c:otherwise>
+        <ui:composition template="/WEB-INF/layouts/layout.xhtml">
+            <ui:param name="title" value="#{layoutMsg.layout_error_page_not_found_title}"/>
+
+            <!-- Main page body -->
+            <ui:define name="pageBody">
+              <div class='awa-error'>
+                <p>#{layoutMsg.layout_error_page_not_found}</p>
+              </div>
+            </ui:define>
+        </ui:composition>
+    </c:otherwise>
+</c:choose>

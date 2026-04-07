@@ -1,0 +1,1 @@
+When sending a message, the recipient's email address is added to the "To" field of the message.

@@ -1,0 +1,20 @@
+<!-- Create a new blog
+  -  Copyright (C) 2017 - 2022 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<ui:composition template="/WEB-INF/layouts/layout.xhtml"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:f="http://java.sun.com/jsf/core">
+    <ui:param name="title" value="#{blogMsg.blog_admin_create_blog_title}"/>
+
+    <!-- Main page body -->
+    <ui:define name="pageBody">
+      <ui:include src="lists/menu-list.xhtml"/>
+      <div id='blog-post-create' class='awa-container'>
+        <ui:include src="forms/blog-create-form.xhtml"/>
+      </div>
+    </ui:define>
+
+</ui:composition>
+

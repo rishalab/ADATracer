@@ -1,0 +1,1 @@
+To be able to use the mail module, you will need to add the following line in your GNAT project file:

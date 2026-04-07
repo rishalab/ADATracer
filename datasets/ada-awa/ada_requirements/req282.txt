@@ -1,0 +1,1 @@
+Get the parameter identified by the given name and return it as an identifier.

@@ -1,0 +1,5 @@
+<p>Include 1 (img):</p><figure class="wiki-img-thumb wiki-img-left"><img src="study_current_measure2.png" alt="Current Measurement" /><figcaption>Current Measurement</figcaption></figure><p>Include 2 (pre):</p><pre>
+* item 1
+''item''
+== dd ==
+</pre><ul><li>item 2</li></ul>

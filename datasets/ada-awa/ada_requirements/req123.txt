@@ -1,0 +1,1 @@
+When a file is uploaded, save the file in the storage service.

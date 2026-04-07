@@ -1,0 +1,1 @@
+The `AWA.Commands` package provides a simple framework with commands that allow to start, stop, configure and manage the web application.

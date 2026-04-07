@@ -1,0 +1,45 @@
+<f:view xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+        xmlns:g="http://code.google.com/p/ada-ado/generator"
+        xmlns:f="http://java.sun.com/jsf/core"
+        file="#{moduleName}/forms/#{formName}-form.xhtml"><![CDATA[
+<f:view contentType="text/html; charset=UTF-8"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:h="http://java.sun.com/jsf/html">
+  <f:metadata>
+    <f:viewParam id='id' value='\#{user.id}'/>
+  </f:metadata>
+  <div>
+    <div class="ui-widget ui-widget-header">
+        Compute the volume of a cylinder
+    </div>
+    <h:form id='#{formName}-form'>
+        <h:inputHidden id='user-id' value="\#{user.id}"/>
+        <div class='ui-widget container_12'>
+            <div class='awa-messages'>
+                <h:message styleClass='awa-error'/>
+            </div>
+            <dl class="awa-required\#{util:hasMessage('email') ? ' awa-error' : ''}">
+                <dt>
+                    <label for='email'>Email</label>
+                    <h:message for='email'/>
+                </dt>
+                <dd>
+                    <h:inputText id='email' size='30' value='\#{user.email}'
+                            styleClass="ui-corner-all">
+                    </h:inputText>
+                    <h:message for='email'/>
+                </dd>
+            </dl>
+            <ul class='awa-buttons'>
+                <li>
+                    <h:commandButton id='save' value='Save' action="\#{user.save}"
+                            styleClass="ui-button ui-state-default ui-corner-all"/>
+                </li>
+            </ul>
+        </div>
+    </h:form>
+  </div>
+</f:view>
+]]></f:view>

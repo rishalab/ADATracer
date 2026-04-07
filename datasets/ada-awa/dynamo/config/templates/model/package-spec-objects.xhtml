@@ -1,0 +1,142 @@
+<ui:composition xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+        xmlns:g="http://code.google.com/p/ada-ado/generator"
+        xmlns:f="http://java.sun.com/jsf/core">
+
+<h:list value="#{package.tables}" var="table">
+<h:panelGroup rendered="#{table.bean eq 'yes'}">
+   type #{table.type}_Ref is new ADO.Objects.Object_Ref and Util.Beans.Basic.Bean with null record;
+</h:panelGroup>
+<h:panelGroup rendered="#{table.bean ne 'yes'}">
+   type #{table.type}_Ref is new ADO.Objects.Object_Ref with null record;
+</h:panelGroup>
+#{''}
+</h:list>
+
+<h:list value="#{package.tables}" var="table">
+ <h:panelGroup rendered="#{not empty table.comment}">
+   --  --------------------
+   --<h:outputText value="#{g:comment(table.comment)}" escape="false"/>
+   --  --------------------
+ </h:panelGroup>
+   --  Create an object key for #{table.type}.
+   function #{table.type}_Key (Id : in ADO.Identifier) return ADO.Objects.Object_Key;
+   --  Create an object key for #{table.type} from a string.
+   --  Raises Constraint_Error if the string cannot be converted into the object key.
+   function #{table.type}_Key (Id : in String) return ADO.Objects.Object_Key;
+#{''}
+
+   Null_#{table.type} : constant #{table.type}_Ref;
+
+   function "=" (Left, Right : #{table.type}_Ref'Class) return Boolean;
+<h:list value="#{table.members}" var="column">
+<h:panelGroup rendered="#{column.isInserted or column.isUpdated}">
+
+#{''}
+   --<h:outputText value="#{g:comment(column.comment, 'Set ')}" escape="false"/>
+   procedure Set_#{fn:capitalize(column.name)} (Object : in out #{fn:capitalize(table.type)}_Ref;
+                  #{g:indent(column.name)} Value  : in #{g:adaType(column,1)});
+<h:panelGroup rendered="#{column.type.isString}">
+   procedure Set_#{fn:capitalize(column.name)} (Object : in out #{fn:capitalize(table.type)}_Ref;
+                  #{g:indent(column.name)} Value : in String);
+</h:panelGroup>
+#{''}
+</h:panelGroup>
+
+   --<h:outputText value="#{g:comment(column.comment, 'Get ')}" escape="false"/>
+   function Get_#{fn:capitalize(column.name)} (Object : in #{fn:capitalize(table.type)}_Ref)
+                 return #{g:adaType(column,1)};
+<h:panelGroup rendered="#{column.type.isString}">
+   function Get_#{fn:capitalize(column.name)} (Object : in #{fn:capitalize(table.type)}_Ref)
+                 return String;
+</h:panelGroup>
+</h:list>
+#{''}
+
+   --  Load the entity identified by 'Id'.
+   --  Raises the NOT_FOUND exception if it does not exist.
+   procedure Load (Object  : in out #{fn:capitalize(table.type)}_Ref;
+                   Session : in out ADO.Sessions.Session'Class;
+                   Id      : in #{g:adaType(table.id,0)});
+#{''}
+   --  Load the entity identified by 'Id'.
+   --  Returns True in <b>Found</b> if the object was found and False if it does not exist.
+   procedure Load (Object  : in out #{fn:capitalize(table.type)}_Ref;
+                   Session : in out ADO.Sessions.Session'Class;
+                   Id      : in #{g:adaType(table.id,0)};
+                   Found   : out Boolean);
+<h:panelGroup rendered="#{not empty table.version}">
+#{''}
+   --  Reload from the database the same object if it was modified.
+   --  Returns True in `Updated` if the object was reloaded.
+   --  Raises the NOT_FOUND exception if it does not exist.
+   procedure Reload (Object  : in out #{fn:capitalize(table.type)}_Ref;
+                     Session : in out ADO.Sessions.Session'Class;
+                     Updated : out Boolean);
+</h:panelGroup>
+#{''}
+
+   --  Find and load the entity.
+   overriding
+   procedure Find (Object  : in out #{fn:capitalize(table.type)}_Ref;
+                   Session : in out ADO.Sessions.Session'Class;
+                   Query   : in ADO.SQL.Query'Class;
+                   Found   : out Boolean);
+#{''}
+
+   --  Save the entity.  If the entity does not have an identifier, an identifier is allocated
+   --  and it is inserted in the table.  Otherwise, only data fields which have been changed
+   --  are updated.
+   overriding
+   procedure Save (Object  : in out #{fn:capitalize(table.type)}_Ref;
+                   Session : in out ADO.Sessions.Master_Session'Class);
+#{''}
+
+   --  Delete the entity.
+   overriding
+   procedure Delete (Object  : in out #{fn:capitalize(table.type)}_Ref;
+                     Session : in out ADO.Sessions.Master_Session'Class);
+#{''}
+
+   overriding
+   function Get_Value (From : in #{fn:capitalize(table.type)}_Ref;
+                       Name : in String) return Util.Beans.Objects.Object;
+#{''}
+<h:panelGroup rendered="#{table.bean eq 'yes'}">
+   --  Set the value identified by the name
+   overriding 
+   procedure Set_Value (Item  : in out #{fn:capitalize(table.type)}_Ref;
+                        Name  : in String;
+                        Value : in Util.Beans.Objects.Object);
+#{''}
+</h:panelGroup>
+   --  Table definition
+   #{fn:toUpperCase(table.type)}_TABLE : constant ADO.Schemas.Class_Mapping_Access;
+#{''}
+
+   --  Internal method to allocate the Object_Record instance
+   overriding
+   procedure Allocate (Object : in out #{fn:capitalize(table.type)}_Ref);
+#{''}
+
+   --  Copy of the object.
+   procedure Copy (Object : in #{fn:capitalize(table.type)}_Ref;
+                   Into   : in out #{fn:capitalize(table.type)}_Ref);
+#{''}
+<h:panelGroup rendered="#{table.hasList}">
+   package #{fn:capitalize(table.type)}_Vectors is
+      new Ada.Containers.Vectors (Index_Type   => Positive,
+                                  Element_Type => #{fn:capitalize(table.type)}_Ref,
+                                  "="          => "=");
+   subtype #{fn:capitalize(table.type)}_Vector is #{fn:capitalize(table.type)}_Vectors.Vector;
+#{''}
+
+   procedure List (Object  : in out #{fn:capitalize(table.type)}_Vector;
+                   Session : in out ADO.Sessions.Session'Class;
+                   Query   : in ADO.SQL.Query'Class);
+</h:panelGroup>
+</h:list>
+#{''}
+
+</ui:composition>

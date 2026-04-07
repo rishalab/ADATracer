@@ -1,0 +1,1 @@
+Test the Get_Event_Type_Name internal operation.

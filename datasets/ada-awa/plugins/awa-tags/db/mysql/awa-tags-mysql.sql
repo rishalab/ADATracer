@@ -1,0 +1,25 @@
+/* File generated automatically by dynamo */
+/* The tag definition. */
+CREATE TABLE IF NOT EXISTS awa_tag (
+  /* the tag identifier */
+  `id` BIGINT NOT NULL,
+  /* the tag name */
+  `name` VARCHAR(255) BINARY NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*  */
+CREATE TABLE IF NOT EXISTS awa_tagged_entity (
+  /* the tag entity identifier */
+  `id` BIGINT NOT NULL,
+  /* Title: Tag model
+Date: 2013-02-23the database entity to which the tag is associated */
+  `for_entity_id` BIGINT NOT NULL,
+  /* the entity type */
+  `entity_type` INTEGER NOT NULL,
+  /*  */
+  `tag_id` BIGINT NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+INSERT IGNORE INTO ado_entity_type (name) VALUES
+("awa_tag"), ("awa_tagged_entity");
+INSERT IGNORE INTO ado_version (name, version) VALUES ("awa-tags", 1);

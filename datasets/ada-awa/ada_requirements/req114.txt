@@ -1,0 +1,1 @@
+Setup the command to start and configure the application.

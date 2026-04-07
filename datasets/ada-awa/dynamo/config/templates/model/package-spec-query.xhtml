@@ -1,0 +1,76 @@
+<ui:composition xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+        xmlns:g="http://code.google.com/p/ada-ado/generator"
+        xmlns:f="http://java.sun.com/jsf/core">
+<h:list value="#{package.queries}" var="query">
+  <h:panelGroup rendered="#{not empty query.operations or not empty query.members}">
+    <h:panelGroup rendered="#{query.bean eq 'yes'}">
+      <ui:include src="../beans/package-spec-bean-decl.xhtml">
+        <ui:param name="bean" value="#{query}"/>
+      </ui:include>
+    </h:panelGroup>
+    <h:panelGroup rendered="#{query.bean eq 'no'}">
+      <ui:include src="package-spec-record-decl.xhtml">
+        <ui:param name="bean" value="#{query}"/>
+      </ui:include>
+    </h:panelGroup>
+
+  </h:panelGroup>
+  <h:panelGroup rendered="#{not empty query.operations and not empty query.members}">
+   --  Read in the object the data from the query result and prepare to read the next row.
+   --  If there is no row, raise the ADO.NOT_FOUND exception.
+   procedure Read (Into : in out #{fn:capitalize(query.type)};
+                   Stmt : in out ADO.Statements.Query_Statement'Class);
+#{''}
+   --  Run the query controlled by &lt;b&gt;Context&lt;/b> and load the result in &lt;b>Object&lt;/b>.
+   procedure Load (Object  : in out #{fn:capitalize(query.type)}'Class;
+                   Session : in out ADO.Sessions.Session'Class;
+                   Context : in out ADO.Queries.Context'Class);
+  </h:panelGroup>
+<h:panelGroup rendered="#{empty query.operations and not empty query.members}">
+  <h:panelGroup rendered="#{query.bean eq 'yes'}">
+#{''}
+
+   package #{fn:capitalize(query.type)}_Beans is
+      new Util.Beans.Basic.Lists (Element_Type => #{fn:capitalize(query.type)});
+   package #{fn:capitalize(query.type)}_Vectors renames #{fn:capitalize(query.type)}_Beans.Vectors;
+   subtype #{fn:capitalize(query.type)}_List_Bean is #{fn:capitalize(query.type)}_Beans.List_Bean;
+#{''}
+   type #{fn:capitalize(query.type)}_List_Bean_Access is access all #{fn:capitalize(query.type)}_List_Bean;
+#{''}
+   --  Run the query controlled by &lt;b&gt;Context&lt;/b> and append the list in &lt;b>Object&lt;/b>.
+   procedure List (Object  : in out #{fn:capitalize(query.type)}_List_Bean'Class;
+                   Session : in out ADO.Sessions.Session'Class;
+                   Context : in out ADO.Queries.Context'Class);
+  </h:panelGroup>
+  <h:panelGroup rendered="#{query.bean ne 'yes'}">
+   package #{fn:capitalize(query.type)}_Vectors is
+      new Ada.Containers.Vectors (Index_Type   => Positive,
+                                  Element_Type => #{fn:capitalize(query.type)},
+                                  "="          => "=");
+  </h:panelGroup>
+#{''}
+   subtype #{fn:capitalize(query.type)}_Vector is #{fn:capitalize(query.type)}_Vectors.Vector;
+#{''}
+
+   --  Run the query controlled by &lt;b&gt;Context&lt;/b> and append the list in &lt;b>Object&lt;/b>.
+   procedure List (Object  : in out #{fn:capitalize(query.type)}_Vector;
+                   Session : in out ADO.Sessions.Session'Class;
+                   Context : in out ADO.Queries.Context'Class);
+</h:panelGroup>
+
+   <h:list value="#{query.queries}" var="basic_query">
+#{''}
+  <h:panelGroup rendered="#{not empty basic_query.sorts}">
+   type #{fn:capitalize(g:adaIdent(basic_query.name))}_Order_Type is (<h:list value="#{basic_query.sorts}" var="sort">#{sort.rowIndex > 1 ? ', ' : ''}#{sort.name}</h:list>);
+  </h:panelGroup>
+
+   Query_#{fn:capitalize(g:adaIdent(basic_query.name))} : constant ADO.Queries.Query_Definition_Access;
+   </h:list>
+
+#{''}
+</h:list>
+
+#{''}
+</ui:composition>

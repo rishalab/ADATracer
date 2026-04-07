@@ -1,0 +1,59 @@
+<!-- Information about a file
+  -  Copyright (C) 2018, 2019 Stephane Carrez
+  -  Written by Stephane Carrez (Stepfhane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<div class="storage-file-info" xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:c="http://java.sun.com/jstl/core"
+     xmlns:util="http://code.google.com/p/ada-asf/util"
+     xmlns:h="http://java.sun.com/jsf/html">
+    <div class="awa-grid-6">
+        <dl class="image-details">
+            <dt>#{storageMsg.image_file_label}</dt>
+            <dd>#{storageInfo.folder_name}/#{storageInfo.name}</dd>
+            <h:panelGroup rendered="#{storageInfo.id ne 0 and storageInfo.list.count ne 0}">
+                <dt>#{storageMsg.image_file_size_label}</dt>
+                <dd>
+                    <h:outputText value="#{storageInfo.file_size}">
+                        <f:converter converterId="sizeConverter"/>
+                    </h:outputText>
+                </dd>
+                <dt>#{storageMsg.image_date_label}</dt>
+                <dd>
+                    <h:outputText value="#{storageInfo.create_date}">
+                        <f:converter converterId="smartDateConverter"/>
+                    </h:outputText>
+                </dd>
+                <h:panelGroup rendered="#{storageInfo.width ne 0 or storageInfo.height ne 0}">
+                    <dt>#{storageMsg.image_dimension_label}</dt>
+                    <dd>#{storageInfo.width}x#{storageInfo.height}</dd>
+                </h:panelGroup>
+                <dt>#{storageMsg.image_mime_label}</dt>
+                <dd>#{storageInfo.mime_type}</dd>
+
+            </h:panelGroup>
+        </dl>
+    </div>
+    <div class="awa-grid-6">
+        <div class='storage-upload'>
+            <a id="storage-reupload-button" class="awa-button">
+                #{storageMsg.storage_upload_new_version_label}
+            </a>
+        </div>
+        <util:script>
+            $("#storage-reupload-button").uploader({
+                folderId: "#{storageInfo.folder_id}",
+                fileId: "#{storageInfo.id}",
+                uploadUrl: '#{contextPath}/storages/forms/upload-form.html',
+                uploadDoneAction: function() {
+                    document.location = document.location;
+                },
+                dictDefaultMessage: "#{util:escapeJavaScript(storageMsg.storage_upload_form_message)}",
+                dictInvalidFileType: "#{util:escapeJavaScript(storageMsg.storage_upload_form_invalid_file_message)}"
+            });
+        </util:script>
+    </div>
+</div>
+
+

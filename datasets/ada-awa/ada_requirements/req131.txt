@@ -1,0 +1,1 @@
+Save the file represented by the `Path` variable into a store and associate that content with the storage reference represented by `Into`.

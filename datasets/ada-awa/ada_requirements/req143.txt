@@ -1,0 +1,1 @@
+The user has the permission to access a given page if they are logged in and authenticated.

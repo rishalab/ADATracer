@@ -1,0 +1,292 @@
+/*
+ *  awa-storages -- Storages and folders
+ *  Copyright (C) 2012, 2013, 2016, 2018, 2019 Stephane Carrez
+ *  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+.page-storages #ada-page {
+    height: 100%;
+}
+.storage-folder-list {
+    float: left;
+    width: 100%;
+    overflow: hidden;
+}
+.storage-folder-list .storage-folder-name {
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+    padding: 1em;
+    cursor: pointer;
+}
+.storage-folder-title {
+    font-weight: bold;
+    font-size: 1.2em;
+    padding: 1em;
+}
+#storage-doc-message-notif {
+    padding: 1em;
+    border-radius: 0.5em;
+}
+.storage-document {
+    float: left;
+    clear: both;
+    width: 92%;
+    font-size: 0.9em;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 4%;
+    padding-right: 2%;
+}
+.storage-document storage-title {
+    float: left;
+    font-size: 1.1em;
+    width: 50%;
+}
+.storage-document .storage-size {
+    float: right;
+    width: 130px;
+    padding-left: 10px;
+}
+.storage-document .storage-mime, .storage-document .storage-date, .storage-document .storage-owner {
+    float: right;
+    padding-left: 10px;
+}
+.storage-document .storage-download {
+    float: left;
+    clear: left;
+    display: inline-block;
+    visibility: hidden;
+}
+.storage-document .storage-doc-status {
+    float: left;
+    height: 24px;
+    width: 32px;
+    cursor: pointer;
+}
+.storage-document .storage-doc-thumbnail {
+    float: left;
+    width: 64px;
+    height: 64px;
+    overflow: hidden;
+}
+.storage-private .storage-doc-status {
+    background: url(../images/storages/doc-private.png) no-repeat;
+}
+.storage-public .storage-doc-status {
+    background: url(../images/storages/icon-internet.png) no-repeat;
+}
+.storage-document .storage-doc-info {
+    float: left;
+    padding-left: 10px;
+    width: calc(100% - 110px);
+}
+div.asf-active-list div.asf-active .storage-download {
+    visibility: visible;
+}
+.storage-document-list {
+    float: left;
+    width: 98%;
+    padding-left: 1%;
+}
+.storage-document-list div.asf-active {
+    background-color: #FFC;
+}
+#storage-folder-left-panel {
+    width: 20%;
+    min-height: 100%;
+    height: -webkit-fill-available;
+    height: -moz-available;
+}
+#storage-list-right-panel {
+    width: 99%;
+}
+#storage-folder-list-editor {
+    float: left;
+    width: 95%;
+    margin-top: 15px;
+    margin-left: 5%;
+}
+#storage-folder-add, .storage-file-info {
+    float: left;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+#storage-list-editor {
+    float: left;
+    width: 100%;
+    padding-top: 1em;
+}
+#storage-action {
+    width: 24px;
+    left:  -4px;
+}
+#storage-folder-create {
+    width: 96%;
+    padding: 2%;
+}
+#storage-folder-add input.asf-editable-text {
+    width: 98%;
+    margin-bottom: 10px;
+}
+#storage-folder-create-button {
+    margin-bottom: 10px;
+}
+.storage-action {
+    float: left;
+    width: 100%;
+    padding-bottom: 10px;
+    list-style-type: none;
+}
+.storage-action li {
+    float: left;
+    padding-right: 10px;
+}
+.storage-file-content {
+    float: left;
+    width: 100%;
+    border-top: 1px solid #ccc;
+    padding: 0.5em;
+}
+.storage-content {
+    margin-left: 0.5em;
+}
+.storage-doc-viewport {
+    height: 1500px;
+    width: 100%;
+    display: block;
+    overflow: hidden;
+}
+/* Image information page */
+.image-info, .image-view {
+    float: left;
+    clear: both;
+    width: 100%;
+}
+.image-details {
+    float: left;
+    width: 100%;
+    padding: 0.5em;
+}
+.image-details dt {
+    clear: both;
+    float: left;
+    font-weight: bold;
+    width: 20%;
+}
+.image-details dd {
+    float: left;
+    width: 80%;
+}
+.storage-upload {
+    float: left;
+    width: 100%;
+    padding-top: 2em;
+}
+.image-upload {
+    height: 80px;
+}
+.image-view {
+    padding: 1%;
+    width: 98%;
+}
+.image-view a {
+    font-weight: bold;
+    padding-right: 0.5em;
+    padding-bottom: 0.5em;
+    display: inline-block;
+}
+
+.storage-folder-list-editor {
+    float: left;
+    width: 30%;
+}
+.storage-image-list-editor {
+    float: right;
+    width: 69%;
+    height: 350px;
+    overflow-y: scroll;
+}
+.storage-image-list-editor .active {
+    background-color: #ccc;
+}
+/* Dropzone style */
+.dropzone {
+    border-radius: 5px;
+    padding: 1em;
+}
+.dropzone input {
+    display: none;
+}
+.dropzone.dz-clickable .dz-message {
+    cursor: pointer;
+}
+.dropzone .dz-message {
+    font-weight: bold;
+    padding: 2em 0;
+}
+.dz-image, .dz-details, .dz-progress, .dropzone .dz-success-mark, .dropzone .dz-error-mark {
+    float: left;
+}
+
+/**
+ * Image selector.
+ */
+.awa-folder-list-editor .storage-folder-list .storage-folder-name {
+    padding: 5px;
+}
+.awa-folder-list-editor {
+    float: left;
+    width: 30%;
+}
+.awa-image-list-editor {
+    float: left;
+    width: 70%;
+}
+.wiki-image-grid-info {
+    overflow: hidden;
+}
+.awa-image-list-editor a {
+    text-decoration: none;
+}
+/*
+ * Color and theme
+ */
+div.storage-folder-list div.asf-active,
+#storage-reupload-button {
+    background-color: #DFEFFC;
+}
+.awa-image-list-editor .active,
+div.storage-folder-list div.asf-selected {
+    background-color: #A6C9E2;
+}
+.storage-folder-title {
+    border-bottom: 1px solid #A6C9E2;
+}
+#storage-doc-message-notif {
+    background: #DFEFFC;
+    border: 1px solid var(--color-error);
+}
+#storage-folder-left-panel {
+    background: #f3f9fe;
+    border-right: 3px solid #A6C9E2;
+}
+.storage-file-content,
+.storage-image-content {
+    border-top: 1px solid var(--border-light);
+}
+.dropzone {
+    border: 2px dashed #A6C9E2;
+    background: #e8f3fd;
+}

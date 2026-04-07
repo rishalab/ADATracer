@@ -1,0 +1,28 @@
+<!-- Dialog box to confirm the deletion of the question.
+  -  Copyright (C) 2013 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<f:view contentType="text/html; charset=UTF-8"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:h="http://java.sun.com/jsf/html">
+    <f:metadata>
+        <f:viewParam id='id' value='#{question.id}'/>
+    </f:metadata>
+    <h2>#{questionMsg.question_delete_title}</h2>
+    <h:form id='question-delete'>
+        <h:inputHidden id='question-delete-id' value='#{question.id}'/>
+        <p>
+            <h:outputFormat value="#{questionMsg.question_confirm_delete_message}">
+                <f:param value="#{question.title}"/>
+            </h:outputFormat>
+        </p>
+        <ul class='awa-buttons'>
+            <li>
+                <h:commandButton id='question-delete-button' value='#{questionMsg.question_delete_button}'
+                                 styleClass="ui-button ui-state-default ui-corner-all"
+                                 action="#{question.delete}" title="#{questionMsg.question_delete_tooltip}"/>
+            </li>
+        </ul>
+    </h:form>
+</f:view>

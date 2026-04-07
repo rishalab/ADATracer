@@ -1,0 +1,23 @@
+<!-- Workspace user page
+  -  Copyright (C) 2011 - 2022 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<ui:composition template="/WEB-INF/layouts/layout.xhtml"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:u="http://code.google.com/p/ada-asf/util"
+        xmlns:h="http://java.sun.com/jsf/html">
+    <ui:param name="title" value="#{workspaceMsg.workspace_main_title}"/>
+    <ui:param name="pageStyle" value="page-workspace"/>
+
+    <!-- Main page body -->
+    <ui:define name="pageBody">
+      <ui:include src="/blogs/admin/lists/menu-list.xhtml"/>
+      <div id='blog-post-list' class='blog-admin'>
+        <ui:include src="/blogs/admin/lists/blog-list.xhtml"/>
+      </div>
+    </ui:define>
+</ui:composition>
+

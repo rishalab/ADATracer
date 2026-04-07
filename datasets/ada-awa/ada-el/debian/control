@@ -1,0 +1,34 @@
+Source: libelada
+Priority: optional
+Section: libdevel
+Maintainer: Stephane Carrez <Stephane.Carrez@gmail.com>
+Build-Depends: debhelper (>= 10), autotools-dev,
+ dh-ada-library,
+ gnat, gnat-9,
+# This line is parsed by debian/rules.
+ gprbuild (>= 2015-2),
+ libutilada-sys3-dev,
+ libutilada-unit3-dev
+Standards-Version: 4.1.4
+Homepage: https://github.com/stcarrez/ada-el/
+Vcs-Git: https://github.com/stcarrez/ada-el.gi -b debian-gnat-9
+Vcs-Browser: https://github.com/stcarrez/ada-el/tree/debian-gnat-9
+
+Package: libelada1.8.5
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Ada implementation of Java Unified Expression Language (runtime)
+ The library provides an Ada implementation of the Java Unified Expression
+ Language shared by the JSP 2.1 and JSF 1.2 technologies.
+ Refer to the Expression Language specification in JSR245
+ (http://jcp.org/en/jsr/summary?id=245)
+
+Package: libelada3-dev
+Section: libdevel
+Architecture: any
+Depends: ${misc:Depends}, ${ada:Depends}
+Description: Ada implementation of Java Unified Expression Language
+ The package contains the Ada development files to develop application
+ using the libelada library.
+

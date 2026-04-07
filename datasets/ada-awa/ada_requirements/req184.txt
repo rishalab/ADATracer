@@ -1,0 +1,1 @@
+Verify the anonymous access for the invitation page.

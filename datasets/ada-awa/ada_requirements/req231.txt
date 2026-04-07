@@ -1,0 +1,1 @@
+The server configuration file path is returned by the Get_Configuration_Path function.

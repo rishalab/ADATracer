@@ -1,0 +1,1 @@
+Dispatch the event identified by <b>Event</b>.

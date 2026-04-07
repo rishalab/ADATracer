@@ -1,0 +1,1 @@
+The tag module registers the bean constructors when it is initialized.

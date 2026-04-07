@@ -1,0 +1,19 @@
+<f:view xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+        xmlns:g="http://code.google.com/p/ada-ado/generator"
+        xmlns:f="http://java.sun.com/jsf/core"
+        file="Makefile">
+ROOTDIR ?= ../..
+#{''}
+
+include $(ROOTDIR)/Makefile.defaults
+#{''}
+
+#{projectName}_#{g:replace(pluginName,'-','_')}_dir=$(ROOTDIR)/plugins/#{pluginDir}
+#{projectName}_#{g:replace(pluginName,'-','_')}_dynamo=
+#{projectName}_#{g:replace(pluginName,'-','_')}_install_dirs=
+#{''}
+
+$(eval $(call awa_plugin,#{projectName}_#{g:replace(pluginName,'-','_')}))
+</f:view>

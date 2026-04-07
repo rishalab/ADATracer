@@ -1,0 +1,210 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<module version="1.0">
+
+  <context-param>
+    <param-name>storages.storage_root</param-name>
+    <param-value>storage</param-value>
+    <description>
+       The path of the directory that contains storage files stored on the local filesystem.
+    </description>
+  </context-param>
+
+  <context-param>
+    <param-name>storages.tmp_storage_root</param-name>
+    <param-value>tmp</param-value>
+    <description>
+       The path of the directory that contains temporary storage files on the local filesystem.
+    </description>
+  </context-param>
+
+  <context-param>
+    <param-name>storages.database_max_size</param-name>
+    <param-value>100000</param-value>
+    <description>
+       The maximum size of documents store in the database storage.
+    </description>
+  </context-param>
+
+  <managed-bean>
+    <description>This bean allows to create a storage folder.</description>
+    <managed-bean-name>storageFolder</managed-bean-name>
+    <managed-bean-class>AWA.Storages.Beans.Folder_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>
+
+  <managed-bean>
+    <description>This bean allows to upload a new file in the storage space.</description>
+    <managed-bean-name>uploadFile</managed-bean-name>
+    <managed-bean-class>AWA.Storages.Beans.Upload_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>
+
+  <managed-bean>
+    <description>This bean gives the list of storage folders in the workspace.</description>
+    <managed-bean-name>folderList</managed-bean-name>
+    <managed-bean-class>AWA.Storages.Beans.Folder_List_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>
+
+  <managed-bean>
+    <description>This bean gives the list of storage files associated with a given folder.</description>
+    <managed-bean-name>storageList</managed-bean-name>
+    <managed-bean-class>AWA.Storages.Beans.Storage_List_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>
+
+  <managed-bean>
+    <description>This bean gives some information about a document and its folder.</description>
+    <managed-bean-name>storageInfo</managed-bean-name>
+    <managed-bean-class>AWA.Storages.Beans.Storage_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>
+
+  <navigation-rule>
+    <from-view-id>/storages/forms/folder-create.xhtml</from-view-id>
+    <navigation-case>
+      <from-outcome>success</from-outcome>
+      <to-view-id>/storages/forms/folder-create-response.xhtml</to-view-id>
+    </navigation-case>
+  </navigation-rule>
+
+  <navigation-rule>
+    <from-view-id>/storages/forms/upload-form.xhtml</from-view-id>
+    <navigation-case>
+      <from-outcome>success</from-outcome>
+      <to-view-id>/storages/forms/upload-form-response.xhtml</to-view-id>
+    </navigation-case>
+  </navigation-rule>
+
+  <navigation-rule>
+    <from-view-id>/storages/forms/file-delete-form.xhtml</from-view-id>
+    <navigation-case>
+      <from-outcome>success</from-outcome>
+      <to-view-id>/storages/forms/file-delete-form-response.xhtml</to-view-id>
+    </navigation-case>
+  </navigation-rule>
+
+  <navigation-rule>
+    <from-view-id>/storages/forms/folder-create-first.xhtml</from-view-id>
+    <navigation-case>
+      <from-outcome>success</from-outcome>
+      <to-view-id>/storages/forms/folder-create-first-response.xhtml</to-view-id>
+    </navigation-case>
+  </navigation-rule>
+
+  <navigation-rule>
+    <from-view-id>/ajax/uploadFile/publish</from-view-id>
+    <navigation-case>
+      <from-outcome>success</from-outcome>
+      <to-view-id>/storages/forms/publish-response.xhtml</to-view-id>
+    </navigation-case>
+  </navigation-rule>
+
+  <entity-permission>
+    <name>folder-create</name>
+    <entity-type>awa_workspace</entity-type>
+    <description>
+      This permission grants the creation of storage folder for the given user
+      in a specific workspace.
+    </description>
+    <sql>
+       SELECT acl.id FROM awa_acl AS acl
+       INNER JOIN awa_workspace AS workspace ON workspace.owner_id = :user_id
+       WHERE acl.entity_type = :entity_type
+       AND acl.entity_id = workspace.id
+       AND acl.user_id = :user_id
+       AND acl.permission = $permission[folder-create]
+    </sql>
+  </entity-permission>
+
+  <entity-permission>
+    <name>storage-create</name>
+    <entity-type>awa_workspace</entity-type>
+    <description>
+      This permission grants the creation of storage file for the given user
+      in a specific workspace.
+    </description>
+    <sql>
+       SELECT acl.id FROM awa_acl AS acl
+       WHERE acl.entity_type = :entity_type
+       AND acl.entity_id = :entity_id
+       AND acl.user_id = :user_id
+       AND acl.permission = $permission[storage-create]
+    </sql>
+  </entity-permission>
+
+  <entity-permission>
+    <name>storage-delete</name>
+    <entity-type>awa_workspace</entity-type>
+    <description>
+      This permission grants the deletion of storage files for the given user
+      in a specific workspace.
+    </description>
+    <sql>
+       SELECT acl.id FROM awa_storage
+       INNER JOIN awa_acl AS acl ON acl.entity_id = awa_storage.workspace_id
+       WHERE acl.entity_type = :entity_type
+       AND acl.user_id = :user_id
+       AND acl.permission = $permission[storage-delete]
+       AND awa_storage.id = :entity_id
+    </sql>
+  </entity-permission>
+
+  <servlet-mapping>
+    <servlet-name>ajax</servlet-name>
+    <url-pattern>/storages/ajax/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>storage</servlet-name>
+    <url-pattern>/storages/files/:storage_id/:mode/:filename</url-pattern>
+  </servlet-mapping>
+
+  <filter-mapping>
+    <filter-name>service</filter-name>
+    <url-pattern>/storages/*.html</url-pattern>
+    <url-pattern>/storages/ajax/*</url-pattern>
+    <url-pattern>/storages/files/*</url-pattern>
+    <url-pattern>/storages/file-info/#{storageInfo.id}</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>auth-filter</filter-name>
+    <url-pattern>/storages/*.html</url-pattern>
+    <url-pattern>/storages/files/*</url-pattern>
+    <url-pattern>/storages/ajax/*</url-pattern>
+    <url-pattern>/storages/file-info/#{storageInfo.id}</url-pattern>
+  </filter-mapping>
+
+  <url-policy>
+    <description>
+      Security rule to allow anonymous users to display the documents.
+    </description>
+    <permission>anonymous</permission>
+    <url-pattern>/storages/documents.html</url-pattern>
+    <url-pattern>/storages/lists/documents.html</url-pattern>
+    <url-pattern>/storages/files/.*</url-pattern>
+  </url-policy>
+
+  <url-policy>
+    <description>
+      Security rule to allow only logged users to view documents.
+    </description>
+    <permission>logged-user</permission>
+    <url-pattern>/storages/forms/folder-create-first.html</url-pattern>
+    <url-pattern>/storages/forms/folder-create.html</url-pattern>
+    <url-pattern>/storages/forms/upload-form.html</url-pattern>
+    <url-pattern>/storages/forms/file-delete-form.html</url-pattern>
+    <url-pattern>/storages/lists/documents.html</url-pattern>
+    <url-pattern>/storages/documents.html</url-pattern>
+    <url-pattern>/storages/files/.*</url-pattern>
+    <url-pattern>/storages/ajax/uploadFile/publish</url-pattern>
+    <url-pattern>/storages/file-info/.*</url-pattern>
+  </url-policy>
+
+  <url-mapping>
+    <pattern>/storages/file-info/#{storageInfo.id}</pattern>
+    <view-id>/storages/file-info.html</view-id>
+  </url-mapping>
+
+</module>

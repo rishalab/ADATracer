@@ -1,0 +1,24 @@
+<!-- Create the wiki spqce
+  -  Copyright (C) 2015, 2018, 2019, 2023 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -  SPDX-License-Identifier: Apache-2.0
+  -->
+<ui:composition template="/WEB-INF/layouts/layout.xhtml"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:f="http://java.sun.com/jsf/core">
+    <ui:param name="title" value="#{wikiMsg.wiki_admin_create_title}"/>
+    <ui:param name="pageStyle" value="page-wiki"/>
+
+    <!-- Main page body -->
+    <ui:define name="pageBody">
+        <div class="awa-container">
+            <div class="awa-side1">
+                <img src="#{contextPath}/images/wikis/wiki-create.png"/>
+            </div>
+            <div class="awa-side2">
+                <ui:include src="forms/wiki-create.xhtml"/>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+
